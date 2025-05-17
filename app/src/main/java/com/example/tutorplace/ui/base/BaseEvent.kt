@@ -1,3 +1,3 @@
 package com.example.tutorplace.ui.base
 
-interface BaseIntent
+interface BaseEvent

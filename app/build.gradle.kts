@@ -65,12 +65,16 @@ dependencies {
 	implementation(libs.ui.tooling.preview)
 	debugImplementation(libs.ui.tooling)
 
+	// Splash Screen
+	implementation(libs.androidx.core.splashscreen)
+
 	// Navigation for Compose
 	implementation(libs.androidx.navigation.compose)
 
 	// Lifecycle & MVI helpers
 	implementation(libs.androidx.lifecycle.viewmodel.compose)
 	implementation(libs.androidx.lifecycle.runtime.ktx)
+	implementation(libs.androidx.fragment.ktx)
 
 	// Coroutines
 	implementation(libs.kotlinx.coroutines.android)
