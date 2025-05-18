@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.screens.auth.authorization
+package com.example.tutorplace.ui.screens.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,19 +14,18 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.ui.theme.TutorPlaceTheme
 
 @Composable
-fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
+fun HomeScreen(navController: NavController) = TutorPlaceTheme {
 	Scaffold { paddingValues ->
 		Box(
-			modifier = Modifier
+			Modifier
 				.fillMaxSize()
-				.padding(paddingValues),
-			contentAlignment = Alignment.Center
+				.padding(paddingValues)
 		) {
-			Text(text = "This is Authorization screen")
+			Text(modifier = Modifier.align(Alignment.Center), text = "This is Home screen")
 		}
 	}
 }
 
 @Preview
 @Composable
-private fun AuthorizationScreenPreview() = AuthorizationScreen(rememberNavController())
+private fun HomePreview() = HomeScreen(rememberNavController())

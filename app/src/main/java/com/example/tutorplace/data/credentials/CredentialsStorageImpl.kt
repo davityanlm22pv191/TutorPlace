@@ -4,5 +4,5 @@ import javax.inject.Inject
 
 class CredentialsStorageImpl @Inject constructor() : CredentialsStorage {
 
-	override fun isAuthorized(): Boolean = false
+	override fun isAuthorized(): Boolean = true
 }
