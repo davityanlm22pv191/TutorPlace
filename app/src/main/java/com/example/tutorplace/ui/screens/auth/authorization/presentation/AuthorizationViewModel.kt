@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.fragment.auth.authorization.presentation
+package com.example.tutorplace.ui.screens.auth.authorization.presentation
 
 import com.example.tutorplace.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
