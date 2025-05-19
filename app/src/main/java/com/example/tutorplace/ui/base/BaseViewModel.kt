@@ -24,8 +24,8 @@ abstract class BaseViewModel<Command : BaseCommand, Event : BaseEvent, State : B
 		_state.update { newState }
 	}
 
-	protected fun sendEvent(effect: Event) {
-		viewModelScope.launch { _event.send(effect) }
+	protected fun sendEvent(event: Event) {
+		viewModelScope.launch { _event.send(event) }
 	}
 
 	abstract fun handleCommand(command: Command)

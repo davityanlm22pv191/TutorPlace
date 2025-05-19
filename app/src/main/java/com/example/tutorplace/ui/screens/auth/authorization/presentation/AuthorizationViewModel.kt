@@ -1,7 +1,7 @@
 package com.example.tutorplace.ui.screens.auth.authorization.presentation
 
 import com.example.tutorplace.ui.base.BaseViewModel
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationCommand.EnterClicked
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationCommand.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -12,6 +12,10 @@ class AuthorizationViewModel @Inject constructor() :
 	override fun initialState() = AuthorizationState()
 
 	override fun handleCommand(command: AuthorizationCommand) = when (command) {
-		EnterClicked -> sendEvent(AuthorizationEvent.OnHome)
+		is AuthorizeClicked -> sendEvent(AuthorizationEvent.OnHome)
+		is EmailChanged -> setState(AuthorizationReducer.reduce(state.value, command))
+		is PasswordHiddenClicked -> setState(AuthorizationReducer.reduce(state.value, command))
+		is PasswordChanged -> setState(AuthorizationReducer.reduce(state.value, command))
+		is RestoreClicked -> sendEvent(AuthorizationEvent.OnRestorePassword)
 	}
 }
