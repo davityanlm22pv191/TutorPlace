@@ -5,6 +5,6 @@ import com.example.tutorplace.ui.base.BaseReducer
 class HomeReducer : BaseReducer<HomeState, HomeEvent> {
 	override fun reduce(
 		oldState: HomeState,
-		intent: HomeEvent
+		event: HomeEvent
 	) = oldState
 }

@@ -2,10 +2,10 @@ package com.example.tutorplace.ui.screens.auth.authorization.presentation
 
 import com.example.tutorplace.ui.base.BaseReducer
 
-class AuthorizationReducer : BaseReducer<AuthorizationState, AuthorizationEvent>{
+object AuthorizationReducer : BaseReducer<AuthorizationState, AuthorizationEvent>{
 	override fun reduce(
 		oldState: AuthorizationState,
-		intent: AuthorizationEvent
+		event: AuthorizationEvent
 	): AuthorizationState {
 		return oldState
 	}

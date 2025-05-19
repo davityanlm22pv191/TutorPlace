@@ -74,7 +74,7 @@ dependencies {
 	// Lifecycle & MVI helpers
 	implementation(libs.androidx.lifecycle.viewmodel.compose)
 	implementation(libs.androidx.lifecycle.runtime.ktx)
-	implementation(libs.androidx.fragment.ktx)
+	implementation(libs.androidx.lifecycle.viewmodel.compose)
 
 	// Coroutines
 	implementation(libs.kotlinx.coroutines.android)
@@ -82,4 +82,5 @@ dependencies {
 	// Hilt (Dagger)
 	implementation(libs.hilt.android)
 	ksp(libs.hilt.android.compiler)
+	implementation(libs.androidx.hilt.navigation.compose)
 }

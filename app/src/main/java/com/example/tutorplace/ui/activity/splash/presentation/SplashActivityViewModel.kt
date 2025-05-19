@@ -11,7 +11,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashActivityViewModel @Inject constructor(
 	private val credentialsStorage: CredentialsStorage
-) : BaseViewModel<SplashActivityEvent, SplashActivityCommand>() {
+) : BaseViewModel<SplashActivityCommand, SplashActivityEvent, SplashActivityState>() {
 
 	override fun handleCommand(command: SplashActivityCommand) = when (command) {
 		ResolveNextScreen -> resolveNextScreen()
@@ -19,9 +19,11 @@ class SplashActivityViewModel @Inject constructor(
 
 	private fun resolveNextScreen() {
 		if (credentialsStorage.isAuthorized()) {
-			setEvent(NavigateToHome)
+			sendEvent(NavigateToHome)
 		} else {
-			setEvent(NavigateToAuth)
+			sendEvent(NavigateToAuth)
 		}
 	}
+
+	override fun initialState() = SplashActivityState()
 }

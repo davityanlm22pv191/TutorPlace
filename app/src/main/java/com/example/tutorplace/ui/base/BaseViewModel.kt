@@ -2,23 +2,31 @@ package com.example.tutorplace.ui.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<Event : BaseEvent, Command : BaseCommand> : ViewModel() {
+abstract class BaseViewModel<Command : BaseCommand, Event : BaseEvent, State : BaseState> :
+	ViewModel() {
 
-	private companion object {
-		const val EVENTS_BUFFER_SIZE = 10
+	private val _event = Channel<Event>(Channel.BUFFERED)
+	val event = _event.receiveAsFlow()
+
+	private val _state = MutableStateFlow(initialState())
+	val state: StateFlow<State> = _state
+
+	abstract fun initialState(): State
+
+	protected fun setState(newState: State) {
+		_state.update { newState }
 	}
 
-	private val mutableEvent: MutableSharedFlow<Event> = MutableSharedFlow(
-		replay = EVENTS_BUFFER_SIZE
-	)
-
-	val event: SharedFlow<Event> = mutableEvent
-
-	protected fun setEvent(event: Event) = viewModelScope.launch { mutableEvent.emit(event) }
+	protected fun sendEvent(effect: Event) {
+		viewModelScope.launch { _event.send(effect) }
+	}
 
 	abstract fun handleCommand(command: Command)
 }
