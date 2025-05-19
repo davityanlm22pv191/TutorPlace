@@ -5,6 +5,7 @@
 	<string name="common_or">или</string>
 
 	<!-- 	Authorization -->
+	<string name="auth_register">Зарегистрироваться</string>
 	<string name="authorization_enter_to_profile">Вход в профиль</string>
 	<string name="authorization_your_email">Ваша электронная почта</string>
 	<string name="authorization_your_password">Ваш пароль</string>
@@ -12,6 +13,7 @@
 	<string name="authorization_entry">Войти</string>
 	<string name="authorization_entry_by_yandex_id">Войти через Яндекс ID</string>
 	<string name="authorization_email_error_support_hint">Если вы ошиблись адресом почты при регистрации, обратитесь в поддержку</string>
+	<string name="authorization_email_error_support_hint_spannable">поддержку</string>
 	<string name="authorization_not_yet_account">Еще нет акаунта? Зарегистрироваться</string>
 
 </resources>

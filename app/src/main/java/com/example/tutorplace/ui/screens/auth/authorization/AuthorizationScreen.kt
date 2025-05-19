@@ -27,6 +27,8 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,10 +39,14 @@ import com.example.tutorplace.ui.common.AuthSectionDivider
 import com.example.tutorplace.ui.common.EmailTextField
 import com.example.tutorplace.ui.common.PasswordTextField
 import com.example.tutorplace.ui.common.PurpleButton
+import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
+import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
 import com.example.tutorplace.ui.navigation.Destinations
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationCommand
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.OnHome
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.OnRegistration
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.OnRestorePassword
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.onSupport
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationViewModel
 import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.GreyF8
@@ -134,7 +140,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 					.height(50.dp),
 				shape = RoundedCornerShape(12.dp),
 				colors = ButtonDefaults.buttonColors().copy(containerColor = GreyF8),
-				onClick = { }
+				onClick = { viewModel.handleCommand(AuthorizationCommand.YandexClicked) }
 			) {
 				Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
 					Image(
@@ -149,6 +155,38 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 					)
 				}
 			}
+			SpanClickableText(
+				modifier = Modifier
+					.padding(top = 12.dp)
+					.padding(horizontal = 20.dp),
+				text = stringResource(R.string.authorization_email_error_support_hint),
+				links = listOf(
+					SpanLinkData(
+						link = stringResource(R.string.authorization_email_error_support_hint_spannable),
+						tag = "SUPPORT",
+						SpanStyle(color = PurpleCC),
+						onClick = { viewModel.handleCommand(AuthorizationCommand.SupportClicked) }
+					)
+				),
+				textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
+			)
+
+			SpanClickableText(
+				modifier = Modifier
+					.padding(top = 32.dp)
+					.padding(horizontal = 20.dp)
+					.fillMaxWidth(),
+				text = stringResource(R.string.authorization_not_yet_account),
+				links = listOf(
+					SpanLinkData(
+						link = stringResource(R.string.auth_register),
+						tag = "REGISTRATION",
+						SpanStyle(color = PurpleCC),
+						onClick = { viewModel.handleCommand(AuthorizationCommand.RegistrationClicked) }
+					)
+				),
+				textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center),
+			)
 		}
 	}
 }
@@ -161,8 +199,10 @@ private fun ObserveViewModelEvents(
 	LaunchedEffect(Unit) {
 		viewModel.event.collect { event ->
 			when (event) {
-				OnHome -> navController.navigate(Destinations.Home.route)
-				OnRestorePassword -> navController.navigate(Destinations.Home.route) // TODO THIS IS MOCK ROUTE
+				is OnHome -> navController.navigate(Destinations.Home.route)
+				is OnRestorePassword -> navController.navigate(Destinations.Home.route) // TODO THIS IS MOCK ROUTE
+				is OnRegistration -> navController.navigate(Destinations.Home.route) // TODO THIS IS MOCK ROUTE
+				is onSupport -> navController.navigate(Destinations.Home.route) // TODO THIS IS MOCK ROUTE
 			}
 		}
 	}

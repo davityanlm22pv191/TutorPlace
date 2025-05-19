@@ -8,4 +8,7 @@ sealed interface AuthorizationCommand : BaseCommand {
 	data class PasswordChanged(val enteredPassword: String) : AuthorizationCommand
 	object PasswordHiddenClicked : AuthorizationCommand
 	data object RestoreClicked : AuthorizationCommand
+	object SupportClicked : AuthorizationCommand
+	object RegistrationClicked : AuthorizationCommand
+	object YandexClicked : AuthorizationCommand
 }
