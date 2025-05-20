@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection.Ltr
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -69,7 +72,12 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 		Column(
 			modifier = Modifier
 				.fillMaxSize()
-				.padding(paddingValues)
+				.padding(
+					top = paddingValues.calculateTopPadding(),
+					start = paddingValues.calculateStartPadding(Ltr),
+					end = paddingValues.calculateEndPadding(Ltr),
+					bottom = paddingValues.calculateBottomPadding() + 16.dp
+				)
 				.verticalScroll(scrollState)
 				.imePadding(),
 			horizontalAlignment = Alignment.CenterHorizontally
