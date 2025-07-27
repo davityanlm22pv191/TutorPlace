@@ -34,6 +34,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tutorplace.R
+import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.Grey82
 import com.example.tutorplace.ui.theme.GreyD5
 import com.example.tutorplace.ui.theme.PurpleCC
@@ -72,7 +73,7 @@ fun EmailTextField(
 		value = value,
 		onValueChange = { onValueChanged(it) },
 		singleLine = true,
-		textStyle = Typography.labelMedium,
+		textStyle = Typography.labelMedium.copy(color = Black16),
 		colors = outlinedTextFieldColors,
 		isError = isError,
 		label = {
@@ -153,7 +154,7 @@ private fun TextFieldsPreview() {
 		EmailTextField(
 			modifier = Modifier.padding(horizontal = 16.dp),
 			value = "example@google.com",
-			label = stringResource(R.string.authorization_your_email),
+			label = stringResource(R.string.common_your_email),
 			isError = true,
 			onValueChanged = {},
 			onNextClicked = {}

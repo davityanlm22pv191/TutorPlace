@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.tutorplace.ui.navigation.Destinations.AuthorizationFlow
 import com.example.tutorplace.ui.screens.auth.authorization.AuthorizationScreen
+import com.example.tutorplace.ui.screens.auth.restorepassword.RestorePasswordScreen
 
 fun NavGraphBuilder.AutorizationFlow(navController: NavController) {
 	navigation(
@@ -13,5 +14,6 @@ fun NavGraphBuilder.AutorizationFlow(navController: NavController) {
 		route = AuthorizationFlow.FLOW_ROUTE
 	) {
 		composable(AuthorizationFlow.Auth.route) { AuthorizationScreen(navController) }
+		composable(AuthorizationFlow.RestorePassword.route) { RestorePasswordScreen(navController) }
 	}
 }

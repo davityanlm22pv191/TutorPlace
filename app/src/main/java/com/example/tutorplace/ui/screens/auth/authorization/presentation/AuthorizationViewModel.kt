@@ -19,7 +19,7 @@ class AuthorizationViewModel @Inject constructor() :
 	override fun initialState() = AuthorizationState()
 
 	override fun handleCommand(command: AuthorizationCommand) = when (command) {
-		is SupportClicked -> sendEvent(AuthorizationEvent.onSupport)
+		is SupportClicked -> sendEvent(AuthorizationEvent.OnSupport)
 		is AuthorizeClicked -> sendEvent(AuthorizationEvent.OnHome)
 		is EmailChanged -> setState(AuthorizationReducer.reduce(state.value, command))
 		is PasswordHiddenClicked -> setState(AuthorizationReducer.reduce(state.value, command))
