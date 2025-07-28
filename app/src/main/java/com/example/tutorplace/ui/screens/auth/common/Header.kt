@@ -1,6 +1,6 @@
 package com.example.tutorplace.ui.screens.auth.common
 
-import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,8 +22,8 @@ import com.example.tutorplace.ui.theme.Typography
 
 @Composable
 fun Header(
-	@StringRes title: Int,
-	@StringRes description: Int?,
+	title: String,
+	description: String?,
 	onBackButtonClicked: (() -> Unit)?
 ) {
 	Box(
@@ -55,21 +54,24 @@ fun Header(
 				modifier = Modifier
 					.fillMaxWidth()
 					.padding(top = 24.dp),
-				text = stringResource(title),
+				text = title,
 				style = Typography.headlineLarge,
 				color = Black16,
 				textAlign = TextAlign.Center
 			)
-			description?.let {
-				Text(
-					modifier = Modifier
-						.fillMaxWidth()
-						.padding(top = 8.dp),
-					text = stringResource(it),
-					style = Typography.labelMedium,
-					color = Black16,
-					textAlign = TextAlign.Center
-				)
+			AnimatedContent(targetState = description) { animatedDescription ->
+				if (animatedDescription != null) {
+					Text(
+						modifier = Modifier
+							.fillMaxWidth()
+							.padding(top = 8.dp),
+						text = animatedDescription,
+						style = Typography.labelMedium,
+						color = Black16,
+						textAlign = TextAlign.Center
+					)
+				}
+
 			}
 		}
 	}
@@ -79,8 +81,8 @@ fun Header(
 @Composable
 private fun HeaderPreview() {
 	Header(
-		title = R.string.restore_password_title,
-		description = R.string.restore_password_description,
+		title = "Восстановление пароля",
+		description = "Введите свой email для восстановления пароля",
 		onBackButtonClicked = null
 	)
 }

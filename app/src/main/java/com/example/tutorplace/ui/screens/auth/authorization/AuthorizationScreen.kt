@@ -28,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -68,7 +67,6 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 	val scrollState = rememberScrollState()
 	val emailFocusRequester = remember { FocusRequester() }
 	val passwordFocusRequester = remember { FocusRequester() }
-	val focusManager = LocalFocusManager.current
 	ObserveViewModelEvents(viewModel, navController)
 	Scaffold(
 		modifier = Modifier.fillMaxSize(),
@@ -88,7 +86,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 			horizontalAlignment = Alignment.CenterHorizontally
 		) {
 			Header(
-				title = R.string.authorization_enter_to_profile,
+				title = stringResource(R.string.authorization_enter_to_profile),
 				description = null,
 				onBackButtonClicked = null,
 			)

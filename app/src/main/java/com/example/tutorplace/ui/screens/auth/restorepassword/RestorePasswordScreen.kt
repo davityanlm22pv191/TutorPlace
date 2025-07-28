@@ -1,5 +1,6 @@
 package com.example.tutorplace.ui.screens.auth.restorepassword
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -29,13 +30,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.R
+import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.ui.common.EmailTextField
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
 import com.example.tutorplace.ui.screens.auth.common.Header
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordCommand
-import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordCommand.EmailChanged
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordCommand.UpdateEmail
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.OnAuthorization
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordViewModel
 import com.example.tutorplace.ui.theme.BlackAlpha04
@@ -52,10 +54,7 @@ fun RestorePasswordScreen(navController: NavController) {
 	val focusManager = LocalFocusManager.current
 	ObserveViewModelEvent(viewModel, navController)
 	TutorPlaceTheme {
-		Scaffold(
-			modifier = Modifier.fillMaxSize(),
-			containerColor = White
-		) { paddingValues ->
+		Scaffold(modifier = Modifier.fillMaxSize(), containerColor = White) { paddingValues ->
 			Column(
 				modifier = Modifier
 					.fillMaxSize()
@@ -70,35 +69,57 @@ fun RestorePasswordScreen(navController: NavController) {
 				horizontalAlignment = Alignment.CenterHorizontally
 			) {
 				Header(
-					title = R.string.restore_password_title,
-					description = R.string.restore_password_description,
+					title = stringResource(R.string.restore_password_title),
+					description = if (state.isEmailSent) {
+						stringResource(
+							R.string.restore_password_description_with_email_format, state.email
+						)
+					} else {
+						stringResource(R.string.restore_password_description)
+					},
 					onBackButtonClicked = {
 						viewModel.handleCommand(RestorePasswordCommand.BackClicked)
 					}
 				)
-				EmailTextField(
-					modifier = Modifier
-						.fillMaxWidth()
-						.padding(top = 18.dp),
-					value = state.email,
-					label = stringResource(R.string.common_your_email),
-					isError = state.isEmailError,
-					onNextClicked = { focusManager.clearFocus() },
-					onValueChanged = { email -> viewModel.handleCommand(EmailChanged(email)) }
-				)
+				AnimatedContent(targetState = state.isEmailSent) { isEmailSent ->
+					if (!isEmailSent) {
+						EmailTextField(
+							modifier = Modifier
+								.fillMaxWidth()
+								.padding(top = 18.dp),
+							value = state.email,
+							label = stringResource(R.string.common_your_email),
+							isError = state.isEmailError,
+							onNextClicked = { focusManager.clearFocus() },
+							onValueChanged = { email -> viewModel.handleCommand(UpdateEmail(email)) }
+						)
+					}
+				}
+
 				Spacer(Modifier.weight(1f))
 				PurpleButton(
 					modifier = Modifier.fillMaxWidth(),
-					text = stringResource(R.string.restore_password_restore_password),
+					text = when {
+						state.timerInSeconds != 0 -> FormatHelper.formatTime(state.timerInSeconds)
+						state.timerInSeconds == 0 && state.isEmailSent -> stringResource(R.string.restore_password_retry_send_button)
+						else -> stringResource(R.string.restore_password_restore_password)
+					},
 					isLoading = state.isLoading,
-					isEnabled = state.isRestoreButtonEnabled,
+					isEnabled = state.timerInSeconds == 0,
 				) {
-
+					when {
+						state.isLoading -> Unit
+						!state.isEmailSent -> viewModel.handleCommand(RestorePasswordCommand.RestoreClicked)
+						state.isEmailSent -> viewModel.handleCommand(RestorePasswordCommand.RetrySendButtonClicked)
+					}
 				}
+
 				HorizontalDivider(
 					modifier = Modifier
 						.padding(top = 16.dp)
-						.fillMaxWidth(), thickness = 1.dp, color = BlackAlpha04
+						.fillMaxWidth(),
+					thickness = 1.dp,
+					color = BlackAlpha04
 				)
 				SpanClickableText(
 					modifier = Modifier
@@ -110,9 +131,7 @@ fun RestorePasswordScreen(navController: NavController) {
 							link = stringResource(R.string.restore_password_already_have_account_spannable),
 							tag = "ENTRY",
 							style = SpanStyle(color = PurpleCC),
-							onClick = {
-								viewModel.handleCommand(RestorePasswordCommand.AuthorizeClicked)
-							}
+							onClick = { viewModel.handleCommand(RestorePasswordCommand.AuthorizeClicked) }
 						)
 					),
 					textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)

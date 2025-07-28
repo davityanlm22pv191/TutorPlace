@@ -4,9 +4,13 @@ import com.example.tutorplace.ui.base.BaseCommand
 
 sealed interface RestorePasswordCommand : BaseCommand {
 	object BackClicked : RestorePasswordCommand
-	data class EmailChanged(val enteredEmail: String) : RestorePasswordCommand
+	data class UpdateEmail(val enteredEmail: String) : RestorePasswordCommand
+	object EmailIsNotValid : RestorePasswordCommand
+	object EmailErrorSending: RestorePasswordCommand
+	object EmailSending: RestorePasswordCommand
+	object EmailSent: RestorePasswordCommand
 	object RestoreClicked : RestorePasswordCommand
 	object AuthorizeClicked : RestorePasswordCommand
-	object RetrySendTimerOver : RestorePasswordCommand
+	data class RetrySendTimeUpdated(val seconds: Int) : RestorePasswordCommand
 	object RetrySendButtonClicked : RestorePasswordCommand
 }

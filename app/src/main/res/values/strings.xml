@@ -19,6 +19,8 @@
 	<!-- 	Restore Password -->
 	<string name="restore_password_title">Восстановление пароля</string>
 	<string name="restore_password_description">Введите свой email для восстановления пароля</string>
+	<string name="restore_password_description_with_email_format">Новый пароль был отправлен на почту %s</string>
+	<string name="restore_password_retry_send_button">Отправить повторно</string>
 	<string name="restore_password_restore_password">Восстановить пароль</string>
 	<string name="restore_password_already_have_account">Уже есть аккаунт? Войти</string>
 	<string name="restore_password_already_have_account_spannable">Войти</string>
