@@ -7,6 +7,7 @@ val Transparent = Color(0x00000000)
 val White = Color(0xFFFFFFFF)
 
 val Black16 = Color(0xFF161616)
+val BlackAlpha04 = Color(0x0A000000)
 
 val Grey82 = Color(0xFF828282)
 val GreyF8 = Color(0xFFF8F8F8)

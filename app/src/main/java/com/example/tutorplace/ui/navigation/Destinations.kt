@@ -7,7 +7,10 @@ sealed class Destinations(open val route: String) {
 			const val FLOW_ROUTE = "authorization_flow"
 		}
 
-		object Auth : Destinations("auth")
+		object Auth : AuthorizationFlow("auth")
+
+		object RestorePassword : AuthorizationFlow("restore_password")
+
 		// TODO ADD HERE OTHER AUTH SCREENS
 	}
 

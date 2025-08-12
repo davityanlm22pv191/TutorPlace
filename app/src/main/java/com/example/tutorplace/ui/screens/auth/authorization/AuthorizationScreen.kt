@@ -23,10 +23,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -49,8 +50,9 @@ import com.example.tutorplace.ui.screens.auth.authorization.presentation.Authori
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.OnHome
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.OnRegistration
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.OnRestorePassword
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.onSupport
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.OnSupport
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationViewModel
+import com.example.tutorplace.ui.screens.auth.common.Header
 import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.GreyF8
 import com.example.tutorplace.ui.theme.PurpleCC
@@ -63,7 +65,8 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 	val viewModel = hiltViewModel<AuthorizationViewModel>()
 	val state by viewModel.state.collectAsState()
 	val scrollState = rememberScrollState()
-	val focusManager = LocalFocusManager.current
+	val emailFocusRequester = remember { FocusRequester() }
+	val passwordFocusRequester = remember { FocusRequester() }
 	ObserveViewModelEvents(viewModel, navController)
 	Scaffold(
 		modifier = Modifier.fillMaxSize(),
@@ -82,32 +85,27 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 				.imePadding(),
 			horizontalAlignment = Alignment.CenterHorizontally
 		) {
-			Image(
-				modifier = Modifier.padding(top = 44.dp),
-				painter = painterResource(R.drawable.ic_tutor_place_logo),
-				contentDescription = null
+			Header(
+				title = stringResource(R.string.authorization_enter_to_profile),
+				description = null,
+				onBackButtonClicked = null,
 			)
-			Text(
-				modifier = Modifier.padding(top = 24.dp),
-				text = stringResource(R.string.authorization_enter_to_profile),
-				style = Typography.headlineLarge,
-				color = Black16
-			)
-
 			EmailTextField(
 				modifier = Modifier
 					.padding(top = 18.dp)
-					.padding(horizontal = 20.dp),
+					.padding(horizontal = 20.dp)
+					.focusRequester(emailFocusRequester),
 				value = state.email,
-				label = stringResource(R.string.authorization_your_email),
+				label = stringResource(R.string.common_your_email),
 				isError = state.isEmailError,
-				onNextClicked = { focusManager.moveFocus(FocusDirection.Next) }
+				onNextClicked = { passwordFocusRequester.requestFocus() }
 			) { viewModel.handleCommand(AuthorizationCommand.EmailChanged(it)) }
 
 			PasswordTextField(
 				modifier = Modifier
 					.padding(top = 6.dp)
-					.padding(horizontal = 20.dp),
+					.padding(horizontal = 20.dp)
+					.focusRequester(passwordFocusRequester),
 				value = state.password,
 				label = stringResource(R.string.authorization_your_password),
 				isError = state.isPasswordError,
@@ -208,9 +206,9 @@ private fun ObserveViewModelEvents(
 		viewModel.event.collect { event ->
 			when (event) {
 				is OnHome -> navController.navigate(Destinations.Home.route)
-				is OnRestorePassword -> navController.navigate(Destinations.Home.route) // TODO THIS IS MOCK ROUTE
+				is OnRestorePassword -> navController.navigate(Destinations.AuthorizationFlow.RestorePassword.route)
 				is OnRegistration -> navController.navigate(Destinations.Home.route) // TODO THIS IS MOCK ROUTE
-				is onSupport -> navController.navigate(Destinations.Home.route) // TODO THIS IS MOCK ROUTE
+				is OnSupport -> navController.navigate(Destinations.Home.route) // TODO THIS IS MOCK ROUTE
 			}
 		}
 	}

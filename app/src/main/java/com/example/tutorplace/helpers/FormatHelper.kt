@@ -1,6 +1,7 @@
 package com.example.tutorplace.helpers
 
 import android.util.Patterns
+import java.util.Locale
 
 object FormatHelper {
 
@@ -18,6 +19,16 @@ object FormatHelper {
 
 	fun isValidPassword(text: String): Boolean {
 		return text.length > REQUIRED_PASSWORD_LENGTH
+	}
+
+	// endregion
+
+	// region ==================== Time =====================
+
+	fun formatTime(seconds: Int): String {
+		val minutes = seconds / 60
+		val remainingSeconds = seconds % 60
+		return String.format(Locale.getDefault(), "%02d:%02d", minutes, remainingSeconds)
 	}
 
 	// endregion
