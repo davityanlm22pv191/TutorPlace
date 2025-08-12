@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.R
-import com.example.tutorplace.ui.common.NameTextField
 import com.example.tutorplace.ui.screens.auth.common.Header
 import com.example.tutorplace.ui.theme.White
 
