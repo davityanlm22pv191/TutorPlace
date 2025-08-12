@@ -6,9 +6,9 @@ sealed interface RestorePasswordCommand : BaseCommand {
 	object BackClicked : RestorePasswordCommand
 	data class UpdateEmail(val enteredEmail: String) : RestorePasswordCommand
 	object EmailIsNotValid : RestorePasswordCommand
-	object EmailErrorSending: RestorePasswordCommand
-	object EmailSending: RestorePasswordCommand
-	object EmailSent: RestorePasswordCommand
+	object EmailErrorSending : RestorePasswordCommand
+	object EmailSending : RestorePasswordCommand
+	object EmailSent : RestorePasswordCommand
 	object RestoreClicked : RestorePasswordCommand
 	object AuthorizeClicked : RestorePasswordCommand
 	data class RetrySendTimeUpdated(val seconds: Int) : RestorePasswordCommand
