@@ -96,7 +96,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 					.padding(horizontal = 20.dp)
 					.focusRequester(emailFocusRequester),
 				value = state.email,
-				label = stringResource(R.string.common_your_email),
+				label = stringResource(R.string.common_auth_your_email),
 				isError = state.isEmailError,
 				onNextClicked = { passwordFocusRequester.requestFocus() }
 			) { viewModel.handleCommand(AuthorizationCommand.EmailChanged(it)) }
@@ -207,7 +207,7 @@ private fun ObserveViewModelEvents(
 			when (event) {
 				is OnHome -> navController.navigate(Destinations.Home.route)
 				is OnRestorePassword -> navController.navigate(Destinations.AuthorizationFlow.RestorePassword.route)
-				is OnRegistration -> navController.navigate(Destinations.Home.route) // TODO THIS IS MOCK ROUTE
+				is OnRegistration -> navController.navigate(Destinations.AuthorizationFlow.Registration.route)
 				is OnSupport -> navController.navigate(Destinations.Home.route) // TODO THIS IS MOCK ROUTE
 			}
 		}

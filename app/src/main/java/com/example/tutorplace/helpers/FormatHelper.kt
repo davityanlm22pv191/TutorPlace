@@ -23,6 +23,10 @@ object FormatHelper {
 
 	// endregion
 
+	// region ==================== Password =====================
+
+	// endregion
+
 	// region ==================== Time =====================
 
 	fun formatTime(seconds: Int): String {
