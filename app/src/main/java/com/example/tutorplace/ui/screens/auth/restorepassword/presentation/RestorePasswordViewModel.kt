@@ -61,14 +61,16 @@ class RestorePasswordViewModel @Inject constructor(
 
 	private fun startTimer() {
 		timerJob?.cancel()
+		timer.value = 60
 		timerJob = viewModelScope.launch {
-			while (timer.value > 0) {
+			while (timer.value >= 0) {
 				setState(
 					RestorePasswordReducer.reduce(state.value, RetrySendTimeUpdated(timer.value))
 				)
 				delay(1000)
 				timer.value--
 			}
+
 			timerJob?.cancel()
 			timer.value = 0
 		}

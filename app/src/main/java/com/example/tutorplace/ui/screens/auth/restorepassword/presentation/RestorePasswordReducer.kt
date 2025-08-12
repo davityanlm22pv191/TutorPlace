@@ -18,6 +18,7 @@ object RestorePasswordReducer : BaseReducer<RestorePasswordState, RestorePasswor
 		is EmailSending -> oldState.copy(isLoading = true)
 		is EmailIsNotValid -> oldState.copy(isEmailError = true)
 		is RetrySendTimeUpdated -> oldState.copy(timerInSeconds = command.seconds)
+
 		else -> oldState
 	}
 
