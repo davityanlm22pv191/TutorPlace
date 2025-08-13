@@ -1,11 +1,14 @@
 package com.example.tutorplace.ui.screens.auth.registration
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -27,7 +30,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.R
+import com.example.tutorplace.ui.common.EmailTextField
+import com.example.tutorplace.ui.common.NameTextField
+import com.example.tutorplace.ui.common.PasswordTextField
+import com.example.tutorplace.ui.common.PhoneTextField
 import com.example.tutorplace.ui.common.PurpleButton
+import com.example.tutorplace.ui.common.TelegramTextField
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
 import com.example.tutorplace.ui.screens.auth.common.AuthSectionDivider
@@ -68,7 +76,56 @@ fun RegistrationScreen(navController: NavController) {
 				description = null,
 				onBackButtonClicked = { navController.popBackStack() }
 			)
-			Spacer(Modifier.weight(1f))
+
+			Column(
+				modifier = Modifier.padding(top = 18.dp),
+				verticalArrangement = Arrangement.spacedBy(6.dp),
+			) {
+				when (val step = state.registrationStep) {
+					is FirstStep -> {
+						NameTextField(
+							value = step.name,
+							label = stringResource(R.string.registration_your_name),
+							isError = step.isNameError,
+							onNextClicked = {}
+						) { }
+						PhoneTextField(
+							value = step.phoneNumber,
+							label = stringResource(R.string.registration_your_phone_number),
+							isError = step.isPhoneNumberError,
+							onNextClicked = {}
+						) { }
+						TelegramTextField(
+							value = step.telegram,
+							label = stringResource(R.string.registration_your_telegram),
+							isError = step.isTelegramError,
+							onDoneClicked = {}
+						) { }
+					}
+					is SecondStep -> {
+						EmailTextField(
+							value = step.email,
+							label = stringResource(R.string.common_auth_your_email),
+							isError = step.isEmailError,
+							onNextClicked = {}
+						) { }
+						PasswordTextField(
+							value = step.password,
+							label = stringResource(R.string.registration_your_password),
+							isError = step.isPasswordError,
+							onDoneClicked = {}
+						) { }
+						PasswordTextField(
+							value = step.confirmPassword,
+							label = stringResource(R.string.registration_repeat_password),
+							isError = step.isConfirmPasswordError,
+							onDoneClicked = {}
+						) { }
+					}
+				}
+			}
+
+			Spacer(Modifier.weight(1f).defaultMinSize(minHeight = 16.dp))
 			PurpleButton(
 				modifier = Modifier.fillMaxSize(),
 				text = when (state.registrationStep) {

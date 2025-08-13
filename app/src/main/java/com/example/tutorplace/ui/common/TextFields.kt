@@ -92,7 +92,7 @@ fun EmailTextField(
 
 @Composable
 fun PasswordTextField(
-	modifier: Modifier,
+	modifier: Modifier = Modifier,
 	value: String,
 	label: String,
 	isError: Boolean = false,
