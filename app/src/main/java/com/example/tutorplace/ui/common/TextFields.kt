@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction.Companion.Done
 import androidx.compose.ui.text.input.ImeAction.Companion.Next
 import androidx.compose.ui.text.input.KeyboardType.Companion.Email
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.input.KeyboardType.Companion.Password
 import androidx.compose.ui.text.input.KeyboardType.Companion.Phone
 import androidx.compose.ui.text.input.KeyboardType.Companion.Text
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -100,6 +102,7 @@ fun PasswordTextField(
 	onValueChanged: (String) -> Unit,
 ) {
 	var passwordVisible by remember { mutableStateOf(false) }
+
 	OutlinedTextField(
 		modifier = modifier
 			.fillMaxWidth()
@@ -185,11 +188,14 @@ fun PhoneTextField(
 	onNextClicked: () -> Unit,
 	onValueChanged: (String) -> Unit,
 ) {
+	val textFieldValue = remember(value) {
+		TextFieldValue(text = value, selection = TextRange(value.length))
+	}
 	OutlinedTextField(
 		modifier = modifier
 			.fillMaxWidth()
 			.focusable(),
-		value = value, // TODO разобраться с тем, как форматировать телефонный номер
+		value = textFieldValue,
 		shape = RoundedCornerShape(12.dp),
 		label = {
 			Text(
@@ -198,7 +204,7 @@ fun PhoneTextField(
 				color = Grey82
 			)
 		},
-		onValueChange = { onValueChanged(it) },
+		onValueChange = { onValueChanged(it.text) },
 		singleLine = true,
 		textStyle = Typography.labelMedium,
 		colors = outlinedTextFieldColors,
@@ -265,7 +271,6 @@ private fun TextFieldsPreview() {
 			onValueChanged = {},
 			onDoneClicked = {}
 		)
-
 		NameTextField(
 			modifier = Modifier.padding(horizontal = 16.dp),
 			value = "Name",

@@ -5,6 +5,7 @@ import java.util.Locale
 
 object FormatHelper {
 
+	private const val REQUIRED_NAME_LENGTH = 6
 	private const val REQUIRED_PASSWORD_LENGTH = 6
 
 	// region ==================== E-mail =====================
@@ -23,7 +24,28 @@ object FormatHelper {
 
 	// endregion
 
-	// region ==================== Password =====================
+	// region ==================== Name =====================
+
+	fun isValidName(text: String): Boolean {
+		return text.isNotEmpty() && text.all { it.isLetter() } && text.length > REQUIRED_NAME_LENGTH
+	}
+
+	// endregion
+
+	// region ==================== Phone =====================
+
+	fun isValidPhone(phone: String): Boolean {
+		return true
+	}
+
+	// endregion
+
+	// region ==================== Phone =====================
+
+	fun isValidTelegram(telegram: String): Boolean {
+		val regex = Regex("^[a-zA-Z0-9][a-zA-Z0-9_]{3,30}[a-zA-Z0-9]$")
+		return regex.matches(telegram)
+	}
 
 	// endregion
 

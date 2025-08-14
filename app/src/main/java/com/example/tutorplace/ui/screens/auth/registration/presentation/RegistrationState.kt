@@ -1,11 +1,16 @@
 package com.example.tutorplace.ui.screens.auth.registration.presentation
 
 import com.example.tutorplace.ui.base.BaseState
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState.RegistrationStep.FirstStep
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState.RegistrationStep.SecondStep
+import kotlin.reflect.KClass
 
 data class RegistrationState(
 	override val isLoading: Boolean = false,
 	override val throwable: Throwable? = null,
-	val registrationStep: RegistrationStep = RegistrationStep.FirstStep()
+	val firstStep: FirstStep = FirstStep(),
+	val secondStep: SecondStep = SecondStep(),
+	val currentStep: KClass<out RegistrationStep> = FirstStep::class
 ) : BaseState {
 
 	sealed interface RegistrationStep {
