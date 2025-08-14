@@ -13,8 +13,8 @@ class RegistrationViewModel @Inject constructor() :
 
 	override fun handleCommand(command: RegistrationCommand) = when (command) {
 		is OnAuthClicked -> sendEvent(RegistrationEvent.OnAuth)
-		is OnYandexButtonClicked,
-		is OnRegistrationClicked -> sendEvent(RegistrationEvent.OnHome)
+		is OnYandexButtonClicked -> sendEvent(RegistrationEvent.OnHome)
+		is OnRegistrationClicked -> setState(RegistrationReducer.reduce(state.value, command))
 		is NameChanged -> setState(RegistrationReducer.reduce(state.value, command))
 		is PhoneChanged -> setState(RegistrationReducer.reduce(state.value, command))
 		is TelegramChanged -> setState(RegistrationReducer.reduce(state.value, command))

@@ -7,6 +7,7 @@ import com.example.tutorplace.ui.screens.auth.registration.presentation.Registra
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.NameChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnFirstStep
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnNextClicked
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnRegistrationClicked
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.PasswordChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.PhoneChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.TelegramChanged
@@ -23,6 +24,7 @@ object RegistrationReducer : BaseReducer<RegistrationState, RegistrationCommand>
 		is PasswordChanged -> reducePasswordChanged(oldState, command)
 		is ConfirmPasswordChanged -> reduceConfirmPasswordChanged(oldState, command)
 		is OnNextClicked -> reduceOnNext(oldState)
+		is OnRegistrationClicked -> reduceOnRegistrationClicked(oldState)
 		is OnFirstStep -> oldState.copy(currentStep = RegistrationState.RegistrationStep.FirstStep::class)
 		else -> oldState
 	}
@@ -113,6 +115,24 @@ object RegistrationReducer : BaseReducer<RegistrationState, RegistrationCommand>
 			)
 		} else {
 			oldState.copy(currentStep = RegistrationState.RegistrationStep.SecondStep::class)
+		}
+	}
+
+	private fun reduceOnRegistrationClicked(oldState: RegistrationState): RegistrationState {
+		val isEmailError = FormatHelper.isValidEmail(oldState.secondStep.email).not()
+		val isPasswordError = FormatHelper.isValidPassword(oldState.secondStep.password).not()
+		val isConfirmPasswordError = FormatHelper.isValidPassword(oldState.secondStep.password)
+			.not() || oldState.secondStep.password != oldState.secondStep.confirmPassword
+		return if (isEmailError || isPasswordError || isConfirmPasswordError) {
+			oldState.copy(
+				secondStep = oldState.secondStep.copy(
+					isEmailError = isEmailError,
+					isPasswordError = isPasswordError,
+					isConfirmPasswordError = isConfirmPasswordError
+				)
+			)
+		} else {
+			oldState.copy(isLoading = true)
 		}
 	}
 }

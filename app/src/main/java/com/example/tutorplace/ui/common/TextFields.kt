@@ -189,7 +189,11 @@ fun PhoneTextField(
 	onValueChanged: (String) -> Unit,
 ) {
 	val textFieldValue = remember(value) {
-		TextFieldValue(text = value, selection = TextRange(value.length))
+		val formattedPhone = formatRussianPhone(value)
+		TextFieldValue(
+			text = formattedPhone,
+			selection = TextRange(formattedPhone.length)
+		)
 	}
 	OutlinedTextField(
 		modifier = modifier
@@ -204,7 +208,13 @@ fun PhoneTextField(
 				color = Grey82
 			)
 		},
-		onValueChange = { onValueChanged(it.text) },
+		onValueChange = { newValue ->
+			val filteredPhone = newValue.text
+				.filter { it.isDigit() }
+				.take(11)
+				.replaceFirstChar { if (it == '8') '7' else it }
+			onValueChanged(filteredPhone)
+		},
 		singleLine = true,
 		textStyle = Typography.labelMedium,
 		colors = outlinedTextFieldColors,
@@ -212,6 +222,40 @@ fun PhoneTextField(
 		keyboardOptions = KeyboardOptions(keyboardType = Phone, imeAction = Next),
 		keyboardActions = KeyboardActions(onNext = { onNextClicked() }),
 	)
+}
+
+private fun formatRussianPhone(phone: String): String {
+	if (phone.isEmpty()) return ""
+	// Оставляем только цифры
+	var digits = phone.filter { it.isDigit() }
+
+	// Если начинается на 8, меняем на 7
+	if (digits.startsWith("8")) {
+		digits = "7" + digits.drop(1)
+	}
+
+	// Если начинается на 9 или 1 и т.п., добавляем 7 в начало
+	if (digits.isNotEmpty() && digits[0] != '7') {
+		digits = "7$digits"
+	}
+
+	// Если пусто — возвращаем "+7"
+	if (digits.isEmpty()) return "+7"
+
+	// Формируем результат
+	val sb = StringBuilder("+")
+	for (i in digits.indices) {
+		when (i) {
+			0 -> sb.append(digits[i])                  // +7
+			1 -> sb.append(" (").append(digits[i])     // +7 (9
+			3 -> sb.append(digits[i]).append(") ")     // +7 (99)
+			6 -> sb.append(digits[i]).append(" ")      // +7 (999) 999
+			8 -> sb.append(digits[i]).append("-")      // +7 (999) 999 99-
+			else -> sb.append(digits[i])
+		}
+	}
+
+	return sb.dropLastWhile { !it.isDigit() }.toString()
 }
 
 @Composable
