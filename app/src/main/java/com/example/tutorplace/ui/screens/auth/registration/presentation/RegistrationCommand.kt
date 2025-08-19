@@ -15,6 +15,5 @@ sealed interface RegistrationCommand : BaseCommand {
 	object OnYandexButtonClicked : RegistrationCommand
 	object OnOfferClicked: RegistrationCommand
 	object OnTermsClicked: RegistrationCommand
-	object OnAuthClicked : RegistrationCommand
 	object OnFirstStep: RegistrationCommand
 }

@@ -45,7 +45,6 @@ import com.example.tutorplace.ui.screens.auth.common.YandexButton
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.ConfirmPasswordChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.EmailChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.NameChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnAuthClicked
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnFirstStep
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnNextClicked
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnOfferClicked
@@ -98,7 +97,6 @@ fun RegistrationScreen(navController: NavController) {
 					else -> null
 				}
 			)
-
 			AnimatedContent(
 				modifier = Modifier.padding(top = 18.dp),
 				targetState = state.currentStep,
@@ -167,8 +165,9 @@ fun RegistrationScreen(navController: NavController) {
 					else -> return@Column
 				},
 				isLoading = state.isLoading,
-				isEnabled = !state.isLoading,
+				isEnabled = true,
 			) {
+				if (state.isLoading) return@PurpleButton
 				val command = when (state.currentStep) {
 					FirstStep::class -> OnNextClicked
 					SecondStep::class -> OnRegistrationClicked
@@ -222,7 +221,7 @@ fun RegistrationScreen(navController: NavController) {
 						link = stringResource(R.string.restore_password_already_have_account_spannable),
 						tag = "ENTRY",
 						style = SpanStyle(color = PurpleCC),
-						onClick = { viewModel.handleCommand(OnAuthClicked) }
+						onClick = { navController.popBackStack() }
 					)
 				),
 				textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
@@ -239,8 +238,9 @@ private fun ObserveViewModelEvents(
 	LaunchedEffect(Unit) {
 		viewModel.event.collect { event ->
 			when (event) {
-				RegistrationEvent.OnAuth -> navController.popBackStack()
-				RegistrationEvent.OnHome -> navController.navigate(Destinations.Home.route)
+				RegistrationEvent.OnHome -> navController.navigate(Destinations.Home.route) {
+					popUpTo(Destinations.AuthorizationFlow.FLOW_ROUTE) { inclusive = true }
+				}
 			}
 		}
 	}

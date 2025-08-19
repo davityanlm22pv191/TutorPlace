@@ -123,16 +123,12 @@ object RegistrationReducer : BaseReducer<RegistrationState, RegistrationCommand>
 		val isPasswordError = FormatHelper.isValidPassword(oldState.secondStep.password).not()
 		val isConfirmPasswordError = FormatHelper.isValidPassword(oldState.secondStep.password)
 			.not() || oldState.secondStep.password != oldState.secondStep.confirmPassword
-		return if (isEmailError || isPasswordError || isConfirmPasswordError) {
-			oldState.copy(
-				secondStep = oldState.secondStep.copy(
-					isEmailError = isEmailError,
-					isPasswordError = isPasswordError,
-					isConfirmPasswordError = isConfirmPasswordError
-				)
+		return oldState.copy(
+			secondStep = oldState.secondStep.copy(
+				isEmailError = isEmailError,
+				isPasswordError = isPasswordError,
+				isConfirmPasswordError = isConfirmPasswordError
 			)
-		} else {
-			oldState.copy(isLoading = true)
-		}
+		)
 	}
 }
