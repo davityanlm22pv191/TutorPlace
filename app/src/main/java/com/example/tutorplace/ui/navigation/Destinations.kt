@@ -11,6 +11,8 @@ sealed class Destinations(open val route: String) {
 
 		object RestorePassword : AuthorizationFlow("restore_password")
 
+		object Registration : AuthorizationFlow("registration")
+
 		// TODO ADD HERE OTHER AUTH SCREENS
 	}
 

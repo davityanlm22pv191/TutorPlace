@@ -3,7 +3,11 @@
 
 	<!-- 	Common -->
 	<string name="common_or">или</string>
-	<string name="common_your_email">Ваша электронная почта</string>
+	<string name="common_next">Далее</string>
+
+	<!-- 	Common Auth -->
+	<string name="common_auth_your_email">Ваша электронная почта</string>
+	<string name="common_auth_already_have_account">Уже есть аккаунт? Войти</string>
 
 	<!-- 	Authorization -->
 	<string name="auth_register">Зарегистрироваться</string>
@@ -22,7 +26,20 @@
 	<string name="restore_password_description_with_email_format">Новый пароль был отправлен на почту %s</string>
 	<string name="restore_password_retry_send_button">Отправить повторно</string>
 	<string name="restore_password_restore_password">Восстановить пароль</string>
-	<string name="restore_password_already_have_account">Уже есть аккаунт? Войти</string>
 	<string name="restore_password_already_have_account_spannable">Войти</string>
+
+	<!-- 	Registration -->
+	<string name="registration_title">Регистрация профиля</string>
+	<string name="registration_your_name">Ваше имя</string>
+	<string name="registration_your_phone_number">Ваш номер телефона</string>
+	<string name="registration_your_telegram">Ваш телеграм</string>
+	<string name="registration_your_email">Ваша электронная почта*</string>
+	<string name="registration_your_password">Введите пароль*</string>
+	<string name="registration_repeat_password">Повторите пароль*</string>
+	<string name="registration_registration">Зарегистрироваться</string>
+	<string name="registration_offer_and_terms">Нажимая на кнопку, я принимаю Оферту и соглашаюсь на Обработку персональных данных</string>
+	<string name="registration_offer_span">Оферту</string>
+	<string name="registration_terms_span">Обработку персональных данных</string>
+
 
 </resources>

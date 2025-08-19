@@ -25,11 +25,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction.Companion.Done
 import androidx.compose.ui.text.input.ImeAction.Companion.Next
 import androidx.compose.ui.text.input.KeyboardType.Companion.Email
 import androidx.compose.ui.text.input.KeyboardType.Companion.Password
+import androidx.compose.ui.text.input.KeyboardType.Companion.Phone
+import androidx.compose.ui.text.input.KeyboardType.Companion.Text
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -90,7 +94,7 @@ fun EmailTextField(
 
 @Composable
 fun PasswordTextField(
-	modifier: Modifier,
+	modifier: Modifier = Modifier,
 	value: String,
 	label: String,
 	isError: Boolean = false,
@@ -98,6 +102,7 @@ fun PasswordTextField(
 	onValueChanged: (String) -> Unit,
 ) {
 	var passwordVisible by remember { mutableStateOf(false) }
+
 	OutlinedTextField(
 		modifier = modifier
 			.fillMaxWidth()
@@ -142,6 +147,149 @@ fun PasswordTextField(
 	)
 }
 
+@Composable
+fun NameTextField(
+	modifier: Modifier = Modifier,
+	value: String,
+	label: String,
+	isError: Boolean = false,
+	onNextClicked: () -> Unit,
+	onValueChanged: (String) -> Unit,
+) {
+	OutlinedTextField(
+		modifier = modifier
+			.fillMaxWidth()
+			.focusable(),
+		shape = RoundedCornerShape(12.dp),
+		value = value,
+		label = {
+			Text(
+				text = label,
+				style = Typography.labelSmall,
+				color = Grey82
+			)
+		},
+		onValueChange = { onValueChanged(it) },
+		singleLine = true,
+		textStyle = Typography.labelMedium,
+		colors = outlinedTextFieldColors,
+		isError = isError,
+		keyboardOptions = KeyboardOptions(keyboardType = Text, imeAction = Next),
+		keyboardActions = KeyboardActions(onNext = { onNextClicked() }),
+	)
+}
+
+@Composable
+fun PhoneTextField(
+	modifier: Modifier = Modifier,
+	value: String,
+	label: String,
+	isError: Boolean = false,
+	onNextClicked: () -> Unit,
+	onValueChanged: (String) -> Unit,
+) {
+	val textFieldValue = remember(value) {
+		val formattedPhone = formatRussianPhone(value)
+		TextFieldValue(
+			text = formattedPhone,
+			selection = TextRange(formattedPhone.length)
+		)
+	}
+	OutlinedTextField(
+		modifier = modifier
+			.fillMaxWidth()
+			.focusable(),
+		value = textFieldValue,
+		shape = RoundedCornerShape(12.dp),
+		label = {
+			Text(
+				text = label,
+				style = Typography.labelSmall,
+				color = Grey82
+			)
+		},
+		onValueChange = { newValue ->
+			val filteredPhone = newValue.text
+				.filter { it.isDigit() }
+				.take(11)
+				.replaceFirstChar { if (it == '8') '7' else it }
+			onValueChanged(filteredPhone)
+		},
+		singleLine = true,
+		textStyle = Typography.labelMedium,
+		colors = outlinedTextFieldColors,
+		isError = isError,
+		keyboardOptions = KeyboardOptions(keyboardType = Phone, imeAction = Next),
+		keyboardActions = KeyboardActions(onNext = { onNextClicked() }),
+	)
+}
+
+private fun formatRussianPhone(phone: String): String {
+	if (phone.isEmpty()) return ""
+	// Оставляем только цифры
+	var digits = phone.filter { it.isDigit() }
+
+	// Если начинается на 8, меняем на 7
+	if (digits.startsWith("8")) {
+		digits = "7" + digits.drop(1)
+	}
+
+	// Если начинается на 9 или 1 и т.п., добавляем 7 в начало
+	if (digits.isNotEmpty() && digits[0] != '7') {
+		digits = "7$digits"
+	}
+
+	// Если пусто — возвращаем "+7"
+	if (digits.isEmpty()) return "+7"
+
+	// Формируем результат
+	val sb = StringBuilder("+")
+	for (i in digits.indices) {
+		when (i) {
+			0 -> sb.append(digits[i])                  // +7
+			1 -> sb.append(" (").append(digits[i])     // +7 (9
+			3 -> sb.append(digits[i]).append(") ")     // +7 (99)
+			6 -> sb.append(digits[i]).append(" ")      // +7 (999) 999
+			8 -> sb.append(digits[i]).append("-")      // +7 (999) 999 99-
+			else -> sb.append(digits[i])
+		}
+	}
+
+	return sb.dropLastWhile { !it.isDigit() }.toString()
+}
+
+@Composable
+fun TelegramTextField(
+	modifier: Modifier = Modifier,
+	value: String,
+	label: String,
+	isError: Boolean = false,
+	onDoneClicked: () -> Unit,
+	onValueChanged: (String) -> Unit,
+) {
+	OutlinedTextField(
+		modifier = modifier
+			.fillMaxWidth()
+			.focusable(),
+		value = value,
+		shape = RoundedCornerShape(12.dp),
+		label = {
+			Text(
+				text = label,
+				style = Typography.labelSmall,
+				color = Grey82
+			)
+		},
+		onValueChange = { onValueChanged(it) },
+		singleLine = true,
+		textStyle = Typography.labelMedium,
+		colors = outlinedTextFieldColors,
+		isError = isError,
+		keyboardOptions = KeyboardOptions(keyboardType = Email, imeAction = Next),
+		keyboardActions = KeyboardActions(onNext = { onDoneClicked() }),
+	)
+}
+
 @Preview
 @Composable
 private fun TextFieldsPreview() {
@@ -154,7 +302,7 @@ private fun TextFieldsPreview() {
 		EmailTextField(
 			modifier = Modifier.padding(horizontal = 16.dp),
 			value = "example@google.com",
-			label = stringResource(R.string.common_your_email),
+			label = stringResource(R.string.common_auth_your_email),
 			isError = true,
 			onValueChanged = {},
 			onNextClicked = {}
@@ -163,6 +311,30 @@ private fun TextFieldsPreview() {
 			modifier = Modifier.padding(horizontal = 16.dp),
 			value = "123456",
 			label = stringResource(R.string.authorization_your_password),
+			isError = false,
+			onValueChanged = {},
+			onDoneClicked = {}
+		)
+		NameTextField(
+			modifier = Modifier.padding(horizontal = 16.dp),
+			value = "Name",
+			label = stringResource(R.string.registration_your_name),
+			isError = false,
+			onValueChanged = {},
+			onNextClicked = {}
+		)
+		PhoneTextField(
+			modifier = Modifier.padding(horizontal = 16.dp),
+			value = "79999999999",
+			label = stringResource(R.string.registration_your_phone_number),
+			isError = false,
+			onNextClicked = {},
+			onValueChanged = {}
+		)
+		TelegramTextField(
+			modifier = Modifier.padding(horizontal = 16.dp),
+			value = "@someTelegramAddress",
+			label = stringResource(R.string.registration_your_telegram),
 			isError = false,
 			onValueChanged = {},
 			onDoneClicked = {}

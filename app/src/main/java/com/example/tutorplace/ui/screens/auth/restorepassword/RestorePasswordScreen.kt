@@ -88,7 +88,7 @@ fun RestorePasswordScreen(navController: NavController) {
 								.fillMaxWidth()
 								.padding(top = 18.dp),
 							value = state.email,
-							label = stringResource(R.string.common_your_email),
+							label = stringResource(R.string.common_auth_your_email),
 							isError = state.isEmailError,
 							onNextClicked = { focusManager.clearFocus() },
 							onValueChanged = { email -> viewModel.handleCommand(UpdateEmail(email)) }
@@ -125,7 +125,7 @@ fun RestorePasswordScreen(navController: NavController) {
 					modifier = Modifier
 						.padding(top = 16.dp)
 						.fillMaxWidth(),
-					text = stringResource(R.string.restore_password_already_have_account),
+					text = stringResource(R.string.common_auth_already_have_account),
 					links = listOf(
 						SpanLinkData(
 							link = stringResource(R.string.restore_password_already_have_account_spannable),

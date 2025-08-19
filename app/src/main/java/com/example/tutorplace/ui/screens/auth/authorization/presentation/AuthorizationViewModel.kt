@@ -25,7 +25,7 @@ class AuthorizationViewModel @Inject constructor() :
 		is PasswordHiddenClicked -> setState(AuthorizationReducer.reduce(state.value, command))
 		is PasswordChanged -> setState(AuthorizationReducer.reduce(state.value, command))
 		is RestoreClicked -> sendEvent(AuthorizationEvent.OnRestorePassword)
-		is RegistrationClicked -> sendEvent(AuthorizationEvent.OnHome)
+		is RegistrationClicked -> sendEvent(AuthorizationEvent.OnRegistration)
 		is YandexClicked -> sendEvent(AuthorizationEvent.OnHome)
 	}
 }
