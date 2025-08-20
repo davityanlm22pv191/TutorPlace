@@ -1,12 +1,6 @@
 package com.example.tutorplace.ui.screens.auth.registration.presentation
 
 import com.example.tutorplace.ui.base.BaseViewModel
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.ConfirmPasswordChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.EmailChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.NameChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.PasswordChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.PhoneChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.TelegramChanged
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -17,23 +11,26 @@ class RegistrationViewModel @Inject constructor() :
 	override fun initialState() = RegistrationState()
 
 	override fun onEvent(event: RegistrationEvent) = when (event) {
-		is RegistrationEvent.UI -> when (event) {
-			is ConfirmPasswordChanged -> setState(RegistrationReducer.reduce(state.value, event))
-			is EmailChanged -> setState(RegistrationReducer.reduce(state.value, event))
-			is NameChanged -> setState(RegistrationReducer.reduce(state.value, event))
-			is PasswordChanged -> setState(RegistrationReducer.reduce(state.value, event))
-			is PhoneChanged -> setState(RegistrationReducer.reduce(state.value, event))
-			is TelegramChanged -> setState(RegistrationReducer.reduce(state.value, event))
-		}
+		is RegistrationEvent.UI -> setState(RegistrationReducer.reduce(state.value, event))
 		is RegistrationEvent.Domain -> Unit
 	}
 
 	fun onFirstStepClicked() {
-		setState(RegistrationReducer.reduce(state.value, RegistrationEvent.Domain.SwitchToFirstStep))
+		setState(
+			RegistrationReducer.reduce(
+				state.value,
+				RegistrationEvent.Domain.SwitchToFirstStep
+			)
+		)
 	}
 
 	fun onSecondStepClicked() {
-		setState(RegistrationReducer.reduce(state.value, RegistrationEvent.Domain.SwitchToSecondStep))
+		setState(
+			RegistrationReducer.reduce(
+				state.value,
+				RegistrationEvent.Domain.SwitchToSecondStep
+			)
+		)
 	}
 
 	fun onRegisterClicked() {

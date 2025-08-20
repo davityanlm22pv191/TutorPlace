@@ -4,7 +4,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.tutorplace.data.auth.AuthService
 import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.ui.base.BaseViewModel
-import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.*
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailErrorSending
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailIsNotValid
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailSending
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailSent
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.RetrySendTimeUpdated
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -22,13 +26,8 @@ class RestorePasswordViewModel @Inject constructor(
 
 	override fun initialState() = RestorePasswordState()
 
-	override fun onEvent(event: RestorePasswordEvent) = when(event){
-		is EmailErrorSending -> TODO()
-		is EmailIsNotValid -> TODO()
-		is EmailSending -> TODO()
-		is EmailSent -> TODO()
-		is RetrySendTimeUpdated -> TODO()
-		is EmailChanged -> setState(RestorePasswordReducer.reduce(state.value, event))
+	override fun onEvent(event: RestorePasswordEvent) {
+		setState(RestorePasswordReducer.reduce(state.value, event))
 	}
 
 	fun authorizeClicked() {

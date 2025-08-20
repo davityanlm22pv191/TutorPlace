@@ -1,8 +1,6 @@
 package com.example.tutorplace.ui.screens.auth.authorization.presentation
 
 import com.example.tutorplace.ui.base.BaseViewModel
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.EmailChanged
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.PasswordChanged
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -12,9 +10,8 @@ class AuthorizationViewModel @Inject constructor() :
 
 	override fun initialState() = AuthorizationState()
 
-	override fun onEvent(event: AuthorizationEvent) = when (event) {
-		is EmailChanged -> setState(AuthorizationReducer.reduce(state.value, event))
-		is PasswordChanged -> setState(AuthorizationReducer.reduce(state.value, event))
+	override fun onEvent(event: AuthorizationEvent) {
+		setState(AuthorizationReducer.reduce(state.value, event))
 	}
 
 	fun onRestoreClicked() {
