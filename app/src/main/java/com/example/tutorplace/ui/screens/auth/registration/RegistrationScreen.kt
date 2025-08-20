@@ -42,19 +42,13 @@ import com.example.tutorplace.ui.navigation.Destinations
 import com.example.tutorplace.ui.screens.auth.common.AuthSectionDivider
 import com.example.tutorplace.ui.screens.auth.common.Header
 import com.example.tutorplace.ui.screens.auth.common.YandexButton
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.ConfirmPasswordChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.EmailChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.NameChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnFirstStep
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnNextClicked
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnOfferClicked
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnRegistrationClicked
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnTermsClicked
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnYandexButtonClicked
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.PasswordChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.PhoneChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.TelegramChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEffect
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.ConfirmPasswordChanged
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.EmailChanged
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.NameChanged
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.PasswordChanged
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.PhoneChanged
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.TelegramChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState.RegistrationStep.FirstStep
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState.RegistrationStep.SecondStep
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationViewModel
@@ -92,7 +86,7 @@ fun RegistrationScreen(navController: NavController) {
 				onBackButtonClicked = when (state.currentStep) {
 					FirstStep::class -> null
 					SecondStep::class -> {
-						{ viewModel.handleCommand(OnFirstStep) }
+						{ viewModel::onFirstStepClicked }
 					}
 					else -> null
 				}
@@ -109,21 +103,21 @@ fun RegistrationScreen(navController: NavController) {
 								label = stringResource(R.string.registration_your_name),
 								isError = state.firstStep.isNameError,
 								onNextClicked = {},
-								onValueChanged = { viewModel.handleCommand(NameChanged(it)) }
+								onValueChanged = { viewModel.onEvent(NameChanged(it)) }
 							)
 							PhoneTextField(
 								value = state.firstStep.phoneNumber,
 								label = stringResource(R.string.registration_your_phone_number),
 								isError = state.firstStep.isPhoneNumberError,
 								onNextClicked = {},
-								onValueChanged = { viewModel.handleCommand(PhoneChanged(it)) }
+								onValueChanged = { viewModel.onEvent(PhoneChanged(it)) }
 							)
 							TelegramTextField(
 								value = state.firstStep.telegram,
 								label = stringResource(R.string.registration_your_telegram),
 								isError = state.firstStep.isTelegramError,
-								onDoneClicked = { viewModel.handleCommand(OnNextClicked) },
-								onValueChanged = { viewModel.handleCommand(TelegramChanged(it)) }
+								onDoneClicked = { viewModel::onSecondStepClicked },
+								onValueChanged = { viewModel.onEvent(TelegramChanged(it)) }
 							)
 						}
 						SecondStep::class -> {
@@ -132,21 +126,21 @@ fun RegistrationScreen(navController: NavController) {
 								label = stringResource(R.string.common_auth_your_email),
 								isError = state.secondStep.isEmailError,
 								onNextClicked = {},
-								onValueChanged = { viewModel.handleCommand(EmailChanged(it)) }
+								onValueChanged = { viewModel.onEvent(EmailChanged(it)) }
 							)
 							PasswordTextField(
 								value = state.secondStep.password,
 								label = stringResource(R.string.registration_your_password),
 								isError = state.secondStep.isPasswordError,
 								onDoneClicked = {},
-								onValueChanged = { viewModel.handleCommand(PasswordChanged(it)) }
+								onValueChanged = { viewModel.onEvent(PasswordChanged(it)) }
 							)
 							PasswordTextField(
 								value = state.secondStep.confirmPassword,
 								label = stringResource(R.string.registration_repeat_password),
 								isError = state.secondStep.isConfirmPasswordError,
 								onDoneClicked = {},
-								onValueChanged = { viewModel.handleCommand(ConfirmPasswordChanged(it)) }
+								onValueChanged = { viewModel.onEvent(ConfirmPasswordChanged(it)) }
 							)
 						}
 						else -> {}
@@ -168,12 +162,11 @@ fun RegistrationScreen(navController: NavController) {
 				isEnabled = true,
 			) {
 				if (state.isLoading) return@PurpleButton
-				val command = when (state.currentStep) {
-					FirstStep::class -> OnNextClicked
-					SecondStep::class -> OnRegistrationClicked
+				when (state.currentStep) {
+					FirstStep::class -> viewModel::onSecondStepClicked
+					SecondStep::class -> viewModel::onRegisterClicked
 					else -> return@PurpleButton
 				}
-				viewModel.handleCommand(command)
 			}
 			AuthSectionDivider(
 				modifier = Modifier
@@ -181,7 +174,7 @@ fun RegistrationScreen(navController: NavController) {
 					.padding(top = 8.dp)
 			)
 			YandexButton(modifier = Modifier.padding(top = 8.dp)) {
-				viewModel.handleCommand(OnYandexButtonClicked)
+				viewModel::onYandexClicked
 			}
 			SpanClickableText(
 				modifier = Modifier
@@ -193,13 +186,13 @@ fun RegistrationScreen(navController: NavController) {
 						link = stringResource(R.string.registration_offer_span),
 						tag = "OFFER",
 						style = SpanStyle(color = PurpleCC),
-						onClick = { viewModel.handleCommand(OnOfferClicked) },
+						onClick = { viewModel::onOfferClicked },
 					),
 					SpanLinkData(
 						link = stringResource(R.string.registration_terms_span),
 						tag = "TERMS",
 						style = SpanStyle(color = PurpleCC),
-						onClick = { viewModel.handleCommand(OnTermsClicked) },
+						onClick = { viewModel::onTermsClicked },
 					)
 				),
 				textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center),
@@ -236,9 +229,9 @@ private fun ObserveViewModelEvents(
 	navController: NavController
 ) {
 	LaunchedEffect(Unit) {
-		viewModel.event.collect { event ->
-			when (event) {
-				RegistrationEvent.OnHome -> navController.navigate(Destinations.Home.route) {
+		viewModel.effect.collect { effect ->
+			when (effect) {
+				RegistrationEffect.NavigateToHome -> navController.navigate(Destinations.Home.route) {
 					popUpTo(Destinations.AuthorizationFlow.FLOW_ROUTE) { inclusive = true }
 				}
 			}

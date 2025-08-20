@@ -1,30 +1,29 @@
 package com.example.tutorplace.ui.screens.auth.authorization.presentation
 
 import com.example.tutorplace.ui.base.BaseReducer
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationCommand.EmailChanged
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationCommand.PasswordChanged
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.EmailChanged
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.PasswordChanged
 
-object AuthorizationReducer : BaseReducer<AuthorizationState, AuthorizationCommand> {
+object AuthorizationReducer : BaseReducer<AuthorizationState, AuthorizationEvent> {
 
 	override fun reduce(
 		oldState: AuthorizationState,
-		command: AuthorizationCommand
-	): AuthorizationState = when (command) {
-		is EmailChanged -> reduceEmailChanged(command, oldState)
-		is PasswordChanged -> reducePasswordChanged(command, oldState)
-		else -> oldState
+		event: AuthorizationEvent
+	): AuthorizationState = when (event) {
+		is EmailChanged -> reduceEmailChanged(event, oldState)
+		is PasswordChanged -> reducePasswordChanged(event, oldState)
 	}
 
 	private fun reduceEmailChanged(
-		command: EmailChanged,
+		event: EmailChanged,
 		oldState: AuthorizationState
-	) = oldState.copy(email = command.enteredEmail, isEmailError = false)
+	) = oldState.copy(email = event.enteredEmail, isEmailError = false)
 
 	private fun reducePasswordChanged(
-		command: PasswordChanged,
+		event: PasswordChanged,
 		oldState: AuthorizationState
 	) = oldState.copy(
-		password = command.enteredPassword,
+		password = event.enteredPassword,
 		isPasswordError = false
 	)
 }

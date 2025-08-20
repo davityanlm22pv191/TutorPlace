@@ -1,5 +1,5 @@
 package com.example.tutorplace.ui.base
 
-interface BaseReducer<State: BaseState, Command: BaseCommand> {
-	fun reduce(oldState: State, command: Command): State
+interface BaseReducer<State: BaseState, Event: BaseEvent> {
+	fun reduce(oldState: State, event: Event): State
 }

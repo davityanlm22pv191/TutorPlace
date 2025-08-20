@@ -10,10 +10,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.tutorplace.ui.activity.main.MainActivity
-import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityCommand.ResolveNextScreen
-import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEvent
-import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEvent.NavigateToAuth
-import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEvent.NavigateToHome
+import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEffect
+import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEffect.NavigateToAuthFlow
+import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEffect.NavigateToHome
+import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEvent.ResolveNextScreen
 import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityViewModel
 import com.example.tutorplace.ui.navigation.Destinations
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,28 +38,26 @@ class SplashActivity : ComponentActivity() {
 				.setDuration(500L)
 				.withEndAction {
 					splashScreenView.remove()
-					resolveNextActivity()
+					viewModel.onEvent(ResolveNextScreen)
 					finish()
 				}.start()
 		}
 		super.onCreate(savedInstanceState)
 	}
 
-	private fun resolveNextActivity() = viewModel.handleCommand(ResolveNextScreen)
-
 	private fun observeViewModel() {
 		lifecycleScope.launch {
 			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				viewModel.event.collect { splashActivityEvent ->
-					handlingViewModelEvent(splashActivityEvent)
+				viewModel.effect.collect { effect ->
+					handlingViewModelEffect(effect)
 				}
 			}
 		}
 	}
 
-	private fun handlingViewModelEvent(event: SplashActivityEvent) {
-		val startDestination = when(event) {
-			NavigateToAuth -> Destinations.AuthorizationFlow.FLOW_ROUTE
+	private fun handlingViewModelEffect(effect: SplashActivityEffect) {
+		val startDestination = when (effect) {
+			NavigateToAuthFlow -> Destinations.AuthorizationFlow.FLOW_ROUTE
 			NavigateToHome -> Destinations.Home.route
 		}
 		val intent = Intent(this, MainActivity::class.java).apply {

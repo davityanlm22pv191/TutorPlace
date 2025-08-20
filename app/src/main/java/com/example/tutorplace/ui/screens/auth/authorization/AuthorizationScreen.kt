@@ -39,11 +39,11 @@ import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
 import com.example.tutorplace.ui.navigation.Destinations
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationCommand
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.OnHome
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.OnRegistration
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.OnRestorePassword
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.OnSupport
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToHome
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToRegistration
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToRestorePassword
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToSupport
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationViewModel
 import com.example.tutorplace.ui.screens.auth.common.AuthSectionDivider
 import com.example.tutorplace.ui.screens.auth.common.Header
@@ -92,7 +92,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 				label = stringResource(R.string.common_auth_your_email),
 				isError = state.isEmailError,
 				onNextClicked = { passwordFocusRequester.requestFocus() }
-			) { viewModel.handleCommand(AuthorizationCommand.EmailChanged(it)) }
+			) { viewModel.onEvent(AuthorizationEvent.EmailChanged(it)) }
 
 			PasswordTextField(
 				modifier = Modifier
@@ -102,15 +102,15 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 				value = state.password,
 				label = stringResource(R.string.authorization_your_password),
 				isError = state.isPasswordError,
-				onDoneClicked = { viewModel.handleCommand(AuthorizationCommand.AuthorizeClicked) }
-			) { viewModel.handleCommand(AuthorizationCommand.PasswordChanged(it)) }
+				onDoneClicked = { viewModel::onAuthorizeClicked }
+			) { viewModel.onEvent(AuthorizationEvent.PasswordChanged(it)) }
 
 			TextButton(
 				modifier = Modifier
 					.align(Alignment.Start)
 					.padding(start = 10.dp),
 				colors = ButtonDefaults.textButtonColors(contentColor = PurpleCC),
-				onClick = { viewModel.handleCommand(AuthorizationCommand.RestoreClicked) },
+				onClick = { viewModel::onRestoreClicked },
 			) {
 				Text(
 					modifier = Modifier.padding(top = 6.dp),
@@ -125,7 +125,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 					.padding(horizontal = 20.dp),
 				text = stringResource(R.string.authorization_entry),
 				isEnabled = state.isLoginButtonEnabled
-			) { viewModel.handleCommand(AuthorizationCommand.AuthorizeClicked) }
+			) { viewModel::onAuthorizeClicked }
 			AuthSectionDivider(
 				modifier = Modifier
 					.padding(top = 8.dp)
@@ -135,7 +135,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 				modifier = Modifier
 					.padding(top = 8.dp)
 					.padding(horizontal = 20.dp)
-			) { viewModel.handleCommand(AuthorizationCommand.YandexClicked) }
+			) { viewModel::onYandexClicked }
 			SpanClickableText(
 				modifier = Modifier
 					.padding(top = 12.dp)
@@ -146,7 +146,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 						link = stringResource(R.string.authorization_email_error_support_hint_spannable),
 						tag = "SUPPORT",
 						SpanStyle(color = PurpleCC),
-						onClick = { viewModel.handleCommand(AuthorizationCommand.SupportClicked) }
+						onClick = { viewModel::onSupportClicked }
 					)
 				),
 				textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
@@ -163,7 +163,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 						link = stringResource(R.string.auth_register),
 						tag = "REGISTRATION",
 						SpanStyle(color = PurpleCC),
-						onClick = { viewModel.handleCommand(AuthorizationCommand.RegistrationClicked) }
+						onClick = { viewModel::onRegistrationClicked }
 					)
 				),
 				textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center),
@@ -178,12 +178,12 @@ private fun ObserveViewModelEvents(
 	navController: NavController
 ) {
 	LaunchedEffect(Unit) {
-		viewModel.event.collect { event ->
-			when (event) {
-				is OnHome -> navController.navigate(Destinations.Home.route)
-				is OnRestorePassword -> navController.navigate(Destinations.AuthorizationFlow.RestorePassword.route)
-				is OnRegistration -> navController.navigate(Destinations.AuthorizationFlow.Registration.route)
-				is OnSupport -> navController.navigate(Destinations.Home.route) // TODO THIS IS MOCK ROUTE
+		viewModel.effect.collect { effect ->
+			when (effect) {
+				is NavigateToHome -> navController.navigate(Destinations.Home.route)
+				is NavigateToRestorePassword -> navController.navigate(Destinations.AuthorizationFlow.RestorePassword.route)
+				is NavigateToRegistration -> navController.navigate(Destinations.AuthorizationFlow.Registration.route)
+				is NavigateToSupport -> navController.navigate(Destinations.Home.route) // TODO THIS IS MOCK ROUTE
 			}
 		}
 	}
