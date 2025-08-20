@@ -17,7 +17,7 @@ abstract class BaseViewModel<Event : BaseEvent, State : BaseState, Effect : Base
 	val event: SharedFlow<Event>
 		get() = _event.asSharedFlow()
 
-	private val _effects = Channel<Effect>(capacity = Channel.BUFFERED)
+	private val _effects = Channel<Effect>(capacity = Channel.CONFLATED)
 	val effect = _effects.receiveAsFlow()
 
 	private val _state = MutableStateFlow(initialState())

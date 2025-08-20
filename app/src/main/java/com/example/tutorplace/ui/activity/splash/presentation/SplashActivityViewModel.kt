@@ -1,7 +1,7 @@
 package com.example.tutorplace.ui.activity.splash.presentation
 
 import com.example.tutorplace.data.credentials.CredentialsStorage
-import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEvent.ResolveNextScreen
+import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEvent.SplashAnimationEnded
 import com.example.tutorplace.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -14,7 +14,7 @@ class SplashActivityViewModel @Inject constructor(
 	override fun initialState() = SplashActivityState()
 
 	override fun onEvent(event: SplashActivityEvent) = when (event) {
-		is ResolveNextScreen -> resolveNextScreen()
+		is SplashAnimationEnded -> resolveNextScreen()
 	}
 
 	private fun resolveNextScreen() {

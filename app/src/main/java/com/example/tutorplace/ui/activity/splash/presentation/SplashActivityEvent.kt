@@ -3,5 +3,5 @@ package com.example.tutorplace.ui.activity.splash.presentation
 import com.example.tutorplace.ui.base.BaseEvent
 
 sealed interface SplashActivityEvent: BaseEvent {
-	data object ResolveNextScreen: SplashActivityEvent
+	data object SplashAnimationEnded: SplashActivityEvent
 }

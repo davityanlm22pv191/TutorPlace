@@ -13,7 +13,7 @@ import com.example.tutorplace.ui.activity.main.MainActivity
 import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEffect
 import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEffect.NavigateToAuthFlow
 import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEffect.NavigateToHome
-import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEvent.ResolveNextScreen
+import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEvent.SplashAnimationEnded
 import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityViewModel
 import com.example.tutorplace.ui.navigation.Destinations
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,9 +26,10 @@ class SplashActivity : ComponentActivity() {
 	private val viewModel by viewModels<SplashActivityViewModel>()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
 		val splashScreen = installSplashScreen()
-		observeViewModel()
-
+		observeViewModelEffects()
+		viewModel.onEvent(SplashAnimationEnded)
 		splashScreen.setOnExitAnimationListener { splashScreenView ->
 			splashScreenView.view
 				.animate()
@@ -36,16 +37,12 @@ class SplashActivity : ComponentActivity() {
 				.scaleX(0.9f)
 				.scaleY(0.9f)
 				.setDuration(500L)
-				.withEndAction {
-					splashScreenView.remove()
-					viewModel.onEvent(ResolveNextScreen)
-					finish()
-				}.start()
+				.withEndAction { viewModel.onEvent(SplashAnimationEnded) }
+				.start()
 		}
-		super.onCreate(savedInstanceState)
 	}
 
-	private fun observeViewModel() {
+	private fun observeViewModelEffects() {
 		lifecycleScope.launch {
 			repeatOnLifecycle(Lifecycle.State.STARTED) {
 				viewModel.effect.collect { effect ->
