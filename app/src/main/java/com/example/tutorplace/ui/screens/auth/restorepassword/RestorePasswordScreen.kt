@@ -36,9 +36,8 @@ import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
 import com.example.tutorplace.ui.screens.auth.common.Header
-import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordCommand
-import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordCommand.UpdateEmail
-import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.OnAuthorization
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEffect.NavigateToAuthorization
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailChanged
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordViewModel
 import com.example.tutorplace.ui.theme.BlackAlpha04
 import com.example.tutorplace.ui.theme.PurpleCC
@@ -77,9 +76,7 @@ fun RestorePasswordScreen(navController: NavController) {
 					} else {
 						stringResource(R.string.restore_password_description)
 					},
-					onBackButtonClicked = {
-						viewModel.handleCommand(RestorePasswordCommand.BackClicked)
-					}
+					onBackButtonClicked = { viewModel.backClicked() }
 				)
 				AnimatedContent(targetState = state.isEmailSent) { isEmailSent ->
 					if (!isEmailSent) {
@@ -91,7 +88,7 @@ fun RestorePasswordScreen(navController: NavController) {
 							label = stringResource(R.string.common_auth_your_email),
 							isError = state.isEmailError,
 							onNextClicked = { focusManager.clearFocus() },
-							onValueChanged = { email -> viewModel.handleCommand(UpdateEmail(email)) }
+							onValueChanged = { email -> viewModel.onEvent(EmailChanged(email)) }
 						)
 					}
 				}
@@ -109,8 +106,8 @@ fun RestorePasswordScreen(navController: NavController) {
 				) {
 					when {
 						state.isLoading -> Unit
-						!state.isEmailSent -> viewModel.handleCommand(RestorePasswordCommand.RestoreClicked)
-						state.isEmailSent -> viewModel.handleCommand(RestorePasswordCommand.RetrySendButtonClicked)
+						!state.isEmailSent -> viewModel.restoreClicked()
+						state.isEmailSent -> viewModel.retrySendClicked()
 					}
 				}
 
@@ -131,7 +128,7 @@ fun RestorePasswordScreen(navController: NavController) {
 							link = stringResource(R.string.restore_password_already_have_account_spannable),
 							tag = "ENTRY",
 							style = SpanStyle(color = PurpleCC),
-							onClick = { viewModel.handleCommand(RestorePasswordCommand.AuthorizeClicked) }
+							onClick = { viewModel.authorizeClicked() }
 						)
 					),
 					textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
@@ -147,9 +144,9 @@ private fun ObserveViewModelEvent(
 	navController: NavController
 ) {
 	LaunchedEffect(Unit) {
-		viewModel.event.collect { event ->
-			when (event) {
-				is OnAuthorization -> navController.popBackStack()
+		viewModel.effect.collect { effect ->
+			when (effect) {
+				is NavigateToAuthorization -> navController.popBackStack()
 			}
 		}
 	}

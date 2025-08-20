@@ -2,40 +2,53 @@ package com.example.tutorplace.ui.screens.auth.registration.presentation
 
 import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.ui.base.BaseReducer
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.ConfirmPasswordChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.EmailChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.NameChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnFirstStep
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnNextClicked
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.OnRegistrationClicked
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.PasswordChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.PhoneChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationCommand.TelegramChanged
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.Domain.SwitchToFirstStep
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.Domain.Register
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.Domain.SwitchToSecondStep
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.ConfirmPasswordChanged
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.EmailChanged
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.NameChanged
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.PasswordChanged
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.PhoneChanged
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.TelegramChanged
 
-object RegistrationReducer : BaseReducer<RegistrationState, RegistrationCommand> {
+object RegistrationReducer : BaseReducer<RegistrationState, RegistrationEvent> {
 	override fun reduce(
 		oldState: RegistrationState,
-		command: RegistrationCommand
-	): RegistrationState = when (command) {
-		is NameChanged -> reduceNameChanged(oldState, command)
-		is PhoneChanged -> reducePhoneChanged(oldState, command)
-		is TelegramChanged -> reduceTelegramChanged(oldState, command)
-		is EmailChanged -> reduceEmailChanged(oldState, command)
-		is PasswordChanged -> reducePasswordChanged(oldState, command)
-		is ConfirmPasswordChanged -> reduceConfirmPasswordChanged(oldState, command)
-		is OnNextClicked -> reduceOnNext(oldState)
-		is OnRegistrationClicked -> reduceOnRegistrationClicked(oldState)
-		is OnFirstStep -> oldState.copy(currentStep = RegistrationState.RegistrationStep.FirstStep::class)
-		else -> oldState
+		event: RegistrationEvent
+	): RegistrationState = when (event) {
+		is RegistrationEvent.UI -> reduceUiEvent(oldState, event)
+		is RegistrationEvent.Domain -> reduceDomainEvent(oldState, event)
+	}
+
+	private fun reduceUiEvent(
+		oldState: RegistrationState,
+		event: RegistrationEvent.UI
+	): RegistrationState = when (event) {
+		is NameChanged -> reduceNameChanged(oldState, event)
+		is PhoneChanged -> reducePhoneChanged(oldState, event)
+		is TelegramChanged -> reduceTelegramChanged(oldState, event)
+		is EmailChanged -> reduceEmailChanged(oldState, event)
+		is PasswordChanged -> reducePasswordChanged(oldState, event)
+		is ConfirmPasswordChanged -> reduceConfirmPasswordChanged(oldState, event)
+	}
+
+	private fun reduceDomainEvent(
+		oldState: RegistrationState,
+		event: RegistrationEvent.Domain
+	): RegistrationState = when (event) {
+		is SwitchToFirstStep -> oldState.copy(currentStep = RegistrationState.RegistrationStep.FirstStep::class)
+		is SwitchToSecondStep -> reduceOnSecondStep(oldState)
+		is Register -> reduceOnRegister(oldState)
 	}
 
 	private fun reduceNameChanged(
 		oldState: RegistrationState,
-		command: NameChanged
+		event: NameChanged
 	): RegistrationState {
 		return oldState.copy(
 			firstStep = oldState.firstStep.copy(
-				name = command.enteredName,
+				name = event.enteredName,
 				isNameError = false
 			)
 		)
@@ -43,11 +56,11 @@ object RegistrationReducer : BaseReducer<RegistrationState, RegistrationCommand>
 
 	private fun reducePhoneChanged(
 		oldState: RegistrationState,
-		command: PhoneChanged
+		event: PhoneChanged
 	): RegistrationState {
 		return oldState.copy(
 			firstStep = oldState.firstStep.copy(
-				phoneNumber = command.enteredPhone,
+				phoneNumber = event.enteredPhone,
 				isPhoneNumberError = false
 			)
 		)
@@ -55,11 +68,11 @@ object RegistrationReducer : BaseReducer<RegistrationState, RegistrationCommand>
 
 	private fun reduceTelegramChanged(
 		oldState: RegistrationState,
-		command: TelegramChanged
+		event: TelegramChanged
 	): RegistrationState {
 		return oldState.copy(
 			firstStep = oldState.firstStep.copy(
-				telegram = command.enteredTelegram,
+				telegram = event.enteredTelegram,
 				isTelegramError = false
 			)
 		)
@@ -67,11 +80,11 @@ object RegistrationReducer : BaseReducer<RegistrationState, RegistrationCommand>
 
 	private fun reduceEmailChanged(
 		oldState: RegistrationState,
-		command: EmailChanged
+		event: EmailChanged
 	): RegistrationState {
 		return oldState.copy(
 			secondStep = oldState.secondStep.copy(
-				email = command.enteredEmail,
+				email = event.enteredEmail,
 				isEmailError = false
 			)
 		)
@@ -79,11 +92,11 @@ object RegistrationReducer : BaseReducer<RegistrationState, RegistrationCommand>
 
 	private fun reducePasswordChanged(
 		oldState: RegistrationState,
-		command: PasswordChanged
+		event: PasswordChanged
 	): RegistrationState {
 		return oldState.copy(
 			secondStep = oldState.secondStep.copy(
-				password = command.enteredPassword,
+				password = event.enteredPassword,
 				isPasswordError = false
 			)
 		)
@@ -91,17 +104,17 @@ object RegistrationReducer : BaseReducer<RegistrationState, RegistrationCommand>
 
 	private fun reduceConfirmPasswordChanged(
 		oldState: RegistrationState,
-		command: ConfirmPasswordChanged
+		event: ConfirmPasswordChanged
 	): RegistrationState {
 		return oldState.copy(
 			secondStep = oldState.secondStep.copy(
-				confirmPassword = command.enteredConfirmPassword,
+				confirmPassword = event.enteredConfirmPassword,
 				isConfirmPasswordError = false
 			)
 		)
 	}
 
-	private fun reduceOnNext(oldState: RegistrationState): RegistrationState {
+	private fun reduceOnSecondStep(oldState: RegistrationState): RegistrationState {
 		val isNameError = FormatHelper.isValidName(oldState.firstStep.name).not()
 		val isPhoneNumberError = FormatHelper.isValidPhone(oldState.firstStep.phoneNumber).not()
 		val isTelegramError = FormatHelper.isValidTelegram(oldState.firstStep.telegram).not()
@@ -118,7 +131,7 @@ object RegistrationReducer : BaseReducer<RegistrationState, RegistrationCommand>
 		}
 	}
 
-	private fun reduceOnRegistrationClicked(oldState: RegistrationState): RegistrationState {
+	private fun reduceOnRegister(oldState: RegistrationState): RegistrationState {
 		val isEmailError = FormatHelper.isValidEmail(oldState.secondStep.email).not()
 		val isPasswordError = FormatHelper.isValidPassword(oldState.secondStep.password).not()
 		val isConfirmPasswordError = FormatHelper.isValidPassword(oldState.secondStep.password)
