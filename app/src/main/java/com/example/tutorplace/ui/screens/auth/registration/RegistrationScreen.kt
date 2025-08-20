@@ -86,7 +86,7 @@ fun RegistrationScreen(navController: NavController) {
 				onBackButtonClicked = when (state.currentStep) {
 					FirstStep::class -> null
 					SecondStep::class -> {
-						{ viewModel::onFirstStepClicked }
+						{ viewModel.onFirstStepClicked() }
 					}
 					else -> null
 				}
@@ -116,7 +116,7 @@ fun RegistrationScreen(navController: NavController) {
 								value = state.firstStep.telegram,
 								label = stringResource(R.string.registration_your_telegram),
 								isError = state.firstStep.isTelegramError,
-								onDoneClicked = { viewModel::onSecondStepClicked },
+								onDoneClicked = { viewModel.onSecondStepClicked() },
 								onValueChanged = { viewModel.onEvent(TelegramChanged(it)) }
 							)
 						}
@@ -163,8 +163,8 @@ fun RegistrationScreen(navController: NavController) {
 			) {
 				if (state.isLoading) return@PurpleButton
 				when (state.currentStep) {
-					FirstStep::class -> viewModel::onSecondStepClicked
-					SecondStep::class -> viewModel::onRegisterClicked
+					FirstStep::class -> viewModel.onSecondStepClicked()
+					SecondStep::class -> viewModel.onRegisterClicked()
 					else -> return@PurpleButton
 				}
 			}
@@ -174,7 +174,7 @@ fun RegistrationScreen(navController: NavController) {
 					.padding(top = 8.dp)
 			)
 			YandexButton(modifier = Modifier.padding(top = 8.dp)) {
-				viewModel::onYandexClicked
+				viewModel.onYandexClicked()
 			}
 			SpanClickableText(
 				modifier = Modifier
@@ -186,13 +186,13 @@ fun RegistrationScreen(navController: NavController) {
 						link = stringResource(R.string.registration_offer_span),
 						tag = "OFFER",
 						style = SpanStyle(color = PurpleCC),
-						onClick = { viewModel::onOfferClicked },
+						onClick = { viewModel.onOfferClicked() },
 					),
 					SpanLinkData(
 						link = stringResource(R.string.registration_terms_span),
 						tag = "TERMS",
 						style = SpanStyle(color = PurpleCC),
-						onClick = { viewModel::onTermsClicked },
+						onClick = { viewModel.onTermsClicked() },
 					)
 				),
 				textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center),

@@ -76,7 +76,7 @@ fun RestorePasswordScreen(navController: NavController) {
 					} else {
 						stringResource(R.string.restore_password_description)
 					},
-					onBackButtonClicked = { viewModel::backClicked }
+					onBackButtonClicked = { viewModel.backClicked() }
 				)
 				AnimatedContent(targetState = state.isEmailSent) { isEmailSent ->
 					if (!isEmailSent) {
@@ -112,8 +112,8 @@ fun RestorePasswordScreen(navController: NavController) {
 				) {
 					when {
 						state.isLoading -> Unit
-						!state.isEmailSent -> viewModel::restoreClicked
-						state.isEmailSent -> viewModel::retrySendClicked
+						!state.isEmailSent -> viewModel.restoreClicked()
+						state.isEmailSent -> viewModel.retrySendClicked()
 					}
 				}
 
@@ -134,7 +134,7 @@ fun RestorePasswordScreen(navController: NavController) {
 							link = stringResource(R.string.restore_password_already_have_account_spannable),
 							tag = "ENTRY",
 							style = SpanStyle(color = PurpleCC),
-							onClick = { viewModel::authorizeClicked }
+							onClick = { viewModel.authorizeClicked() }
 						)
 					),
 					textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)

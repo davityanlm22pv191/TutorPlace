@@ -102,7 +102,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 				value = state.password,
 				label = stringResource(R.string.authorization_your_password),
 				isError = state.isPasswordError,
-				onDoneClicked = { viewModel::onAuthorizeClicked }
+				onDoneClicked = { viewModel.onAuthorizeClicked() }
 			) { viewModel.onEvent(AuthorizationEvent.PasswordChanged(it)) }
 
 			TextButton(
@@ -110,7 +110,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 					.align(Alignment.Start)
 					.padding(start = 10.dp),
 				colors = ButtonDefaults.textButtonColors(contentColor = PurpleCC),
-				onClick = { viewModel::onRestoreClicked },
+				onClick = { viewModel.onRestoreClicked() },
 			) {
 				Text(
 					modifier = Modifier.padding(top = 6.dp),
@@ -125,7 +125,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 					.padding(horizontal = 20.dp),
 				text = stringResource(R.string.authorization_entry),
 				isEnabled = state.isLoginButtonEnabled
-			) { viewModel::onAuthorizeClicked }
+			) { viewModel.onAuthorizeClicked() }
 			AuthSectionDivider(
 				modifier = Modifier
 					.padding(top = 8.dp)
@@ -135,7 +135,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 				modifier = Modifier
 					.padding(top = 8.dp)
 					.padding(horizontal = 20.dp)
-			) { viewModel::onYandexClicked }
+			) { viewModel.onYandexClicked() }
 			SpanClickableText(
 				modifier = Modifier
 					.padding(top = 12.dp)
@@ -146,7 +146,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 						link = stringResource(R.string.authorization_email_error_support_hint_spannable),
 						tag = "SUPPORT",
 						SpanStyle(color = PurpleCC),
-						onClick = { viewModel::onSupportClicked }
+						onClick = { viewModel.onSupportClicked() }
 					)
 				),
 				textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
@@ -163,7 +163,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 						link = stringResource(R.string.auth_register),
 						tag = "REGISTRATION",
 						SpanStyle(color = PurpleCC),
-						onClick = { viewModel::onRegistrationClicked }
+						onClick = { viewModel.onRegistrationClicked() }
 					)
 				),
 				textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center),
