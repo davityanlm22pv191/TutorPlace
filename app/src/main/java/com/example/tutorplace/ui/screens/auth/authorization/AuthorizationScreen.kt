@@ -183,7 +183,7 @@ private fun ObserveViewModelEvents(
 				is NavigateToHome -> navController.navigate(Destinations.Home.route)
 				is NavigateToRestorePassword -> navController.navigate(Destinations.AuthorizationFlow.RestorePassword.route)
 				is NavigateToRegistration -> navController.navigate(Destinations.AuthorizationFlow.Registration.route)
-				is NavigateToSupport -> navController.navigate(Destinations.Home.route) // TODO THIS IS MOCK ROUTE
+				is NavigateToSupport -> Unit
 			}
 		}
 	}

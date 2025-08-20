@@ -37,7 +37,7 @@ import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
 import com.example.tutorplace.ui.screens.auth.common.Header
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEffect.NavigateToAuthorization
-import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailChanged
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordViewModel
 import com.example.tutorplace.ui.theme.BlackAlpha04
 import com.example.tutorplace.ui.theme.PurpleCC
@@ -88,13 +88,7 @@ fun RestorePasswordScreen(navController: NavController) {
 							label = stringResource(R.string.common_auth_your_email),
 							isError = state.isEmailError,
 							onNextClicked = { focusManager.clearFocus() },
-							onValueChanged = { email ->
-								viewModel.onEvent(
-									RestorePasswordEvent.EmailChanged(
-										email
-									)
-								)
-							}
+							onValueChanged = { email -> viewModel.onEvent(EmailChanged(email)) }
 						)
 					}
 				}
