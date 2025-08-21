@@ -10,6 +10,7 @@ import com.example.tutorplace.ui.screens.auth.registration.presentation.Registra
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.NameChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.PasswordChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.PhoneChanged
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.RegisterRequested
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.TelegramChanged
 
 object RegistrationReducer : BaseReducer<RegistrationState, RegistrationEvent> {
@@ -31,6 +32,7 @@ object RegistrationReducer : BaseReducer<RegistrationState, RegistrationEvent> {
 		is EmailChanged -> reduceEmailChanged(oldState, event)
 		is PasswordChanged -> reducePasswordChanged(oldState, event)
 		is ConfirmPasswordChanged -> reduceConfirmPasswordChanged(oldState, event)
+		is RegisterRequested -> oldState.copy(isLoading = true)
 	}
 
 	private fun reduceDomainEvent(

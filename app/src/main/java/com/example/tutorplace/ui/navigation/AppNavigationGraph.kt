@@ -10,7 +10,7 @@ import com.example.tutorplace.ui.screens.home.HomeScreen
 fun AppNavigationGraph(startDestination: String) {
 	val navController = rememberNavController()
 	NavHost(navController, startDestination = startDestination) {
-		AutorizationFlow(navController)
+		AuthorizationFlow(navController)
 		composable(Destinations.Home.route) { HomeScreen(navController) }
 	}
 }

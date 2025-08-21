@@ -1,5 +1,12 @@
 package com.example.tutorplace.data.credentials
 
+import kotlinx.coroutines.flow.Flow
+
 interface CredentialsStorage {
-	fun isAuthorized(): Boolean
+
+	suspend fun saveToken(token: String)
+
+	suspend fun clearToken()
+
+	suspend fun isAuthorized(): Flow<Boolean>
 }

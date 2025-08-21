@@ -11,6 +11,7 @@ sealed interface RegistrationEvent : BaseEvent {
 		data class EmailChanged(val enteredEmail: String) : UI
 		data class PasswordChanged(val enteredPassword: String) : UI
 		data class ConfirmPasswordChanged(val enteredConfirmPassword: String) : UI
+		data object RegisterRequested: UI
 	}
 
 	sealed interface Domain : RegistrationEvent {

@@ -84,4 +84,7 @@ dependencies {
 	implementation(libs.hilt.android)
 	ksp(libs.hilt.android.compiler)
 	implementation(libs.androidx.hilt.navigation.compose)
+
+	// Jetpack Data Store
+	implementation(libs.androidx.datastore.preferences)
 }

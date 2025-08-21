@@ -5,4 +5,6 @@ import com.example.tutorplace.ui.base.BaseEvent
 sealed interface AuthorizationEvent : BaseEvent {
 	data class EmailChanged(val enteredEmail: String) : AuthorizationEvent
 	data class PasswordChanged(val enteredPassword: String) : AuthorizationEvent
+	data object CheckEnteredValues : AuthorizationEvent
+	data object EnterToProfileRequested: AuthorizationEvent
 }
