@@ -102,7 +102,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 				value = state.password,
 				label = stringResource(R.string.authorization_your_password),
 				isError = state.isPasswordError,
-				onDoneClicked = { viewModel.onAuthorizeClicked() }
+				onDoneClicked = { viewModel.onEnterClicked() }
 			) { viewModel.onEvent(AuthorizationEvent.PasswordChanged(it)) }
 
 			TextButton(
@@ -124,8 +124,13 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 					.fillMaxWidth()
 					.padding(horizontal = 20.dp),
 				text = stringResource(R.string.authorization_entry),
-				isEnabled = state.isLoginButtonEnabled
-			) { viewModel.onAuthorizeClicked() }
+				isLoading = state.isLoading,
+				isEnabled = true
+			) {
+				if (!state.isLoading) {
+					viewModel.onEnterClicked()
+				}
+			}
 			AuthSectionDivider(
 				modifier = Modifier
 					.padding(top = 8.dp)
@@ -180,7 +185,11 @@ private fun ObserveViewModelEvents(
 	LaunchedEffect(Unit) {
 		viewModel.effect.collect { effect ->
 			when (effect) {
-				is NavigateToHome -> navController.navigate(Destinations.Home.route)
+				is NavigateToHome -> navController.navigate(Destinations.Home.route) {
+					popUpTo(Destinations.AuthorizationFlow.FLOW_ROUTE) {
+						inclusive = true
+					}
+				}
 				is NavigateToRestorePassword -> navController.navigate(Destinations.AuthorizationFlow.RestorePassword.route)
 				is NavigateToRegistration -> navController.navigate(Destinations.AuthorizationFlow.Registration.route)
 				is NavigateToSupport -> Unit
