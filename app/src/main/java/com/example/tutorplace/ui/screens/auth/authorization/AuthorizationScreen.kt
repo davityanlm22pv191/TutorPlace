@@ -48,10 +48,10 @@ import com.example.tutorplace.ui.screens.auth.authorization.presentation.Authori
 import com.example.tutorplace.ui.screens.auth.common.AuthSectionDivider
 import com.example.tutorplace.ui.screens.auth.common.Header
 import com.example.tutorplace.ui.screens.auth.common.YandexButton
+import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.TutorPlaceTheme
 import com.example.tutorplace.ui.theme.Typography
-import com.example.tutorplace.ui.theme.White
 
 @Composable
 fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
@@ -63,7 +63,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 	ObserveViewModelEvents(viewModel, navController)
 	Scaffold(
 		modifier = Modifier.fillMaxSize(),
-		containerColor = White
+		containerColor = ScreenColor
 	) { paddingValues ->
 		Column(
 			modifier = Modifier

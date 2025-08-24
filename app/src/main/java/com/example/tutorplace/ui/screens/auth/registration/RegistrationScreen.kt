@@ -54,8 +54,8 @@ import com.example.tutorplace.ui.screens.auth.registration.presentation.Registra
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationViewModel
 import com.example.tutorplace.ui.theme.BlackAlpha04
 import com.example.tutorplace.ui.theme.PurpleCC
+import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.Typography
-import com.example.tutorplace.ui.theme.White
 
 @Composable
 fun RegistrationScreen(navController: NavController) {
@@ -65,7 +65,7 @@ fun RegistrationScreen(navController: NavController) {
 	ObserveViewModelEvents(viewModel, navController)
 	Scaffold(
 		modifier = Modifier.fillMaxSize(),
-		containerColor = White
+		containerColor = ScreenColor
 	) { paddingValues ->
 		Column(
 			modifier = Modifier

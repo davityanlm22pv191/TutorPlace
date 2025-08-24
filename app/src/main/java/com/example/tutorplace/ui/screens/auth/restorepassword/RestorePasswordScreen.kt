@@ -41,9 +41,9 @@ import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.Resto
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordViewModel
 import com.example.tutorplace.ui.theme.BlackAlpha04
 import com.example.tutorplace.ui.theme.PurpleCC
+import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.TutorPlaceTheme
 import com.example.tutorplace.ui.theme.Typography
-import com.example.tutorplace.ui.theme.White
 
 @Composable
 fun RestorePasswordScreen(navController: NavController) {
@@ -53,7 +53,10 @@ fun RestorePasswordScreen(navController: NavController) {
 	val focusManager = LocalFocusManager.current
 	ObserveViewModelEvent(viewModel, navController)
 	TutorPlaceTheme {
-		Scaffold(modifier = Modifier.fillMaxSize(), containerColor = White) { paddingValues ->
+		Scaffold(
+			modifier = Modifier.fillMaxSize(),
+			containerColor = ScreenColor
+		) { paddingValues ->
 			Column(
 				modifier = Modifier
 					.fillMaxSize()

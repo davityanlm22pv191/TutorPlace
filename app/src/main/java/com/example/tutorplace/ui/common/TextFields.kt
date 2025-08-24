@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tutorplace.R
 import com.example.tutorplace.ui.theme.Black16
+import com.example.tutorplace.ui.theme.ContainerColor
 import com.example.tutorplace.ui.theme.Grey82
 import com.example.tutorplace.ui.theme.GreyD5
 import com.example.tutorplace.ui.theme.PurpleCC
@@ -48,8 +49,8 @@ import com.example.tutorplace.ui.theme.White
 
 private val outlinedTextFieldColors: TextFieldColors
 	@Composable get() = OutlinedTextFieldDefaults.colors(
-		focusedContainerColor = White,
-		unfocusedContainerColor = White,
+		focusedContainerColor = ContainerColor,
+		unfocusedContainerColor = ContainerColor,
 		focusedBorderColor = PurpleCC,
 		unfocusedBorderColor = GreyD5,
 		errorBorderColor = Red1D,

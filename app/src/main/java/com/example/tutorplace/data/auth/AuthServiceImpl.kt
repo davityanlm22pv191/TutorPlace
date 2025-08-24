@@ -1,11 +1,6 @@
 package com.example.tutorplace.data.auth
 
-import com.example.tutorplace.helpers.DateHelper.toDate
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.io.Encoders
-import io.jsonwebtoken.security.Keys
 import kotlinx.coroutines.delay
-import java.time.ZonedDateTime
 import javax.inject.Inject
 
 class AuthServiceImpl @Inject constructor() : AuthService {
@@ -15,22 +10,7 @@ class AuthServiceImpl @Inject constructor() : AuthService {
 		val token = (0..1000)
 			.random()
 			.takeIf { randomInt -> randomInt >= 400 }
-			?.let { randomInt ->
-				val userId = randomInt.toString()
-				val issuedAt = ZonedDateTime.now().toDate()
-				Jwts
-					.builder()
-					.subject(userId)
-					.subject(email)
-					.subject(password)
-					.issuedAt(issuedAt)
-					.signWith(
-						Keys.hmacShaKeyFor(
-							Encoders.BASE64.encode(email.toByteArray()).toByteArray()
-						)
-					)
-					.compact()
-			}
+			?.let { randomInt -> "$randomInt:$email:$password" }
 		return Result.success(token)
 	}
 
@@ -45,24 +25,7 @@ class AuthServiceImpl @Inject constructor() : AuthService {
 		val token = (0..1000)
 			.random()
 			.takeIf { randomInt -> randomInt >= 400 }
-			?.let { randomInt ->
-				val userId = randomInt.toString()
-				val issuedAt = ZonedDateTime.now().toDate()
-				Jwts
-					.builder()
-					.subject(userId)
-					.subject(name)
-					.subject(phoneNumber)
-					.subject(email)
-					.subject(password)
-					.issuedAt(issuedAt)
-					.signWith(
-						Keys.hmacShaKeyFor(
-							Encoders.BASE64.encode(email.toByteArray()).toByteArray()
-						)
-					)
-					.compact()
-			}
+			?.let { randomInt -> "$randomInt:$email:$password::$name:$phoneNumber:$telegram" }
 		return Result.success(token)
 	}
 

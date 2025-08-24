@@ -1,8 +1,16 @@
 package com.example.tutorplace.ui.theme
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 
 val Transparent = Color(0x00000000)
+val ScreenColor: Color
+	@Composable get() = lerp(White, MaterialTheme.colorScheme.primaryContainer, 0.10f)
+
+val ContainerColor: Color
+	@Composable get() = lerp(White, MaterialTheme.colorScheme.primaryContainer, 0.05f)
 
 val White = Color(0xFFFFFFFF)
 
