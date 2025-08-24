@@ -87,4 +87,9 @@ dependencies {
 
 	// Jetpack Data Store
 	implementation(libs.androidx.datastore.preferences)
+
+	// JWT Json Web Token
+	implementation(libs.jjwt.api)
+	runtimeOnly(libs.jjwt.impl)
+	runtimeOnly(libs.jjwt.jackson)
 }

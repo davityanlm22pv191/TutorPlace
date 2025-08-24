@@ -1,7 +1,7 @@
 package com.example.tutorplace.ui.screens.auth.registration.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.example.tutorplace.data.credentials.CredentialsStorage
+import com.example.tutorplace.domain.RegisterUseCase
 import com.example.tutorplace.ui.base.BaseViewModel
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.Domain
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
-	private val credentialsStorage: CredentialsStorage
+	private val registerUseCase: RegisterUseCase,
 ) : BaseViewModel<RegistrationEvent, RegistrationState, RegistrationEffect>() {
 
 	override fun initialState() = RegistrationState()
@@ -29,19 +29,28 @@ class RegistrationViewModel @Inject constructor(
 		setState(RegistrationReducer.reduce(state.value, Domain.SwitchToSecondStep))
 	}
 
-	fun onRegisterClicked() {
+	fun onRegisterClicked() = with(state.value) {
 		setState(RegistrationReducer.reduce(state.value, Domain.Register))
-		if (state.value.firstStep.isNameError) return
-		if (state.value.firstStep.isPhoneNumberError) return
-		if (state.value.firstStep.isTelegramError) return
-		if (state.value.secondStep.isEmailError) return
-		if (state.value.secondStep.isPasswordError) return
-		if (state.value.secondStep.isConfirmPasswordError) return
+		if (firstStep.isNameError) return
+		if (firstStep.isPhoneNumberError) return
+		if (firstStep.isTelegramError) return
+		if (secondStep.isEmailError) return
+		if (secondStep.isPasswordError) return
+		if (secondStep.isConfirmPasswordError) return
 		viewModelScope.launch {
 			setState(RegistrationReducer.reduce(state.value, UI.RegisterRequested))
-			credentialsStorage.saveToken("123123")
-			sendEffect(RegistrationEffect.NavigateToHome)
+			val isRegisterSuccess = registerUseCase.execute(
+				firstStep.name,
+				firstStep.phoneNumber,
+				firstStep.telegram,
+				secondStep.email,
+				secondStep.password
+			)
+			if (isRegisterSuccess) {
+				sendEffect(RegistrationEffect.NavigateToHome)
+			}
 		}
+		return@with
 	}
 
 	fun onOfferClicked() = Unit

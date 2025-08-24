@@ -1,7 +1,7 @@
 package com.example.tutorplace.ui.screens.auth.authorization.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.example.tutorplace.data.credentials.CredentialsStorage
+import com.example.tutorplace.domain.AuthorizeUseCase
 import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.ui.base.BaseViewModel
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.CheckEnteredValues
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthorizationViewModel @Inject constructor(
-	private val credentialsStorage: CredentialsStorage
+	private val authorizeUseCase: AuthorizeUseCase,
 ) : BaseViewModel<AuthorizationEvent, AuthorizationState, AuthorizationEffect>() {
 
 	override fun initialState() = AuthorizationState()
@@ -35,8 +35,13 @@ class AuthorizationViewModel @Inject constructor(
 		if (!FormatHelper.isValidPassword(state.value.password)) return
 		setState(AuthorizationReducer.reduce(state.value, EnterToProfileRequested))
 		viewModelScope.launch {
-			credentialsStorage.saveToken("123")
-			sendEffect(AuthorizationEffect.NavigateToHome)
+			val isAuthorizedSuccess = authorizeUseCase.execute(
+				email = state.value.email,
+				password = state.value.password
+			)
+			if (isAuthorizedSuccess) {
+				sendEffect(AuthorizationEffect.NavigateToHome)
+			}
 		}
 	}
 
