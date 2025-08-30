@@ -11,21 +11,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.tutorplace.ui.navigation.Destinations.Home.HomeParams
 import com.example.tutorplace.ui.theme.TutorPlaceTheme
 
 @Composable
-fun HomeScreen(navController: NavController) = TutorPlaceTheme {
-	Scaffold { paddingValues ->
-		Box(
-			Modifier
-				.fillMaxSize()
-				.padding(paddingValues)
-		) {
-			Text(modifier = Modifier.align(Alignment.Center), text = "This is Home screen")
+fun HomeScreen(navController: NavController, params: HomeParams) {
+	TutorPlaceTheme {
+		Scaffold { paddingValues ->
+			Box(
+				Modifier
+					.fillMaxSize()
+					.padding(paddingValues)
+			) {
+				Text(
+					modifier = Modifier.align(Alignment.Center),
+					text = "isShouldShowOnboarding = ${params.isShouldShowOnboarding}"
+				)
+			}
 		}
 	}
 }
 
 @Preview
 @Composable
-private fun HomePreview() = HomeScreen(rememberNavController())
+private fun HomePreview() = HomeScreen(rememberNavController(), HomeParams())

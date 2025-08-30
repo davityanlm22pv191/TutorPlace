@@ -55,7 +55,7 @@ class SplashActivity : ComponentActivity() {
 	private fun handlingViewModelEffect(effect: SplashActivityEffect) {
 		val startDestination = when (effect) {
 			NavigateToAuthFlow -> Destinations.AuthorizationFlow.FLOW_ROUTE
-			NavigateToHome -> Destinations.Home.route
+			NavigateToHome -> Destinations.Home(Destinations.Home.HomeParams(isShouldShowOnboarding = false)).route
 		}
 		val intent = Intent(this, MainActivity::class.java).apply {
 			putExtra("start_destination", startDestination)
