@@ -231,7 +231,11 @@ private fun ObserveViewModelEvents(
 	LaunchedEffect(Unit) {
 		viewModel.effect.collect { effect ->
 			when (effect) {
-				RegistrationEffect.NavigateToHome -> navController.navigate(Destinations.Home.route) {
+				RegistrationEffect.NavigateToHome -> navController.navigate(
+					Destinations.Home(
+						Destinations.Home.HomeParams(isShouldShowOnboarding = true)
+					)
+				) {
 					popUpTo(Destinations.AuthorizationFlow.FLOW_ROUTE) { inclusive = true }
 				}
 			}

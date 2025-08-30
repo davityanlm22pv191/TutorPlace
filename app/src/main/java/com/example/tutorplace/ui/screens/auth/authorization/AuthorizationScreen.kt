@@ -48,8 +48,8 @@ import com.example.tutorplace.ui.screens.auth.authorization.presentation.Authori
 import com.example.tutorplace.ui.screens.auth.common.AuthSectionDivider
 import com.example.tutorplace.ui.screens.auth.common.Header
 import com.example.tutorplace.ui.screens.auth.common.YandexButton
-import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.PurpleCC
+import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.TutorPlaceTheme
 import com.example.tutorplace.ui.theme.Typography
 
@@ -185,7 +185,9 @@ private fun ObserveViewModelEvents(
 	LaunchedEffect(Unit) {
 		viewModel.effect.collect { effect ->
 			when (effect) {
-				is NavigateToHome -> navController.navigate(Destinations.Home.route) {
+				is NavigateToHome -> navController.navigate(
+					Destinations.Home(Destinations.Home.HomeParams(isShouldShowOnboarding = false)).route
+				) {
 					popUpTo(Destinations.AuthorizationFlow.FLOW_ROUTE) {
 						inclusive = true
 					}
