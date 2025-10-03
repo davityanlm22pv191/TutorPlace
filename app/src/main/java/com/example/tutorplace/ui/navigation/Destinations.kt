@@ -27,4 +27,6 @@ sealed class Destinations(open val route: String) {
 			val isShouldShowOnboarding: Boolean = false
 		)
 	}
+
+	object Onboarding: Destinations("onboarding")
 }
