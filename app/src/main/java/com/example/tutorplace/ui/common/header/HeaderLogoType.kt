@@ -1,0 +1,9 @@
+package com.example.tutorplace.ui.common.header
+
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+
+sealed class HeaderLogoType {
+	data class Image(@param:DrawableRes val image: Int): HeaderLogoType()
+	data class Text(@param:StringRes val text: Int): HeaderLogoType()
+}

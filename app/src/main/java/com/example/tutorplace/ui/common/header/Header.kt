@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.screens.auth.common
+package com.example.tutorplace.ui.common.header
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,13 +23,12 @@ import com.example.tutorplace.ui.theme.Typography
 
 @Composable
 fun Header(
+	logo: HeaderLogoType,
 	title: String,
 	description: String?,
 	onBackButtonClicked: (() -> Unit)?
 ) {
-	Box(
-		modifier = Modifier.fillMaxWidth()
-	) {
+	Box(modifier = Modifier.fillMaxWidth()) {
 		if (onBackButtonClicked != null) {
 			Surface(
 				modifier = Modifier.padding(top = 16.dp),
@@ -43,13 +43,34 @@ fun Header(
 			}
 		}
 		Column {
-			Image(
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(top = 40.dp),
-				painter = painterResource(R.drawable.ic_tutor_place_logo),
-				contentDescription = null
-			)
+			AnimatedContent(
+				modifier = Modifier.fillMaxWidth(),
+				targetState = logo
+			) { logoType ->
+				when (logoType) {
+					is HeaderLogoType.Image -> {
+						Image(
+							modifier = Modifier
+								.fillMaxWidth()
+								.padding(top = 40.dp),
+							painter = painterResource(logoType.image),
+							contentDescription = null
+						)
+					}
+					is HeaderLogoType.Text -> {
+						Text(
+							modifier = Modifier
+								.fillMaxWidth()
+								.padding(top = 28.dp),
+							text = stringResource(logoType.text),
+							style = Typography.displayLarge,
+							color = Black16,
+							textAlign = TextAlign.Center
+						)
+					}
+				}
+			}
+
 			Text(
 				modifier = Modifier
 					.fillMaxWidth()
@@ -57,7 +78,7 @@ fun Header(
 				text = title,
 				style = Typography.headlineLarge,
 				color = Black16,
-				textAlign = TextAlign.Center
+				textAlign = TextAlign.Center,
 			)
 			AnimatedContent(targetState = description) { animatedDescription ->
 				if (animatedDescription != null) {
@@ -80,9 +101,27 @@ fun Header(
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 private fun HeaderPreview() {
-	Header(
-		title = "Восстановление пароля",
-		description = "Введите свой email для восстановления пароля",
-		onBackButtonClicked = null
-	)
+	Column(
+		modifier = Modifier.padding(horizontal = 16.dp),
+	) {
+		Header(
+			logo = HeaderLogoType.Image(R.drawable.ic_tutor_place_lettering_logo),
+			title = "Восстановление пароля",
+			description = "Введите свой email для восстановления пароля",
+			onBackButtonClicked = {}
+		)
+		Header(
+			logo = HeaderLogoType.Image(R.drawable.ic_tutor_place_logo),
+			title = "Добро пожаловать на Tutor Place",
+			description = "Введите свой email для восстановления пароля",
+			onBackButtonClicked = null
+		)
+		Header(
+			logo = HeaderLogoType.Text(R.string.onboarding_provide_details_logo),
+			title = "Укажите данные для доступа к платформе",
+			description = null,
+			onBackButtonClicked = {}
+		)
+	}
+
 }

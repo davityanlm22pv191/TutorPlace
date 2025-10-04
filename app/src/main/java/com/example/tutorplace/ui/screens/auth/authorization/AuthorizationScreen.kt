@@ -46,7 +46,8 @@ import com.example.tutorplace.ui.screens.auth.authorization.presentation.Authori
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationViewModel
 import com.example.tutorplace.ui.screens.auth.common.AuthSectionDivider
-import com.example.tutorplace.ui.screens.auth.common.Header
+import com.example.tutorplace.ui.common.header.Header
+import com.example.tutorplace.ui.common.header.HeaderLogoType
 import com.example.tutorplace.ui.screens.auth.common.YandexButton
 import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.ScreenColor
@@ -79,6 +80,7 @@ fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
 			horizontalAlignment = Alignment.CenterHorizontally
 		) {
 			Header(
+				logo = HeaderLogoType.Image(R.drawable.ic_tutor_place_lettering_logo),
 				title = stringResource(R.string.authorization_enter_to_profile),
 				description = null,
 				onBackButtonClicked = null,

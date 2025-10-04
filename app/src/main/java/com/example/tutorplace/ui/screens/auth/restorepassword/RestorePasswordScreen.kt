@@ -35,7 +35,8 @@ import com.example.tutorplace.ui.common.EmailTextField
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
-import com.example.tutorplace.ui.screens.auth.common.Header
+import com.example.tutorplace.ui.common.header.Header
+import com.example.tutorplace.ui.common.header.HeaderLogoType
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEffect.NavigateToAuthorization
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailChanged
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordViewModel
@@ -71,6 +72,7 @@ fun RestorePasswordScreen(navController: NavController) {
 				horizontalAlignment = Alignment.CenterHorizontally
 			) {
 				Header(
+					logo = HeaderLogoType.Image(R.drawable.ic_tutor_place_lettering_logo),
 					title = stringResource(R.string.restore_password_title),
 					description = if (state.isEmailSent) {
 						stringResource(
