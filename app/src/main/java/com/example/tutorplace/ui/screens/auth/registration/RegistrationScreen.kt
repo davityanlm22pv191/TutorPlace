@@ -40,7 +40,8 @@ import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
 import com.example.tutorplace.ui.navigation.Destinations
 import com.example.tutorplace.ui.screens.auth.common.AuthSectionDivider
-import com.example.tutorplace.ui.screens.auth.common.Header
+import com.example.tutorplace.ui.common.header.Header
+import com.example.tutorplace.ui.common.header.HeaderLogoType
 import com.example.tutorplace.ui.screens.auth.common.YandexButton
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEffect
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.ConfirmPasswordChanged
@@ -81,6 +82,7 @@ fun RegistrationScreen(navController: NavController) {
 			horizontalAlignment = Alignment.CenterHorizontally
 		) {
 			Header(
+				logo = HeaderLogoType.Image(R.drawable.ic_tutor_place_lettering_logo),
 				title = stringResource(R.string.registration_title),
 				description = null,
 				onBackButtonClicked = when (state.currentStep) {

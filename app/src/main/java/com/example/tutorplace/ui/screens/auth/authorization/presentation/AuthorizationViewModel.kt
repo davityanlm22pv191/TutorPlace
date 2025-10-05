@@ -1,7 +1,7 @@
 package com.example.tutorplace.ui.screens.auth.authorization.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.example.tutorplace.domain.AuthorizeUseCase
+import com.example.tutorplace.domain.usecases.AuthorizeUseCase
 import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.ui.base.BaseViewModel
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.CheckEnteredValues

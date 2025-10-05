@@ -1,7 +1,7 @@
 package com.example.tutorplace.ui.screens.auth.registration.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.example.tutorplace.domain.RegisterUseCase
+import com.example.tutorplace.domain.usecases.RegisterUseCase
 import com.example.tutorplace.ui.base.BaseViewModel
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.Domain
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI

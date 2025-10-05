@@ -30,6 +30,10 @@ val Typography = Typography(
 		fontWeight = FontWeight.Normal,
 		fontSize = 13.sp,
 		lineHeight = 13.sp,
+	),
+	displayLarge = TextStyle(
+		fontWeight = FontWeight.SemiBold,
+		fontSize = 64.sp,
 	)
 
 

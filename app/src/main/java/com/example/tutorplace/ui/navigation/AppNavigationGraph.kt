@@ -4,9 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.tutorplace.ui.screens.home.HomeScreen
+import com.example.tutorplace.ui.screens.onboarding.OnboardingScreen
 
 @Composable
 fun AppNavigationGraph(startDestination: String) {
@@ -29,5 +31,6 @@ fun AppNavigationGraph(startDestination: String) {
 
 			HomeScreen(navController, params)
 		}
+		dialog(Destinations.Onboarding.route) { OnboardingScreen(navController) }
 	}
 }
