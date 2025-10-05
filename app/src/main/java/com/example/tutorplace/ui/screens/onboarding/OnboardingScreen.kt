@@ -35,7 +35,8 @@ fun OnboardingScreen(navController: NavController) {
 		scrimColor = Transparent,
 		onDismissRequest = { navController.popBackStack() }
 	) {
-
+		// TODO Скачать иконку R.drawable.ic_tutor_place_logo в норм качестве
+		// Написать функцию, которая будет переключаться в зависимости от шага
 	}
 }
 

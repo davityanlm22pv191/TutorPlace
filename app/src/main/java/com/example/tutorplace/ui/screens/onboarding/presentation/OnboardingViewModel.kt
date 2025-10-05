@@ -6,7 +6,7 @@ import javax.inject.Inject
 class OnboardingViewModel @Inject constructor() :
 	BaseViewModel<OnboardingEvent, OnboardingState, OnboardingEffect>() {
 
-	override fun initialState() = OnboardingState()
+	override fun initialState() = OnboardingState.Quizzes()
 
 	override fun onEvent(event: OnboardingEvent) {
 
