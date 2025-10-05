@@ -1,5 +1,6 @@
 package com.example.tutorplace.ui.screens.onboarding
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -14,7 +15,23 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.HelpYouStay
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.KnowledgeFromMasters
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Main
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.MoreOpportunities
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.ProvideDetails
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Quizzes
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.SpendYourTimeProductively
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.TellUsAboutInterests
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingViewModel
+import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingHelpYouStay
+import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingKnowledgeFromMasters
+import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingMain
+import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingMoreOpportunities
+import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingProvideDetails
+import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingQuizzes
+import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingSpendYourTimeProductively
+import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingTellUsAboutInterests
 import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.Transparent
 
@@ -35,8 +52,43 @@ fun OnboardingScreen(navController: NavController) {
 		scrimColor = Transparent,
 		onDismissRequest = { navController.popBackStack() }
 	) {
-		// TODO Скачать иконку R.drawable.ic_tutor_place_logo в норм качестве
-		// Написать функцию, которая будет переключаться в зависимости от шага
+		AnimatedContent(state) { onboardingState ->
+			when (val stepState = onboardingState.value) {
+				is Quizzes -> OnboardingQuizzes(
+					stepState,
+					columnScope = this@ModalBottomSheet
+				)
+				is Main -> OnboardingMain(
+					stepState,
+					columnScope = this@ModalBottomSheet
+				)
+				is ProvideDetails -> OnboardingProvideDetails(
+					stepState,
+					this@ModalBottomSheet
+				)
+				is MoreOpportunities -> OnboardingMoreOpportunities(
+					stepState,
+					columnScope = this@ModalBottomSheet
+				)
+				is KnowledgeFromMasters -> OnboardingKnowledgeFromMasters(
+					stepState,
+					columnScope = this@ModalBottomSheet
+				)
+				is TellUsAboutInterests -> OnboardingTellUsAboutInterests(
+					stepState,
+					columnScope = this@ModalBottomSheet
+				)
+				is HelpYouStay -> OnboardingHelpYouStay(
+					stepState,
+					columnScope = this@ModalBottomSheet
+				)
+				is SpendYourTimeProductively -> OnboardingSpendYourTimeProductively(
+					stepState,
+					columnScope = this@ModalBottomSheet
+				)
+
+			}
+		}
 	}
 }
 

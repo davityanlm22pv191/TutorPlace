@@ -6,37 +6,40 @@ import java.time.LocalDate
 
 sealed class OnboardingState(
 	override val isLoading: Boolean = false,
-	override val throwable: Throwable? = null
+	override val throwable: Throwable? = null,
+	open val isBackButtonVisible: Boolean,
 ) : BaseState {
 
 	data class Quizzes(
 		val productName: String? = null,
-	) : OnboardingState()
+	) : OnboardingState(
+		isBackButtonVisible = false
+	)
 
-	object Main : OnboardingState()
+	object Main : OnboardingState(isBackButtonVisible = false)
 
 	data class ProvideDetails(
 		val userName: String = "",
 		val password: String = "",
 		val sex: Sex? = null,
-	) : OnboardingState()
+	) : OnboardingState(isBackButtonVisible = false)
 
-	object MoreOpportunities : OnboardingState()
+	object MoreOpportunities : OnboardingState(isBackButtonVisible = true)
 
-	object KnowledgeFromMasters : OnboardingState()
+	object KnowledgeFromMasters : OnboardingState(isBackButtonVisible = true)
 
 	data class TellUsAboutInterests(
 		override val isLoading: Boolean = false,
 		override val throwable: Throwable? = null,
 		val allInterests: List<String>? = null,
 		val selectedInterests: List<String> = emptyList()
-	) : OnboardingState()
+	) : OnboardingState(isBackButtonVisible = true)
 
 	data class HelpYouStay(
 		val phoneNumbers: String = "",
 		val notificationTimeStart: LocalDate? = null,
 		val notificationTimeEnd: LocalDate? = null,
-	) : OnboardingState()
+	) : OnboardingState(isBackButtonVisible = true)
 
-	object SpendYourTimeProductively : OnboardingState()
+	object SpendYourTimeProductively : OnboardingState(isBackButtonVisible = true)
 }
