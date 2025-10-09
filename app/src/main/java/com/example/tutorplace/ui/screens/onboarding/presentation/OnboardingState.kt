@@ -5,16 +5,16 @@ import com.example.tutorplace.ui.base.BaseState
 import java.time.LocalDate
 
 sealed class OnboardingState(
-	override val isLoading: Boolean = false,
+	override val isLoading: Boolean = true,
 	override val throwable: Throwable? = null,
 	open val isBackButtonVisible: Boolean,
 ) : BaseState {
 
 	data class Quizzes(
-		val productName: String? = null,
-	) : OnboardingState(
-		isBackButtonVisible = false
-	)
+		val productName: String? = "Астрология",
+		override val isLoading: Boolean = true,
+		override val throwable: Throwable? = null
+	) : OnboardingState(isBackButtonVisible = false)
 
 	object Main : OnboardingState(isBackButtonVisible = false)
 

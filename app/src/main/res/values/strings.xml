@@ -44,12 +44,13 @@
 	<!-- Onboarding -->
 	<string name="onboarding_next_step">Следующий шаг</string>
 	<string name="onboarding_quizzes_welcome_to_tutor_place">Добро пожаловать\n на TutorPlace</string>
-	<string name="onboarding_quizzes_description_format">
-		Поздравляем с получением доступа к нашей платформе\n\n
-		«%s» уже доступен в вашем личном кабинете\n\n
+	<string name="onboarding_quizzes_description">Поздравляем с получением доступа к нашей платформе</string>
+	<string name="onboarding_quizzes_new_product_is_available_format">%s уже доступен в вашем личном кабинете</string>
+	<string name="onboarding_quizzes_this_only_begin">
 		Но знаете ли вы, что это только начало?
 		Вам также открыт доступ к более чем 100 топовым курсам по самым актуальным направлениям
 	</string>
+	
 	<string name="onboarding_main_description">Осталось всего несколько шагов, и вам будет открыт доступ к более чем 100 курсам по самым актуальным направлениям</string>
 	<string name="onboarding_provide_details_logo">💻</string>
 	<string name="onboarding_provide_details_title">Укажите данные для доступа к платформе</string>
