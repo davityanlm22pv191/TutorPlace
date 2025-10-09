@@ -61,9 +61,7 @@ fun OnboardingQuizzes(
 				textStyle = Typography.labelMedium.copy(color = Black16, textAlign = Center)
 			)
 		} else {
-			SkeletonShimmer {
-				Skeleton()
-			}
+			SkeletonShimmer { Skeleton() }
 		}
 	}
 	Text(

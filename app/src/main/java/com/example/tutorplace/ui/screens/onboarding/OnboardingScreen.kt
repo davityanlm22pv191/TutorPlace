@@ -2,17 +2,23 @@ package com.example.tutorplace.ui.screens.onboarding
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,9 +27,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.R
+import com.example.tutorplace.ui.common.PurpleButton
+import com.example.tutorplace.ui.common.TransparentButton
 import com.example.tutorplace.ui.common.header.Header
 import com.example.tutorplace.ui.common.header.HeaderLogoType.Image
 import com.example.tutorplace.ui.common.header.HeaderLogoType.Text
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.HelpYouStay
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.KnowledgeFromMasters
@@ -42,6 +51,7 @@ import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingProvideDetails
 import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingQuizzes
 import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingSpendYourTimeProductively
 import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingTellUsAboutInterests
+import com.example.tutorplace.ui.theme.ContainerColor
 import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.Transparent
 
@@ -50,13 +60,15 @@ import com.example.tutorplace.ui.theme.Transparent
 fun OnboardingScreen(navController: NavController) {
 	val viewModel = hiltViewModel<OnboardingViewModel>()
 	val state = viewModel.state.collectAsState()
-	val sheetState = rememberModalBottomSheetState()
+	val sheetState = rememberModalBottomSheetState(
+
+	)
 	LaunchedEffect(Unit) { sheetState.show() }
 
 	ModalBottomSheet(
 		modifier = Modifier
 			.fillMaxWidth()
-			.heightIn(min = 620.dp),
+			.wrapContentHeight(),
 		containerColor = ScreenColor,
 		sheetState = sheetState,
 		scrimColor = Transparent,
@@ -66,25 +78,60 @@ fun OnboardingScreen(navController: NavController) {
 			logo = state.value.headerLogoType(),
 			title = stringResource(state.value.title()),
 			description = state.value.description()?.let { resId -> stringResource(resId) },
-			onBackButtonClicked = {}.takeIf { state.value.isBackButtonVisible }
+			onBackButtonClicked = {
+				viewModel.onEvent(OnboardingEvent.PreviousStepClicked)
+			}.takeIf { state.value.isBackButtonVisible }
 		)
 		Spacer(modifier = Modifier.height(state.value.contentSeparatorHeight()))
 
 		AnimatedContent(targetState = state.value) { stepState ->
 			stepState.Content(viewModel)
 		}
+		Box(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(top = 20.dp)
+				.background(ContainerColor, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+				.padding(16.dp),
+		) {
+			Column(
+				modifier = Modifier.fillMaxWidth(),
+				verticalArrangement = Arrangement.spacedBy(8.dp),
+				horizontalAlignment = Alignment.CenterHorizontally
+			) {
+				PurpleButton(
+					modifier = Modifier
+						.fillMaxWidth()
+						.height(45.dp),
+					text = stringResource(state.value.mainButtonTitle),
+					isEnabled = state.value.isMainButtonEnabled,
+					isLoading = state.value.isLoading,
+					onClick = { viewModel.onEvent(OnboardingEvent.NextStepClicked) }
+				)
+				AnimatedContent(
+					targetState = state.value.isSkipButtonVisible
+				) { isSkipButtonVisible ->
+					if (isSkipButtonVisible) {
+						TransparentButton(
+							modifier = Modifier
+								.fillMaxWidth()
+								.height(45.dp),
+							text = stringResource(R.string.common_skip),
+							onClick = { viewModel.onEvent(OnboardingEvent.PreviousStepClicked) }
+						)
+					}
+				}
+			}
+		}
 	}
 }
 
 private fun OnboardingState.contentSeparatorHeight() = when (this) {
 	is Quizzes -> 12.dp
-	is Main -> TODO()
-	is ProvideDetails -> 16.dp
+	is Main, is SpendYourTimeProductively -> 40.dp
+	is ProvideDetails, is KnowledgeFromMasters -> 16.dp
 	is MoreOpportunities -> 36.dp
-	is KnowledgeFromMasters -> 16.dp
-	is TellUsAboutInterests -> 24.dp
-	is HelpYouStay -> 24.dp
-	is SpendYourTimeProductively -> TODO()
+	is TellUsAboutInterests, is HelpYouStay -> 24.dp
 }
 
 private fun OnboardingState.headerLogoType() = when (this) {
