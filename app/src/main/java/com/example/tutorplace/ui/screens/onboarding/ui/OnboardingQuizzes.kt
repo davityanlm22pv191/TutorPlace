@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tutorplace.R
+import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.ui.common.SkeletonShimmer
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
@@ -40,20 +41,22 @@ fun OnboardingQuizzes(
 	state: OnboardingState.Quizzes,
 	columnScope: ColumnScope,
 ) = with(columnScope) {
-	AnimatedContent(state.productName) { productName ->
-		if (!productName.isNullOrEmpty() && !state.isLoading) {
+	AnimatedContent(
+		targetState = state.productName,
+	) { productName ->
+		if (productName.data.isNotEmpty() && !state.isLoading) {
 			SpanClickableText(
 				modifier = Modifier
 					.fillMaxWidth()
 					.padding(16.dp),
 				text = stringResource(
 					R.string.onboarding_quizzes_new_product_is_available_format,
-					productName
+					productName.data
 				),
 				links = listOf(
 					SpanLinkData(
-						link = productName,
-						tag = productName,
+						link = productName.data,
+						tag = productName.data,
 						style = SpanStyle(color = PurpleCC),
 						onClick = {}
 					)
@@ -118,7 +121,7 @@ private fun OnboardingQuizzesPreview() {
 		OnboardingQuizzes(
 			columnScope = this,
 			state = OnboardingState.Quizzes(
-				productName = "Астрология",
+				productName = DataInfo(data = "Астрология"),
 			)
 		)
 	}

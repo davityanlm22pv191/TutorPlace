@@ -2,6 +2,7 @@ package com.example.tutorplace.ui.screens.onboarding.presentation
 
 import androidx.annotation.StringRes
 import com.example.tutorplace.R
+import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.domain.model.Sex
 import com.example.tutorplace.ui.base.BaseState
 import java.time.LocalDate
@@ -12,11 +13,11 @@ sealed class OnboardingState(
 	open val isBackButtonVisible: Boolean,
 	open val isMainButtonEnabled: Boolean,
 	@param:StringRes open val mainButtonTitle: Int = R.string.onboarding_next_step,
-	open val isSkipButtonVisible: Boolean = true,
+	open val isSkipButtonVisible: Boolean = false,
 ) : BaseState {
 
 	data class Quizzes(
-		val productName: String? = null,
+		val productName: DataInfo<String> = DataInfo(data = ""),
 		override val isLoading: Boolean = false,
 		override val throwable: Throwable? = null
 	) : OnboardingState(

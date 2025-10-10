@@ -84,9 +84,7 @@ fun OnboardingScreen(navController: NavController) {
 		)
 		Spacer(modifier = Modifier.height(state.value.contentSeparatorHeight()))
 
-		AnimatedContent(targetState = state.value) { stepState ->
-			stepState.Content(viewModel)
-		}
+		AnimatedContent(targetState = state.value) { stepState -> stepState.Content(viewModel) }
 		Box(
 			modifier = Modifier
 				.fillMaxWidth()
@@ -135,7 +133,7 @@ private fun OnboardingState.contentSeparatorHeight() = when (this) {
 }
 
 private fun OnboardingState.headerLogoType() = when (this) {
-	is Quizzes, is Main -> Image(R.drawable.ic_tutor_place_logo)
+	is Quizzes, is Main -> Image(R.drawable.ic_tutor_place_logo, paddingTop = 0)
 	is ProvideDetails -> Text(R.string.onboarding_provide_details_logo)
 	is MoreOpportunities -> Text(R.string.onboarding_more_opportunities_logo)
 	is KnowledgeFromMasters -> Text(R.string.onboarding_knowledge_from_masters_logo)
