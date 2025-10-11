@@ -7,6 +7,14 @@ import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PreviousStepClicked
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.ProductNameLoadFail
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.ProductNameLoaded
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.HelpYouStay
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.KnowledgeFromMasters
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Main
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.MoreOpportunities
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.ProvideDetails
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Quizzes
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.SpendYourTimeProductively
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.TellUsAboutInterests
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,13 +29,28 @@ class OnboardingViewModel @Inject constructor(
 		loadGiftProductName()
 	}
 
-	override fun initialState() = OnboardingState.Quizzes()
+	override fun initialState() = Quizzes()
 
 	override fun onEvent(event: OnboardingEvent) = when (event) {
-		is NextStepClicked,
-		is PreviousStepClicked -> setState(OnboardingReducer.reduce(state.value, event))
+		is NextStepClicked -> checkCurrentStateAndNavigateToNextStep()
+		is PreviousStepClicked -> Unit
 		is ProductNameLoaded,
-		is ProductNameLoadFail -> {
+		is ProductNameLoadFail -> Unit
+	}
+
+	private fun checkCurrentStateAndNavigateToNextStep() {
+		val isAllDataValid = when (state.value) {
+			is ProvideDetails -> false
+			is TellUsAboutInterests -> false
+			is HelpYouStay -> false
+			is Main,
+			is MoreOpportunities,
+			is KnowledgeFromMasters,
+			is SpendYourTimeProductively,
+			is Quizzes -> true
+		}
+		if (isAllDataValid) {
+			setState(OnboardingReducer.reduce(state.value, NextStepClicked))
 		}
 	}
 

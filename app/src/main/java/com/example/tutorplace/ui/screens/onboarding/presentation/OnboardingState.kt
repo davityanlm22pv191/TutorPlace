@@ -67,7 +67,7 @@ sealed class OnboardingState(
 		isBackButtonVisible = true,
 		isMainButtonEnabled = false,
 		mainButtonTitle = R.string.onboarding_bind,
-		isSkipButtonVisible = true
+		isSkipButtonVisible = true,
 	)
 
 	object SpendYourTimeProductively : OnboardingState(

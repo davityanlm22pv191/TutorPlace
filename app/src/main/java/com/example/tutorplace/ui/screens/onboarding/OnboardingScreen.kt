@@ -61,7 +61,7 @@ fun OnboardingScreen(navController: NavController) {
 	val viewModel = hiltViewModel<OnboardingViewModel>()
 	val state = viewModel.state.collectAsState()
 	val sheetState = rememberModalBottomSheetState(
-
+		skipPartiallyExpanded = true,
 	)
 	LaunchedEffect(Unit) { sheetState.show() }
 
@@ -83,7 +83,6 @@ fun OnboardingScreen(navController: NavController) {
 			}.takeIf { state.value.isBackButtonVisible }
 		)
 		Spacer(modifier = Modifier.height(state.value.contentSeparatorHeight()))
-
 		AnimatedContent(targetState = state.value) { stepState -> stepState.Content(viewModel) }
 		Box(
 			modifier = Modifier

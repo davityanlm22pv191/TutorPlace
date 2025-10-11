@@ -49,26 +49,20 @@ fun Header(
 				targetState = logo
 			) { logoType ->
 				when (logoType) {
-					is HeaderLogoType.Image -> {
-						Image(
-							modifier = Modifier
-								.fillMaxWidth()
-								.padding(top = logoType.paddingTop.dp),
-							painter = painterResource(logoType.image),
-							contentDescription = null
-						)
-					}
-					is HeaderLogoType.Text -> {
-						Text(
-							modifier = Modifier
-								.fillMaxWidth()
-								.padding(top = 28.dp),
-							text = stringResource(logoType.text),
-							style = Typography.displayLarge,
-							color = Black16,
-							textAlign = TextAlign.Center
-						)
-					}
+					is HeaderLogoType.Image -> Image(
+						modifier = Modifier
+							.fillMaxWidth()
+							.padding(top = logoType.paddingTop.dp),
+						painter = painterResource(logoType.image),
+						contentDescription = null
+					)
+					is HeaderLogoType.Text -> Text(
+						modifier = Modifier.fillMaxWidth(),
+						text = stringResource(logoType.text),
+						style = Typography.displayLarge,
+						color = Black16,
+						textAlign = TextAlign.Center
+					)
 				}
 			}
 
