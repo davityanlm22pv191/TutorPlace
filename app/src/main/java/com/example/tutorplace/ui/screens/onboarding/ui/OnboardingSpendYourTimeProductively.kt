@@ -8,7 +8,7 @@ import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
 
 @Composable
 fun OnboardingSpendYourTimeProductively(
-	state: OnboardingState.SpendYourTimeProductively,
+	state: OnboardingState,
 	columnScope: ColumnScope
 ) = with(columnScope) {
 }
@@ -19,7 +19,9 @@ private fun OnboardingSpendYourTimeProductivelyPreview() {
 	Column {
 		OnboardingSpendYourTimeProductively(
 			columnScope = this,
-			state = OnboardingState.SpendYourTimeProductively
+			state = OnboardingState(
+				step = OnboardingState.Step.SPEND_YOUR_TIME_PRODUCTIVELY
+			)
 		)
 	}
 }

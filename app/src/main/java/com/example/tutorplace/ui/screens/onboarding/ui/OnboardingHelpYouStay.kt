@@ -8,7 +8,7 @@ import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
 
 @Composable
 fun OnboardingHelpYouStay(
-	state: OnboardingState.HelpYouStay,
+	state: OnboardingState,
 	columnScope: ColumnScope
 ) = with(columnScope) {
 }
@@ -19,7 +19,9 @@ private fun OnboardingHelpYouStayPreview() {
 	Column {
 		OnboardingHelpYouStay(
 			columnScope = this,
-			state = OnboardingState.HelpYouStay()
+			state = OnboardingState(
+				step = OnboardingState.Step.HELP_YOU_STAY
+			)
 		)
 	}
 }

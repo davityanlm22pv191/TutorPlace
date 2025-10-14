@@ -8,7 +8,7 @@ import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
 
 @Composable
 fun OnboardingMoreOpportunities(
-	state: OnboardingState.MoreOpportunities,
+	state: OnboardingState,
 	columnScope: ColumnScope
 ) = with(columnScope) {
 }
@@ -18,7 +18,9 @@ fun OnboardingMoreOpportunities(
 private fun OnboardingMoreOpportunitiesPreview() {
 	Column {
 		OnboardingMoreOpportunities(
-			state = OnboardingState.MoreOpportunities,
+			state = OnboardingState(
+				step = OnboardingState.Step.MORE_OPPORTUNITIES
+			),
 			columnScope = this
 		)
 	}

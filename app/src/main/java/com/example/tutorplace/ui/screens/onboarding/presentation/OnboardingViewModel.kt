@@ -5,16 +5,9 @@ import com.example.tutorplace.domain.usecases.onboarding.GetOnboardingInfoUseCas
 import com.example.tutorplace.ui.base.BaseViewModel
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NextStepClicked
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PreviousStepClicked
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.ProductNameLoadFail
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.ProductNameLoaded
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.HelpYouStay
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.KnowledgeFromMasters
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Main
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.MoreOpportunities
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.ProvideDetails
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Quizzes
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.SpendYourTimeProductively
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.TellUsAboutInterests
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoadFail
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoaded
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,25 +22,25 @@ class OnboardingViewModel @Inject constructor(
 		loadGiftProductName()
 	}
 
-	override fun initialState() = Quizzes()
+	override fun initialState() = OnboardingState(step = Step.CONGRATULATIONS)
 
 	override fun onEvent(event: OnboardingEvent) = when (event) {
 		is NextStepClicked -> checkCurrentStateAndNavigateToNextStep()
 		is PreviousStepClicked -> Unit
-		is ProductNameLoaded,
-		is ProductNameLoadFail -> Unit
+		is OnboardingInfoLoaded,
+		is OnboardingInfoLoadFail -> Unit
 	}
 
 	private fun checkCurrentStateAndNavigateToNextStep() {
-		val isAllDataValid = when (state.value) {
-			is ProvideDetails -> false
-			is TellUsAboutInterests -> false
-			is HelpYouStay -> false
-			is Main,
-			is MoreOpportunities,
-			is KnowledgeFromMasters,
-			is SpendYourTimeProductively,
-			is Quizzes -> true
+		val isAllDataValid = when (state.value.step) {
+			Step.PROVIDE_DETAILS -> false
+			Step.TELL_US_ABOUT_INTERESTS -> false
+			Step.HELP_YOU_STAY -> false
+			Step.WELCOME,
+			Step.MORE_OPPORTUNITIES,
+			Step.KNOWLEDGE_FROM_MASTERS,
+			Step.SPEND_YOUR_TIME_PRODUCTIVELY,
+			Step.CONGRATULATIONS -> true
 		}
 		if (isAllDataValid) {
 			setState(OnboardingReducer.reduce(state.value, NextStepClicked))
@@ -58,11 +51,11 @@ class OnboardingViewModel @Inject constructor(
 		viewModelScope.launch {
 			getOnboardingInfoUseCase
 				.execute()
-				.onSuccess { response ->
+				.onSuccess { onboardingInfo ->
 					setState(
 						OnboardingReducer.reduce(
 							state.value,
-							ProductNameLoaded(response.productName)
+							OnboardingInfoLoaded(onboardingInfo)
 						)
 					)
 				}
@@ -70,7 +63,7 @@ class OnboardingViewModel @Inject constructor(
 					setState(
 						OnboardingReducer.reduce(
 							state.value,
-							ProductNameLoadFail(throwable)
+							OnboardingInfoLoadFail(throwable)
 						)
 					)
 				}

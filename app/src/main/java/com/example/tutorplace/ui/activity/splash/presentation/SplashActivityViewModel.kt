@@ -14,7 +14,7 @@ class SplashActivityViewModel @Inject constructor(
 	private val credentialsStorage: CredentialsStorage
 ) : BaseViewModel<SplashActivityEvent, SplashActivityState, SplashActivityEffect>() {
 
-	override fun initialState() = SplashActivityState()
+	override fun initialState() = SplashActivityState
 
 	override fun onEvent(event: SplashActivityEvent) = when (event) {
 		is SplashAnimationEnded -> resolveNextScreen()

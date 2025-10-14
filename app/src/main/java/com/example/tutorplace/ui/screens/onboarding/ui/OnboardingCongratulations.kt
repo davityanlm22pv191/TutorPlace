@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tutorplace.R
+import com.example.tutorplace.data.onboarding.model.OnboardingInfo
 import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.domain.model.switchStringResId
 import com.example.tutorplace.extension.gender
@@ -39,30 +39,31 @@ import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.Typography
 
 @Composable
-fun OnboardingQuizzes(
-	state: OnboardingState.Quizzes,
+fun OnboardingCongratulations(
+	state: OnboardingState,
 	columnScope: ColumnScope,
 ) = with(columnScope) {
+	val onboardingInfo = state.onboardingInfo
 	AnimatedContent(
-		targetState = state.productName,
-	) { productName ->
-		if (productName.data.isNotEmpty() && !state.isLoading) {
+		targetState = onboardingInfo.data,
+	) { onboardingInfo ->
+		if (onboardingInfo.productName.isNotEmpty() && !state.onboardingInfo.isLoading) {
 			SpanClickableText(
 				modifier = Modifier
 					.fillMaxWidth()
 					.padding(16.dp),
 				text = stringResource(
-					productName.data.gender().switchStringResId(
-						maleStringResId = R.string.onboarding_quizzes_new_product_is_available_male_format,
-						middleStringResId = R.string.onboarding_quizzes_new_product_is_available_middle_format,
-						femaleStringResId = R.string.onboarding_quizzes_new_product_is_available_female_format
+					onboardingInfo.productName.gender().switchStringResId(
+						maleStringResId = R.string.onboarding_congratulations_new_product_is_available_male_format,
+						middleStringResId = R.string.onboarding_congratulations_new_product_is_available_middle_format,
+						femaleStringResId = R.string.onboarding_congratulations_new_product_is_available_female_format
 					),
-					productName.data
+					onboardingInfo.productName
 				),
 				links = listOf(
 					SpanLinkData(
-						link = productName.data,
-						tag = productName.data,
+						link = onboardingInfo.productName,
+						tag = onboardingInfo.productName,
 						style = SpanStyle(color = PurpleCC),
 						onClick = {}
 					)
@@ -78,7 +79,7 @@ fun OnboardingQuizzes(
 			.fillMaxWidth()
 			.padding(top = 16.dp)
 			.padding(horizontal = 16.dp),
-		text = stringResource(R.string.onboarding_quizzes_this_only_begin),
+		text = stringResource(R.string.onboarding_congratulations_this_only_begin),
 		style = Typography.labelMedium.copy(color = Black16, textAlign = Center),
 		softWrap = true,
 	)
@@ -115,7 +116,7 @@ private fun Skeleton() {
 		)
 		Box(
 			Modifier
-				.width(160.dp)
+				.fillMaxWidth()
 				.height(16.dp)
 				.background(GreyD5, shape = RoundedCornerShape(16.dp))
 		)
@@ -124,12 +125,18 @@ private fun Skeleton() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
-private fun OnboardingQuizzesPreview() {
+private fun OnboardingCongratulationsPreview() {
 	Column {
-		OnboardingQuizzes(
+		OnboardingCongratulations(
 			columnScope = this,
-			state = OnboardingState.Quizzes(
-				productName = DataInfo(data = "Астрология"),
+			state = OnboardingState(
+				step = OnboardingState.Step.CONGRATULATIONS,
+				onboardingInfo = DataInfo(
+					data = OnboardingInfo(
+						id = "",
+						productName = "Нумерология"
+					)
+				),
 			)
 		)
 	}

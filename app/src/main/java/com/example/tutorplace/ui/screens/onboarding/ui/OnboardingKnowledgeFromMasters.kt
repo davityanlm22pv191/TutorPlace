@@ -8,7 +8,7 @@ import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
 
 @Composable
 fun OnboardingKnowledgeFromMasters(
-	state: OnboardingState.KnowledgeFromMasters,
+	state: OnboardingState,
 	columnScope: ColumnScope
 ) = with(columnScope) {
 }
@@ -19,7 +19,9 @@ private fun OnboardingKnowledgeFromMastersPreview() {
 	Column {
 		OnboardingKnowledgeFromMasters(
 			columnScope = this,
-			state = OnboardingState.KnowledgeFromMasters
+			state = OnboardingState(
+				step = OnboardingState.Step.KNOWLEDGE_FROM_MASTERS
+			)
 		)
 	}
 }
