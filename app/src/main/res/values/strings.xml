@@ -48,7 +48,9 @@
 	<string name="onboarding_start_learning">Начать обучение</string>
 	<string name="onboarding_quizzes_welcome_to_tutor_place">Добро пожаловать\n на TutorPlace</string>
 	<string name="onboarding_quizzes_description">Поздравляем с получением доступа к нашей платформе</string>
-	<string name="onboarding_quizzes_new_product_is_available_format">%s уже доступен в вашем личном кабинете</string>
+	<string name="onboarding_quizzes_new_product_is_available_male_format">%s уже доступен в вашем личном кабинете</string>
+	<string name="onboarding_quizzes_new_product_is_available_female_format">%s уже доступна в вашем личном кабинете</string>
+	<string name="onboarding_quizzes_new_product_is_available_middle_format">%s уже доступно в вашем личном кабинете</string>
 	<string name="onboarding_quizzes_this_only_begin">
 		Но знаете ли вы, что это только начало?
 		Вам также открыт доступ к более чем 100 топовым курсам по самым актуальным направлениям

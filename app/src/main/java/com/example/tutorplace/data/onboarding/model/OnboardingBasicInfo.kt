@@ -1,5 +1,6 @@
 package com.example.tutorplace.data.onboarding.model
 
-data class OnboardingGiftProductResponse(
+data class OnboardingBasicInfo(
+	val id: String,
 	val productName: String
 )

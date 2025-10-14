@@ -1,7 +1,7 @@
 package com.example.tutorplace.ui.screens.onboarding.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.example.tutorplace.data.onboarding.OnboardingService
+import com.example.tutorplace.domain.usecases.onboarding.GetOnboardingInfoUseCase
 import com.example.tutorplace.ui.base.BaseViewModel
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NextStepClicked
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PreviousStepClicked
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
-	private val onboardingService: OnboardingService,
+	private val getOnboardingInfoUseCase: GetOnboardingInfoUseCase,
 ) :
 	BaseViewModel<OnboardingEvent, OnboardingState, OnboardingEffect>() {
 
@@ -56,8 +56,8 @@ class OnboardingViewModel @Inject constructor(
 
 	private fun loadGiftProductName() {
 		viewModelScope.launch {
-			onboardingService
-				.getGiftProduct()
+			getOnboardingInfoUseCase
+				.execute()
 				.onSuccess { response ->
 					setState(
 						OnboardingReducer.reduce(

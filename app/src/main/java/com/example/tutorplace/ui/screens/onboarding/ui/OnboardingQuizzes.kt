@@ -27,6 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tutorplace.R
 import com.example.tutorplace.domain.model.DataInfo
+import com.example.tutorplace.domain.model.switchStringResId
+import com.example.tutorplace.extension.gender
 import com.example.tutorplace.ui.common.SkeletonShimmer
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
@@ -50,7 +52,11 @@ fun OnboardingQuizzes(
 					.fillMaxWidth()
 					.padding(16.dp),
 				text = stringResource(
-					R.string.onboarding_quizzes_new_product_is_available_format,
+					productName.data.gender().switchStringResId(
+						maleStringResId = R.string.onboarding_quizzes_new_product_is_available_male_format,
+						middleStringResId = R.string.onboarding_quizzes_new_product_is_available_middle_format,
+						femaleStringResId = R.string.onboarding_quizzes_new_product_is_available_female_format
+					),
 					productName.data
 				),
 				links = listOf(
@@ -81,7 +87,9 @@ fun OnboardingQuizzes(
 @Composable
 private fun Skeleton() {
 	Column(
-		modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+		modifier = Modifier
+			.fillMaxWidth()
+			.padding(horizontal = 16.dp),
 		verticalArrangement = Arrangement.spacedBy(4.dp),
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
