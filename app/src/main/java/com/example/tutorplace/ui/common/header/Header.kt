@@ -26,6 +26,7 @@ fun Header(
 	logo: HeaderLogoType,
 	title: String,
 	description: String?,
+	throwable: Throwable? = null,
 	onBackButtonClicked: (() -> Unit)?
 ) {
 	Box(modifier = Modifier.fillMaxWidth()) {
@@ -48,26 +49,20 @@ fun Header(
 				targetState = logo
 			) { logoType ->
 				when (logoType) {
-					is HeaderLogoType.Image -> {
-						Image(
-							modifier = Modifier
-								.fillMaxWidth()
-								.padding(top = 40.dp),
-							painter = painterResource(logoType.image),
-							contentDescription = null
-						)
-					}
-					is HeaderLogoType.Text -> {
-						Text(
-							modifier = Modifier
-								.fillMaxWidth()
-								.padding(top = 28.dp),
-							text = stringResource(logoType.text),
-							style = Typography.displayLarge,
-							color = Black16,
-							textAlign = TextAlign.Center
-						)
-					}
+					is HeaderLogoType.Image -> Image(
+						modifier = Modifier
+							.fillMaxWidth()
+							.padding(top = logoType.paddingTop.dp),
+						painter = painterResource(logoType.image),
+						contentDescription = null
+					)
+					is HeaderLogoType.Text -> Text(
+						modifier = Modifier.fillMaxWidth(),
+						text = stringResource(logoType.text),
+						style = Typography.displayLarge,
+						color = Black16,
+						textAlign = TextAlign.Center
+					)
 				}
 			}
 
@@ -85,6 +80,7 @@ fun Header(
 					Text(
 						modifier = Modifier
 							.fillMaxWidth()
+							.padding(horizontal = 16.dp)
 							.padding(top = 8.dp),
 						text = animatedDescription,
 						style = Typography.labelMedium,
@@ -92,7 +88,6 @@ fun Header(
 						textAlign = TextAlign.Center
 					)
 				}
-
 			}
 		}
 	}
@@ -120,6 +115,13 @@ private fun HeaderPreview() {
 			logo = HeaderLogoType.Text(R.string.onboarding_provide_details_logo),
 			title = "Укажите данные для доступа к платформе",
 			description = null,
+			onBackButtonClicked = {}
+		)
+		Header(
+			logo = HeaderLogoType.Text(R.string.onboarding_provide_details_logo),
+			title = "Укажите данные для доступа к платформе",
+			description = null,
+			throwable = Throwable(),
 			onBackButtonClicked = {}
 		)
 	}

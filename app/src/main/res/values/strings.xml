@@ -4,6 +4,7 @@
 	<!-- 	Common -->
 	<string name="common_or">или</string>
 	<string name="common_next">Далее</string>
+	<string name="common_skip">Пропустить</string>
 
 	<!-- 	Common Auth -->
 	<string name="common_auth_your_email">Ваша электронная почта</string>
@@ -43,13 +44,18 @@
 
 	<!-- Onboarding -->
 	<string name="onboarding_next_step">Следующий шаг</string>
+	<string name="onboarding_bind">Привязать</string>
+	<string name="onboarding_start_learning">Начать обучение</string>
 	<string name="onboarding_quizzes_welcome_to_tutor_place">Добро пожаловать\n на TutorPlace</string>
-	<string name="onboarding_quizzes_description_format">
-		Поздравляем с получением доступа к нашей платформе\n\n
-		«%s» уже доступен в вашем личном кабинете\n\n
+	<string name="onboarding_quizzes_description">Поздравляем с получением доступа к нашей платформе</string>
+	<string name="onboarding_quizzes_new_product_is_available_male_format">%s уже доступен в вашем личном кабинете</string>
+	<string name="onboarding_quizzes_new_product_is_available_female_format">%s уже доступна в вашем личном кабинете</string>
+	<string name="onboarding_quizzes_new_product_is_available_middle_format">%s уже доступно в вашем личном кабинете</string>
+	<string name="onboarding_quizzes_this_only_begin">
 		Но знаете ли вы, что это только начало?
 		Вам также открыт доступ к более чем 100 топовым курсам по самым актуальным направлениям
 	</string>
+	
 	<string name="onboarding_main_description">Осталось всего несколько шагов, и вам будет открыт доступ к более чем 100 курсам по самым актуальным направлениям</string>
 	<string name="onboarding_provide_details_logo">💻</string>
 	<string name="onboarding_provide_details_title">Укажите данные для доступа к платформе</string>

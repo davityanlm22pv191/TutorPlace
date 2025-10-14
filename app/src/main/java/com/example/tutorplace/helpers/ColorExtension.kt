@@ -9,11 +9,6 @@ fun Color.isLight(): Boolean {
 	val b = (blue * 255).toInt()
 
 	// perceived brightness algorithm
-	val brightness = sqrt(
-		r * r * 0.241 +
-				g * g * 0.691 +
-				b * b * 0.068
-	)
-
+	val brightness = sqrt(r * r * 0.241 + g * g * 0.691 + b * b * 0.068)
 	return brightness >= 130
 }

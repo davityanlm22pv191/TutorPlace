@@ -38,11 +38,18 @@ android {
 	}
 	buildFeatures {
 		compose = true
+		buildConfig = true
+	}
+	defaultConfig {
+		buildConfigField(
+			"String",
+			"SERVER_URL",
+			"\"https://68eaea8e76b3362414cc7139.mockapi.io/app/\""
+		)
 	}
 }
 
 dependencies {
-
 	implementation(libs.androidx.core.ktx)
 	implementation(libs.androidx.lifecycle.runtime.ktx)
 	implementation(libs.androidx.activity.compose)
@@ -87,4 +94,12 @@ dependencies {
 
 	// Jetpack Data Store
 	implementation(libs.androidx.datastore.preferences)
+
+	// Retrofit
+	implementation(libs.retrofit)
+	implementation(libs.converter.gson)
+
+	// Chucker
+	debugImplementation(libs.chucker)
+	releaseImplementation(libs.chucker.no.op)
 }

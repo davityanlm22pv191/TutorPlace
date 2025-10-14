@@ -11,6 +11,7 @@ fun OnboardingMain(
 	state: OnboardingState.Main,
 	columnScope: ColumnScope
 ) = with(columnScope) {
+
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)

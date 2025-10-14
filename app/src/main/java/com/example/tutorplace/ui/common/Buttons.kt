@@ -1,5 +1,7 @@
 package com.example.tutorplace.ui.common
 
+import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.example.tutorplace.ui.theme.GreyAC
 import com.example.tutorplace.ui.theme.GreyF8
 import com.example.tutorplace.ui.theme.PurpleCC
+import com.example.tutorplace.ui.theme.Transparent
 import com.example.tutorplace.ui.theme.Typography
 import com.example.tutorplace.ui.theme.White
 
@@ -56,9 +59,31 @@ fun PurpleButton(
 	}
 }
 
+@Composable
+fun TransparentButton(
+	modifier: Modifier = Modifier,
+	text: String,
+	onClick: () -> Unit
+) {
+	Button(
+		modifier = modifier.height(50.dp),
+		onClick = onClick,
+		enabled = true,
+		shape = RoundedCornerShape(12.dp),
+		colors = ButtonColors(
+			containerColor = Transparent,
+			contentColor = PurpleCC,
+			disabledContainerColor = Transparent,
+			disabledContentColor = PurpleCC
+		),
+		interactionSource = MutableInteractionSource(),
+		content = { Text(text = text, style = Typography.bodyMedium) }
+	)
+}
+
 @Preview(backgroundColor = 0xFFFFFFFF, showBackground = true)
 @Composable
-fun PurpleButtonPreview() {
+private fun PurpleButtonPreview() {
 	Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
 		PurpleButton(
 			modifier = Modifier
@@ -80,6 +105,12 @@ fun PurpleButtonPreview() {
 				.height(50.dp),
 			text = "Войти",
 			isEnabled = false
+		) { }
+		TransparentButton(
+			modifier = Modifier
+				.width(320.dp)
+				.height(50.dp),
+			text = "Пропустить",
 		) { }
 	}
 }

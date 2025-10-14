@@ -236,7 +236,7 @@ private fun ObserveViewModelEvents(
 				RegistrationEffect.NavigateToHome -> navController.navigate(
 					Destinations.Home(
 						Destinations.Home.HomeParams(isShouldShowOnboarding = true)
-					)
+					).route
 				) {
 					popUpTo(Destinations.AuthorizationFlow.FLOW_ROUTE) { inclusive = true }
 				}
