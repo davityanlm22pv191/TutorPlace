@@ -34,14 +34,21 @@ import com.example.tutorplace.ui.common.header.HeaderLogoType.Image
 import com.example.tutorplace.ui.common.header.HeaderLogoType.Text
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.*
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.CONGRATULATIONS
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.HELP_YOU_STAY
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.KNOWLEDGE_FROM_MASTERS
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.MORE_OPPORTUNITIES
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.PROVIDE_DETAILS
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.SPEND_YOUR_TIME_PRODUCTIVELY
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.TELL_US_ABOUT_INTERESTS
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.WELCOME
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingViewModel
+import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingCongratulations
 import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingHelpYouStay
 import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingKnowledgeFromMasters
 import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingMain
 import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingMoreOpportunities
 import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingProvideDetails
-import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingCongratulations
 import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingSpendYourTimeProductively
 import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingTellUsAboutInterests
 import com.example.tutorplace.ui.theme.ContainerColor
@@ -76,7 +83,7 @@ fun OnboardingScreen(navController: NavController) {
 			}.takeIf { state.value.isBackButtonVisible }
 		)
 		Spacer(modifier = Modifier.height(state.value.step.contentSeparatorHeight()))
-		AnimatedContent(targetState = state.value) { it.Content(viewModel) }
+		AnimatedContent(targetState = state.value.step) { state.value.Content(it, viewModel) }
 		Box(
 			modifier = Modifier
 				.fillMaxWidth()
@@ -158,9 +165,9 @@ private fun OnboardingState.Step.description() = when (this) {
 }
 
 @Composable
-private fun OnboardingState.Content(viewModel: OnboardingViewModel) {
+private fun OnboardingState.Content(step: OnboardingState.Step, viewModel: OnboardingViewModel) {
 	Column {
-		when (this@Content.step) {
+		when (step) {
 			CONGRATULATIONS -> OnboardingCongratulations(
 				this@Content,
 				columnScope = this
@@ -171,7 +178,17 @@ private fun OnboardingState.Content(viewModel: OnboardingViewModel) {
 			)
 			PROVIDE_DETAILS -> OnboardingProvideDetails(
 				this@Content,
-				this
+				columnScope = this,
+				onUserNameChanged = { userName ->
+					viewModel.onEvent(OnboardingEvent.NameValueChanged(userName))
+				},
+				onPasswordChanged = { password ->
+					viewModel.onEvent(OnboardingEvent.PasswordValueChanged(password))
+				},
+				onRepeatedPasswordChanged = { password ->
+					viewModel.onEvent(OnboardingEvent.RepeatPasswordValueChanged(password))
+				},
+				onSexChosen = { sex -> viewModel.onEvent(OnboardingEvent.SexChosen(sex)) },
 			)
 			MORE_OPPORTUNITIES -> OnboardingMoreOpportunities(
 				this@Content,

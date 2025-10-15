@@ -132,10 +132,7 @@ private fun OnboardingCongratulationsPreview() {
 			state = OnboardingState(
 				step = OnboardingState.Step.CONGRATULATIONS,
 				onboardingInfo = DataInfo(
-					data = OnboardingInfo(
-						id = "",
-						productName = "Нумерология"
-					)
+					data = OnboardingInfo.empty().copy(productName = "Нумерология")
 				),
 			)
 		)
