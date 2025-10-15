@@ -15,6 +15,7 @@ data class OnboardingState(
 	val password: TextFieldState = TextFieldState(),
 	val repeatedPassword: TextFieldState = TextFieldState(),
 	val sex: Sex? = null,
+	val isSexError: Boolean = false,
 	val isBackButtonVisible: Boolean = false,
 	val isMainButtonEnabled: Boolean = false,
 	@param:StringRes val mainButtonTitle: Int = R.string.onboarding_next_step,

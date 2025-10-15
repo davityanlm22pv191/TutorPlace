@@ -1,9 +1,14 @@
 package com.example.tutorplace.domain.model
 
-enum class Sex {
-	MALE,
-	MIDDLE,
-	FEMALE;
+import androidx.annotation.StringRes
+import com.example.tutorplace.R
+
+enum class Sex(
+	@param:StringRes val stringResId: Int
+) {
+	MALE(R.string.common_sex_male),
+	MIDDLE(0),
+	FEMALE(R.string.common_sex_female);
 }
 
 fun Sex.switchStringResId(

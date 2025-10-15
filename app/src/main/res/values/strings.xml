@@ -8,6 +8,9 @@
 	<string name="common_user_name">Имя пользователя</string>
 	<string name="common_password">Пароль</string>
 	<string name="common_repeat_password">Повторите пароль</string>
+	<string name="common_sex_male">Мужской</string>
+	<string name="common_sex_female">Женский</string>
+	<string name="common_your_sex">Ваш пол</string>
 
 	<!-- 	Common Auth -->
 	<string name="common_auth_your_email">Ваша электронная почта</string>

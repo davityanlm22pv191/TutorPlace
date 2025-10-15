@@ -43,7 +43,7 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 		oldState: OnboardingState,
 		event: SexChosen
 	): OnboardingState {
-		return oldState.copy(sex = event.sex)
+		return oldState.copy(sex = event.sex, isSexError = false)
 	}
 
 	private fun reduceRepeatPasswordError(oldState: OnboardingState): OnboardingState {
