@@ -30,6 +30,11 @@ class OnboardingViewModel @Inject constructor(
 	private val postOnboardingInfoUseCase: PostOnboardingInfoUseCase,
 ) : BaseViewModel<OnboardingEvent, OnboardingState, OnboardingEffect>() {
 
+	// THIS IS MOCK LINK FOR IMAGES
+	// https://iili.io/Kk4qtK7.png
+	// https://iili.io/Kkri8V2.png
+	// https://iili.io/KkriSPS.png
+
 	init {
 		loadGiftProductName()
 	}
@@ -54,7 +59,12 @@ class OnboardingViewModel @Inject constructor(
 
 	private fun checkCurrentStateAndNavigateToNextStep() {
 		when (state.value.step) {
-			Step.PROVIDE_DETAILS -> processProvideDetailsStep()
+			Step.PROVIDE_DETAILS -> setState(
+				OnboardingReducer.reduce(
+					state.value,
+					NextStepClicked
+				)
+			) // TODO processProvideDetailsStep()
 			Step.TELL_US_ABOUT_INTERESTS -> false
 			Step.HELP_YOU_STAY -> false
 			Step.WELCOME,
@@ -83,7 +93,12 @@ class OnboardingViewModel @Inject constructor(
 						)
 					)
 					.onSuccess {
-						setState(OnboardingReducer.reduce(state.value, OnboardingInfoLoaded(state.value.onboardingInfo.data)))
+						setState(
+							OnboardingReducer.reduce(
+								state.value,
+								OnboardingInfoLoaded(state.value.onboardingInfo.data)
+							)
+						)
 						setState(OnboardingReducer.reduce(state.value, NextStepClicked))
 					}
 					.onFailure { throwable ->

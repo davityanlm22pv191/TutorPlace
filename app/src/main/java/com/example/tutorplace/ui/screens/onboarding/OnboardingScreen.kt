@@ -126,8 +126,8 @@ fun OnboardingScreen(navController: NavController) {
 private fun OnboardingState.Step.contentSeparatorHeight() = when (this) {
 	CONGRATULATIONS -> 12.dp
 	WELCOME, SPEND_YOUR_TIME_PRODUCTIVELY -> 40.dp
-	PROVIDE_DETAILS, KNOWLEDGE_FROM_MASTERS -> 16.dp
-	MORE_OPPORTUNITIES -> 36.dp
+	PROVIDE_DETAILS -> 16.dp
+	MORE_OPPORTUNITIES, KNOWLEDGE_FROM_MASTERS -> 40.dp
 	TELL_US_ABOUT_INTERESTS, HELP_YOU_STAY -> 24.dp
 }
 
@@ -157,7 +157,7 @@ private fun OnboardingState.Step.description() = when (this) {
 	CONGRATULATIONS -> R.string.onboarding_congratulations_description
 	WELCOME -> R.string.onboarding_welcome_description
 	PROVIDE_DETAILS -> null
-	MORE_OPPORTUNITIES -> R.string.onboarding_more_opportunities_title
+	MORE_OPPORTUNITIES -> R.string.onboarding_more_opportunities_description
 	KNOWLEDGE_FROM_MASTERS -> R.string.onboarding_knowledge_from_masters_description
 	TELL_US_ABOUT_INTERESTS -> R.string.onboarding_tell_us_about_interests_description
 	HELP_YOU_STAY -> R.string.onboarding_help_you_stay_description

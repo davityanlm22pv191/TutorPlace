@@ -47,7 +47,7 @@ fun OnboardingMain(
 				.padding(horizontal = 16.dp),
 			model = state.onboardingInfo.data.coverUrl,
 			contentDescription = null,
-			contentScale = ContentScale.FillBounds,
+			contentScale = ContentScale.Crop,
 			onSuccess = { isLoading = false },
 			onError = { isLoading = false }
 		)
