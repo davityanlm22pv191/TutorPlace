@@ -1,11 +1,21 @@
 package com.example.tutorplace.data.onboarding
 
 import com.example.tutorplace.data.onboarding.model.OnboardingInfo
+import com.example.tutorplace.domain.usecases.onboarding.model.PlatformAccessDataBody
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 
 interface OnboardingService {
 
-	@GET("onboarding")
+	private companion object {
+		const val ENDPOINT = "onboarding"
+	}
+
+	@GET(ENDPOINT)
 	suspend fun getOnboardingInfo(): Response<List<OnboardingInfo>>
+
+	@POST(ENDPOINT)
+	suspend fun postPlatformAccessData(@Body body: PlatformAccessDataBody): Response<Unit>
 }

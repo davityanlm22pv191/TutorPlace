@@ -9,6 +9,14 @@ enum class Sex(
 	MALE(R.string.common_sex_male),
 	MIDDLE(0),
 	FEMALE(R.string.common_sex_female);
+
+	override fun toString(): String {
+		return when (this) {
+			MALE -> "MALE"
+			MIDDLE -> "MIDDLE"
+			FEMALE -> "FEMALE"
+		}
+	}
 }
 
 fun Sex.switchStringResId(

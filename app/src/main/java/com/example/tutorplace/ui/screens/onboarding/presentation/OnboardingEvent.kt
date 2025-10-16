@@ -5,6 +5,7 @@ import com.example.tutorplace.domain.model.Sex
 import com.example.tutorplace.ui.base.BaseEvent
 
 sealed interface OnboardingEvent : BaseEvent {
+
 	data object NextStepClicked : OnboardingEvent
 	data object PreviousStepClicked : OnboardingEvent
 
@@ -15,7 +16,9 @@ sealed interface OnboardingEvent : BaseEvent {
 	data class RepeatPasswordValueChanged(val repeatPassword: String) : OnboardingEvent
 	data object RepeatPasswordValidError : OnboardingEvent
 	data class SexChosen(val sex: Sex) : OnboardingEvent
+	data object SexError: OnboardingEvent
 
+	data object OnboardingInfoLoading: OnboardingEvent
 	data class OnboardingInfoLoaded(val onboardingInfo: OnboardingInfo) : OnboardingEvent
 	data class OnboardingInfoLoadFail(val throwable: Throwable) : OnboardingEvent
 }

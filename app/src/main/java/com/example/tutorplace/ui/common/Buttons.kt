@@ -1,21 +1,22 @@
 package com.example.tutorplace.ui.common
 
-import androidx.compose.foundation.interaction.InteractionSource
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tutorplace.ui.theme.GreyAC
@@ -35,7 +36,7 @@ fun PurpleButton(
 ) {
 	Button(
 		modifier = modifier.height(50.dp),
-		onClick = onClick,
+		onClick = { if (!isLoading) onClick() },
 		enabled = isEnabled,
 		shape = RoundedCornerShape(12.dp),
 		colors = ButtonColors(
@@ -65,19 +66,19 @@ fun TransparentButton(
 	text: String,
 	onClick: () -> Unit
 ) {
-	Button(
+	Surface(
 		modifier = modifier.height(50.dp),
-		onClick = onClick,
-		enabled = true,
+		onClick = { onClick() },
 		shape = RoundedCornerShape(12.dp),
-		colors = ButtonColors(
-			containerColor = Transparent,
-			contentColor = PurpleCC,
-			disabledContainerColor = Transparent,
-			disabledContentColor = PurpleCC
-		),
-		interactionSource = MutableInteractionSource(),
-		content = { Text(text = text, style = Typography.bodyMedium) }
+		color = Transparent,
+		content = {
+			Text(
+				modifier = Modifier.wrapContentSize(),
+				text = text,
+				style = Typography.bodyMedium.copy(color = PurpleCC),
+				textAlign = TextAlign.Center
+			)
+		}
 	)
 }
 

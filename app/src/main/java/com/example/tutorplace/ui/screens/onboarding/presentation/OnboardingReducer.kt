@@ -3,6 +3,7 @@ package com.example.tutorplace.ui.screens.onboarding.presentation
 import com.example.tutorplace.data.onboarding.model.OnboardingInfo
 import com.example.tutorplace.domain.model.failure
 import com.example.tutorplace.domain.model.loaded
+import com.example.tutorplace.domain.model.loading
 import com.example.tutorplace.ui.base.BaseReducer
 import com.example.tutorplace.ui.common.TextFieldState
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValidError
@@ -10,15 +11,25 @@ import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NextStepClicked
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoadFail
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoaded
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoading
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PasswordValidError
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PasswordValueChanged
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PreviousStepClicked
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.RepeatPasswordValidError
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.RepeatPasswordValueChanged
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.SexChosen
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.SexError
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step
 
 object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
+
+	private val isBackButtonVisible: (Step) -> Boolean
+		get() = { step ->
+			step !in listOf(Step.CONGRATULATIONS, Step.WELCOME, Step.PROVIDE_DETAILS)
+		}
+
+	private val isMainButtonEnabled: (Step) -> Boolean
+		get() = { step -> step !in listOf(Step.TELL_US_ABOUT_INTERESTS, Step.HELP_YOU_STAY) }
 
 	override fun reduce(
 		oldState: OnboardingState,
@@ -27,6 +38,7 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 		return when (event) {
 			is NextStepClicked -> reduceNextStep(oldState)
 			is PreviousStepClicked -> reducePreviousStep(oldState)
+			is OnboardingInfoLoading -> oldState.copy(onboardingInfo = oldState.onboardingInfo.loading())
 			is OnboardingInfoLoadFail -> reduceOnboardingInfoLoadFail(oldState, event.throwable)
 			is OnboardingInfoLoaded -> reduceOnboardingInfoLoaded(oldState, event.onboardingInfo)
 			is NameValidError -> reduceNameValidError(oldState)
@@ -36,7 +48,12 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 			is RepeatPasswordValidError -> reduceRepeatPasswordError(oldState)
 			is RepeatPasswordValueChanged -> reduceRepeatPasswordValueChanged(oldState, event)
 			is SexChosen -> reduceSexChosen(oldState, event)
+			is SexError -> reduceSexError(oldState)
 		}
+	}
+
+	private fun reduceSexError(oldState: OnboardingState): OnboardingState {
+		return oldState.copy(isSexError = true)
 	}
 
 	private fun reduceSexChosen(
@@ -48,7 +65,7 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 
 	private fun reduceRepeatPasswordError(oldState: OnboardingState): OnboardingState {
 		return oldState.copy(
-			userName = TextFieldState(oldState.repeatedPassword.value, isError = true)
+			repeatedPassword = TextFieldState(oldState.repeatedPassword.value, isError = true)
 		)
 	}
 
@@ -88,7 +105,7 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 	}
 
 	private fun reduceNextStep(oldState: OnboardingState): OnboardingState {
-		val newStep = when (oldState.step) {
+		val nextStep = when (oldState.step) {
 			Step.CONGRATULATIONS -> Step.WELCOME
 			Step.WELCOME -> Step.PROVIDE_DETAILS
 			Step.PROVIDE_DETAILS -> Step.MORE_OPPORTUNITIES
@@ -98,25 +115,29 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 			Step.HELP_YOU_STAY -> Step.SPEND_YOUR_TIME_PRODUCTIVELY
 			Step.SPEND_YOUR_TIME_PRODUCTIVELY -> TODO() // This is final step
 		}
-		val isMainButtonEnabled = newStep !in listOf(
-			Step.PROVIDE_DETAILS,
-			Step.TELL_US_ABOUT_INTERESTS,
-			Step.HELP_YOU_STAY
-		)
-		val isBackButtonVisible = newStep !in listOf(
-			Step.CONGRATULATIONS,
-			Step.WELCOME,
-			Step.PROVIDE_DETAILS
-		)
 		return oldState.copy(
-			step = newStep,
-			isMainButtonEnabled = isMainButtonEnabled,
-			isBackButtonVisible = isBackButtonVisible
+			step = nextStep,
+			isMainButtonEnabled = isMainButtonEnabled(nextStep),
+			isBackButtonVisible = isBackButtonVisible(nextStep)
 		)
 	}
 
 	private fun reducePreviousStep(oldState: OnboardingState): OnboardingState {
-		return oldState
+		val previousStep = when (oldState.step) {
+			Step.CONGRATULATIONS -> TODO()
+			Step.WELCOME -> Step.CONGRATULATIONS
+			Step.PROVIDE_DETAILS -> Step.WELCOME
+			Step.MORE_OPPORTUNITIES -> Step.PROVIDE_DETAILS
+			Step.KNOWLEDGE_FROM_MASTERS -> Step.MORE_OPPORTUNITIES
+			Step.TELL_US_ABOUT_INTERESTS -> Step.KNOWLEDGE_FROM_MASTERS
+			Step.HELP_YOU_STAY -> Step.TELL_US_ABOUT_INTERESTS
+			Step.SPEND_YOUR_TIME_PRODUCTIVELY -> Step.HELP_YOU_STAY
+		}
+		return oldState.copy(
+			step = previousStep,
+			isMainButtonEnabled = isMainButtonEnabled(previousStep),
+			isBackButtonVisible = isBackButtonVisible(previousStep)
+		)
 	}
 
 	private fun reduceOnboardingInfoLoaded(

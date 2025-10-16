@@ -32,7 +32,7 @@ fun Header(
 	Box(modifier = Modifier.fillMaxWidth()) {
 		if (onBackButtonClicked != null) {
 			Surface(
-				modifier = Modifier.padding(top = 16.dp),
+				modifier = Modifier.padding(top = 16.dp, start = 16.dp),
 				shape = CircleShape,
 				color = Color.Transparent,
 				onClick = { onBackButtonClicked() }

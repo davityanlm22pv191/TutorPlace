@@ -22,8 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +40,7 @@ import com.example.tutorplace.ui.theme.Grey82
 import com.example.tutorplace.ui.theme.GreyD5
 import com.example.tutorplace.ui.theme.Red1D
 import com.example.tutorplace.ui.theme.Typography
+import com.example.tutorplace.ui.theme.White
 
 @Composable
 fun OnboardingProvideDetails(
@@ -110,7 +109,7 @@ private fun SexChoosingMenu(
 	Surface(
 		modifier = modifier,
 		shape = RoundedCornerShape(12.dp),
-		color = ContainerColor,
+		color = if (isError) White else ContainerColor,
 		border = BorderStroke(1.dp, if (isError) Red1D else GreyD5),
 		onClick = { isOpen = !isOpen }
 	) {
@@ -124,7 +123,6 @@ private fun SexChoosingMenu(
 				modifier = Modifier.weight(1f),
 				text = stringResource(selectedSex?.stringResId ?: R.string.common_your_sex),
 				style = Typography.labelMedium.copy(color = if (selectedSex != null) Black16 else Grey82),
-				color = if (isError) Red1D.copy(alpha = 0.5f) else Color.Unspecified,
 				maxLines = 1
 			)
 			Image(
@@ -132,7 +130,6 @@ private fun SexChoosingMenu(
 				contentDescription = null,
 				painter = painterResource(R.drawable.ic_arrow_down_black_16),
 				alpha = if (selectedSex != null) 1f else 0.5f,
-				colorFilter = ColorFilter.tint(Red1D).takeIf { isError }
 			)
 			DropdownMenu(
 				expanded = isOpen,
