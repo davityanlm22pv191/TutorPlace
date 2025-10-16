@@ -200,7 +200,8 @@ private fun OnboardingState.Content(step: OnboardingState.Step, viewModel: Onboa
 			)
 			TELL_US_ABOUT_INTERESTS -> OnboardingTellUsAboutInterests(
 				this@Content,
-				columnScope = this
+				columnScope = this,
+				{}
 			)
 			HELP_YOU_STAY -> OnboardingHelpYouStay(
 				this@Content,

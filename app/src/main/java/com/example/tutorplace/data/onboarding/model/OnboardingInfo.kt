@@ -5,7 +5,8 @@ data class OnboardingInfo(
 	val productName: String,
 	val coverUrl: String,
 	val coursesCoverUrls: List<String>,
-	val mastersCoverUrls: List<String>
+	val mastersCoverUrls: List<String>,
+	val interests: List<Interest>
 ) {
 	companion object {
 		fun empty() = OnboardingInfo(
@@ -14,6 +15,7 @@ data class OnboardingInfo(
 			coverUrl = "",
 			coursesCoverUrls = emptyList(),
 			mastersCoverUrls = emptyList(),
+			interests = emptyList()
 		)
 	}
 }
