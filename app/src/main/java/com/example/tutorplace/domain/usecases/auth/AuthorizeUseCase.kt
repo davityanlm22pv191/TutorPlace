@@ -1,4 +1,4 @@
-package com.example.tutorplace.domain.usecases
+package com.example.tutorplace.domain.usecases.auth
 
 import com.example.tutorplace.data.auth.AuthService
 import com.example.tutorplace.data.credentials.CredentialsStorage
