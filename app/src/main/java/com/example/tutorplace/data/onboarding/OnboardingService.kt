@@ -1,7 +1,8 @@
 package com.example.tutorplace.data.onboarding
 
 import com.example.tutorplace.data.onboarding.model.OnboardingInfo
-import com.example.tutorplace.domain.usecases.onboarding.model.PlatformAccessDataBody
+import com.example.tutorplace.data.onboarding.model.PlatformAccessDataBody
+import com.example.tutorplace.data.onboarding.model.PostInterestListBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -18,4 +19,7 @@ interface OnboardingService {
 
 	@POST(ENDPOINT)
 	suspend fun postPlatformAccessData(@Body body: PlatformAccessDataBody): Response<Unit>
+
+	@POST(ENDPOINT)
+	suspend fun postInterests(@Body body: PostInterestListBody): Response<Unit>
 }

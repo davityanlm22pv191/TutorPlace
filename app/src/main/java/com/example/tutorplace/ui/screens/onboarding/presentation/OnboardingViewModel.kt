@@ -3,7 +3,7 @@ package com.example.tutorplace.ui.screens.onboarding.presentation
 import androidx.lifecycle.viewModelScope
 import com.example.tutorplace.domain.usecases.onboarding.GetOnboardingInfoUseCase
 import com.example.tutorplace.domain.usecases.onboarding.PostOnboardingInfoUseCase
-import com.example.tutorplace.domain.usecases.onboarding.model.PlatformAccessDataBody
+import com.example.tutorplace.data.onboarding.model.PlatformAccessDataBody
 import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.ui.base.BaseViewModel
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValidError
@@ -66,9 +66,9 @@ class OnboardingViewModel @Inject constructor(
 					NextStepClicked
 				)
 			) // TODO processProvideDetailsStep()
+			Step.TELL_US_ABOUT_INTERESTS -> processTellUsAboutInterestsStep()
 			Step.HELP_YOU_STAY -> false
 			Step.WELCOME,
-			Step.TELL_US_ABOUT_INTERESTS,
 			Step.MORE_OPPORTUNITIES,
 			Step.KNOWLEDGE_FROM_MASTERS,
 			Step.SPEND_YOUR_TIME_PRODUCTIVELY,
@@ -76,6 +76,31 @@ class OnboardingViewModel @Inject constructor(
 				if (!state.value.onboardingInfo.isLoading) {
 					setState(OnboardingReducer.reduce(state.value, NextStepClicked))
 				}
+			}
+		}
+	}
+
+	private fun processTellUsAboutInterestsStep() {
+		viewModelScope.launch {
+			val isAllDataValid = state.value.selectedInterestsIds.isNotEmpty()
+			if (isAllDataValid) {
+				setState(OnboardingReducer.reduce(state.value, OnboardingInfoLoading))
+				postOnboardingInfoUseCase
+					.postInterests(state.value.selectedInterestsIds)
+					.onSuccess {
+						setState(
+							OnboardingReducer.reduce(
+								state.value,
+								OnboardingInfoLoaded(state.value.onboardingInfo.data)
+							)
+						)
+						setState(OnboardingReducer.reduce(state.value, NextStepClicked))
+					}
+					.onFailure { throwable ->
+						setState(
+							OnboardingReducer.reduce(state.value, OnboardingInfoLoadFail(throwable))
+						)
+					}
 			}
 		}
 	}

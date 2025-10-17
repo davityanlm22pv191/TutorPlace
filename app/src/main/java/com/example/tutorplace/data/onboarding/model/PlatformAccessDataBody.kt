@@ -1,4 +1,4 @@
-package com.example.tutorplace.domain.usecases.onboarding.model
+package com.example.tutorplace.data.onboarding.model
 
 import com.example.tutorplace.domain.model.Sex
 
