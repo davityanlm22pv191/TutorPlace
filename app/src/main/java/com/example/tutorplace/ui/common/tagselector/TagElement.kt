@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,7 +35,11 @@ fun TagElement(tag: Tag, onClick: (Tag) -> Unit) {
 	Box(
 		modifier = Modifier
 			.background(background, RoundedCornerShape(24.dp))
-			.clickable(onClick = { onClick(tag) })
+			.clickable(
+				indication = null,
+				onClick = { onClick(tag) },
+				interactionSource = null,
+			),
 	) {
 		Text(
 			modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
@@ -59,6 +62,9 @@ fun TagElement(tag: Tag, onClick: (Tag) -> Unit) {
 @Composable
 private fun TagElementPreview() {
 	Column(
+		modifier = Modifier
+			.background(ScreenColor)
+			.padding(16.dp),
 		verticalArrangement = Arrangement.spacedBy(8.dp)
 	) {
 		TagElement(Tag(id = "1", "Питание"), onClick = {})

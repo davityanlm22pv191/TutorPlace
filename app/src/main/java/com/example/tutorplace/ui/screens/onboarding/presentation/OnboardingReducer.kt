@@ -6,6 +6,7 @@ import com.example.tutorplace.domain.model.loaded
 import com.example.tutorplace.domain.model.loading
 import com.example.tutorplace.ui.base.BaseReducer
 import com.example.tutorplace.ui.common.TextFieldState
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.InterestSelected
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValidError
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValueChanged
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NextStepClicked
@@ -49,7 +50,23 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 			is RepeatPasswordValueChanged -> reduceRepeatPasswordValueChanged(oldState, event)
 			is SexChosen -> reduceSexChosen(oldState, event)
 			is SexError -> reduceSexError(oldState)
+			is InterestSelected -> reduceInterestSelected(oldState, event)
 		}
+	}
+
+	private fun reduceInterestSelected(
+		oldState: OnboardingState,
+		event: InterestSelected
+	): OnboardingState {
+		val selectedInterestsIds = if (event.interestId in oldState.selectedInterestsIds) {
+			oldState.selectedInterestsIds - event.interestId
+		} else {
+			oldState.selectedInterestsIds + event.interestId
+		}
+		return oldState.copy(
+			selectedInterestsIds = selectedInterestsIds,
+			isMainButtonEnabled = selectedInterestsIds.isNotEmpty()
+		)
 	}
 
 	private fun reduceSexError(oldState: OnboardingState): OnboardingState {

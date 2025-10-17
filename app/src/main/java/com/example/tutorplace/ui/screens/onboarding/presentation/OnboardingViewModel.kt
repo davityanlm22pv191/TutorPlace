@@ -54,6 +54,7 @@ class OnboardingViewModel @Inject constructor(
 		is RepeatPasswordValueChanged,
 		is PreviousStepClicked,
 		is OnboardingInfoLoading,
+		is OnboardingEvent.InterestSelected,
 		is SexChosen -> setState(OnboardingReducer.reduce(state.value, event))
 	}
 
@@ -65,9 +66,9 @@ class OnboardingViewModel @Inject constructor(
 					NextStepClicked
 				)
 			) // TODO processProvideDetailsStep()
-			Step.TELL_US_ABOUT_INTERESTS -> false
 			Step.HELP_YOU_STAY -> false
 			Step.WELCOME,
+			Step.TELL_US_ABOUT_INTERESTS,
 			Step.MORE_OPPORTUNITIES,
 			Step.KNOWLEDGE_FROM_MASTERS,
 			Step.SPEND_YOUR_TIME_PRODUCTIVELY,

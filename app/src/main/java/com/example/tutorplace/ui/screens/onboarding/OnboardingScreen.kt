@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -62,6 +63,7 @@ fun OnboardingScreen(navController: NavController) {
 	val state = viewModel.state.collectAsState()
 	val sheetState = rememberModalBottomSheetState(
 		skipPartiallyExpanded = true,
+		confirmValueChange = { sheetValue -> sheetValue != SheetValue.Hidden }
 	)
 	LaunchedEffect(Unit) { sheetState.show() }
 
@@ -87,7 +89,7 @@ fun OnboardingScreen(navController: NavController) {
 		Box(
 			modifier = Modifier
 				.fillMaxWidth()
-				.padding(top = 20.dp)
+				.padding(top = if (state.value.step != TELL_US_ABOUT_INTERESTS) 20.dp else 0.dp)
 				.background(ContainerColor, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
 				.padding(16.dp),
 		) {
@@ -124,11 +126,11 @@ fun OnboardingScreen(navController: NavController) {
 }
 
 private fun OnboardingState.Step.contentSeparatorHeight() = when (this) {
-	CONGRATULATIONS -> 12.dp
+	CONGRATULATIONS, TELL_US_ABOUT_INTERESTS -> 12.dp
 	WELCOME, SPEND_YOUR_TIME_PRODUCTIVELY -> 40.dp
 	PROVIDE_DETAILS -> 16.dp
 	MORE_OPPORTUNITIES, KNOWLEDGE_FROM_MASTERS -> 40.dp
-	TELL_US_ABOUT_INTERESTS, HELP_YOU_STAY -> 24.dp
+	HELP_YOU_STAY -> 24.dp
 }
 
 private fun OnboardingState.Step.headerLogoType() = when (this) {
@@ -201,7 +203,7 @@ private fun OnboardingState.Content(step: OnboardingState.Step, viewModel: Onboa
 			TELL_US_ABOUT_INTERESTS -> OnboardingTellUsAboutInterests(
 				this@Content,
 				columnScope = this,
-				{}
+				onTagClicked = { viewModel.onEvent(OnboardingEvent.InterestSelected(it.id.toInt())) }
 			)
 			HELP_YOU_STAY -> OnboardingHelpYouStay(
 				this@Content,
