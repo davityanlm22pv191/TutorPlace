@@ -4,17 +4,20 @@ import com.example.tutorplace.data.onboarding.model.OnboardingInfo
 import com.example.tutorplace.domain.model.failure
 import com.example.tutorplace.domain.model.loaded
 import com.example.tutorplace.domain.model.loading
+import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.ui.base.BaseReducer
 import com.example.tutorplace.ui.common.TextFieldState
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.InterestSelected
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValidError
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValueChanged
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NextStepClicked
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnSkipButtonClicked
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoadFail
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoaded
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoading
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PasswordValidError
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PasswordValueChanged
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PhoneNumberValueChanged
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PreviousStepClicked
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.RepeatPasswordValidError
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.RepeatPasswordValueChanged
@@ -29,15 +32,15 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 			step !in listOf(Step.CONGRATULATIONS, Step.WELCOME, Step.PROVIDE_DETAILS)
 		}
 
-	private val isMainButtonEnabled: (Step) -> Boolean
-		get() = { step -> step !in listOf(Step.TELL_US_ABOUT_INTERESTS, Step.HELP_YOU_STAY) }
+	private val isSkipButtonVisible: (Step) -> Boolean
+		get() = { step -> step == Step.HELP_YOU_STAY }
 
 	override fun reduce(
 		oldState: OnboardingState,
 		event: OnboardingEvent
 	): OnboardingState {
 		return when (event) {
-			is NextStepClicked -> reduceNextStep(oldState)
+			is NextStepClicked, is OnSkipButtonClicked -> reduceNextStep(oldState)
 			is PreviousStepClicked -> reducePreviousStep(oldState)
 			is OnboardingInfoLoading -> oldState.copy(onboardingInfo = oldState.onboardingInfo.loading())
 			is OnboardingInfoLoadFail -> reduceOnboardingInfoLoadFail(oldState, event.throwable)
@@ -51,8 +54,20 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 			is SexChosen -> reduceSexChosen(oldState, event)
 			is SexError -> reduceSexError(oldState)
 			is InterestSelected -> reduceInterestSelected(oldState, event)
+			is PhoneNumberValueChanged -> reducePhoneNumberValueChanged(oldState, event)
 		}
 	}
+
+	private fun reducePhoneNumberValueChanged(
+		oldState: OnboardingState,
+		event: PhoneNumberValueChanged
+	): OnboardingState {
+		return oldState.copy(
+			phoneNumber = TextFieldState(event.phoneNumber, isError = false),
+			isMainButtonEnabled = FormatHelper.isValidPhone(event.phoneNumber)
+		)
+	}
+
 
 	private fun reduceInterestSelected(
 		oldState: OnboardingState,
@@ -130,12 +145,17 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 			Step.KNOWLEDGE_FROM_MASTERS -> Step.TELL_US_ABOUT_INTERESTS
 			Step.TELL_US_ABOUT_INTERESTS -> Step.HELP_YOU_STAY
 			Step.HELP_YOU_STAY -> Step.SPEND_YOUR_TIME_PRODUCTIVELY
-			Step.SPEND_YOUR_TIME_PRODUCTIVELY -> TODO() // This is final step
+			Step.SPEND_YOUR_TIME_PRODUCTIVELY -> oldState.step
 		}
 		return oldState.copy(
 			step = nextStep,
-			isMainButtonEnabled = isMainButtonEnabled(nextStep),
-			isBackButtonVisible = isBackButtonVisible(nextStep)
+			isMainButtonEnabled = when (nextStep) {
+				Step.TELL_US_ABOUT_INTERESTS -> oldState.selectedInterestsIds.isNotEmpty()
+				Step.HELP_YOU_STAY -> true // TODO
+				else -> true
+			},
+			isBackButtonVisible = isBackButtonVisible(nextStep),
+			isSkipButtonVisible = isSkipButtonVisible(nextStep)
 		)
 	}
 
@@ -152,8 +172,9 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 		}
 		return oldState.copy(
 			step = previousStep,
-			isMainButtonEnabled = isMainButtonEnabled(previousStep),
-			isBackButtonVisible = isBackButtonVisible(previousStep)
+			isMainButtonEnabled = true,
+			isBackButtonVisible = isBackButtonVisible(previousStep),
+			isSkipButtonVisible = isSkipButtonVisible(previousStep)
 		)
 	}
 

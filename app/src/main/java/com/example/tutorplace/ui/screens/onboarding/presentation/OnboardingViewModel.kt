@@ -1,19 +1,22 @@
 package com.example.tutorplace.ui.screens.onboarding.presentation
 
 import androidx.lifecycle.viewModelScope
+import com.example.tutorplace.data.onboarding.model.PlatformAccessDataBody
 import com.example.tutorplace.domain.usecases.onboarding.GetOnboardingInfoUseCase
 import com.example.tutorplace.domain.usecases.onboarding.PostOnboardingInfoUseCase
-import com.example.tutorplace.data.onboarding.model.PlatformAccessDataBody
 import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.ui.base.BaseViewModel
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.InterestSelected
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValidError
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValueChanged
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NextStepClicked
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnSkipButtonClicked
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoadFail
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoaded
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoading
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PasswordValidError
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PasswordValueChanged
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PhoneNumberValueChanged
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PreviousStepClicked
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.RepeatPasswordValidError
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.RepeatPasswordValueChanged
@@ -54,7 +57,9 @@ class OnboardingViewModel @Inject constructor(
 		is RepeatPasswordValueChanged,
 		is PreviousStepClicked,
 		is OnboardingInfoLoading,
-		is OnboardingEvent.InterestSelected,
+		is InterestSelected,
+		is OnSkipButtonClicked,
+		is PhoneNumberValueChanged,
 		is SexChosen -> setState(OnboardingReducer.reduce(state.value, event))
 	}
 
@@ -66,8 +71,13 @@ class OnboardingViewModel @Inject constructor(
 					NextStepClicked
 				)
 			) // TODO processProvideDetailsStep()
-			Step.TELL_US_ABOUT_INTERESTS -> processTellUsAboutInterestsStep()
-			Step.HELP_YOU_STAY -> false
+			Step.TELL_US_ABOUT_INTERESTS -> setState(
+				OnboardingReducer.reduce(
+					state.value,
+					NextStepClicked
+				)
+			)// TODO processTellUsAboutInterestsStep()
+			Step.HELP_YOU_STAY -> processHelpYouStayStep()
 			Step.WELCOME,
 			Step.MORE_OPPORTUNITIES,
 			Step.KNOWLEDGE_FROM_MASTERS,
@@ -78,6 +88,10 @@ class OnboardingViewModel @Inject constructor(
 				}
 			}
 		}
+	}
+
+	private fun processHelpYouStayStep() {
+
 	}
 
 	private fun processTellUsAboutInterestsStep() {

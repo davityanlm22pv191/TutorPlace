@@ -61,5 +61,9 @@ object FormatHelper {
 		return String.format(Locale.getDefault(), "%02d:%02d", minutes, remainingSeconds)
 	}
 
+	fun formatHourAndMinutes(hours: Int, minutes: Int): String {
+		return String.format(Locale.getDefault(), "%02d:%02d", hours, minutes)
+	}
+
 	// endregion
 }

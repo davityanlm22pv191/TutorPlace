@@ -21,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -90,6 +91,7 @@ fun OnboardingScreen(navController: NavController) {
 			modifier = Modifier
 				.fillMaxWidth()
 				.padding(top = if (state.value.step != TELL_US_ABOUT_INTERESTS) 20.dp else 0.dp)
+				.shadow(8.dp, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
 				.background(ContainerColor, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
 				.padding(16.dp),
 		) {
@@ -116,7 +118,7 @@ fun OnboardingScreen(navController: NavController) {
 								.fillMaxWidth()
 								.height(45.dp),
 							text = stringResource(R.string.common_skip),
-							onClick = { viewModel.onEvent(OnboardingEvent.PreviousStepClicked) }
+							onClick = { viewModel.onEvent(OnboardingEvent.OnSkipButtonClicked) }
 						)
 					}
 				}
@@ -207,7 +209,10 @@ private fun OnboardingState.Content(step: OnboardingState.Step, viewModel: Onboa
 			)
 			HELP_YOU_STAY -> OnboardingHelpYouStay(
 				this@Content,
-				columnScope = this
+				columnScope = this,
+				onPhoneNumberChanged = {  phoneNumber ->
+					viewModel.onEvent(OnboardingEvent.PhoneNumberValueChanged(phoneNumber))
+				}
 			)
 			SPEND_YOUR_TIME_PRODUCTIVELY -> OnboardingSpendYourTimeProductively(
 				this@Content,
