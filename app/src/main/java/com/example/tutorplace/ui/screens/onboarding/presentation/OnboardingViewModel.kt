@@ -6,21 +6,13 @@ import com.example.tutorplace.domain.usecases.onboarding.GetOnboardingInfoUseCas
 import com.example.tutorplace.domain.usecases.onboarding.PostOnboardingInfoUseCase
 import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.ui.base.BaseViewModel
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.InterestSelected
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValidError
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValueChanged
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NextStepClicked
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnSkipButtonClicked
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoadFail
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoaded
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoading
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PasswordValidError
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PasswordValueChanged
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PhoneNumberValueChanged
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PreviousStepClicked
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.RepeatPasswordValidError
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.RepeatPasswordValueChanged
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.SexChosen
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.SexError
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,6 +30,15 @@ class OnboardingViewModel @Inject constructor(
 	// https://iili.io/Kkri8V2.png
 	// https://iili.io/KkriSPS.png
 
+	// TODO
+	//  1) Сделать один when для When'a на проверку шага, создать UiState,
+	//  где будет mainButtonTitle, title, description, separator и тд,
+	//  2) далее реализовать mock API для HelpToStay экрана
+	//  3) Пофиксить карусель с картинками на MoreOpportunities и на KnowledgeFromMasters
+	//  4) На реальном телефоне проверить, чтобы цвет текста был везде черным
+	//  5) Подумать как распределить Event'ы так, чтобы можно было удобно их использовать UI/Domain
+	//  6) Радоваться
+
 	init {
 		loadGiftProductName()
 	}
@@ -46,21 +47,7 @@ class OnboardingViewModel @Inject constructor(
 
 	override fun onEvent(event: OnboardingEvent) = when (event) {
 		is NextStepClicked -> checkCurrentStateAndNavigateToNextStep()
-		is OnboardingInfoLoaded,
-		is SexError,
-		is OnboardingInfoLoadFail -> Unit
-		is NameValidError,
-		is NameValueChanged,
-		is PasswordValidError,
-		is PasswordValueChanged,
-		is RepeatPasswordValidError,
-		is RepeatPasswordValueChanged,
-		is PreviousStepClicked,
-		is OnboardingInfoLoading,
-		is InterestSelected,
-		is OnSkipButtonClicked,
-		is PhoneNumberValueChanged,
-		is SexChosen -> setState(OnboardingReducer.reduce(state.value, event))
+		else -> setState(OnboardingReducer.reduce(state.value, event))
 	}
 
 	private fun checkCurrentStateAndNavigateToNextStep() {
@@ -77,11 +64,11 @@ class OnboardingViewModel @Inject constructor(
 					NextStepClicked
 				)
 			)// TODO processTellUsAboutInterestsStep()
+			Step.SPEND_YOUR_TIME_PRODUCTIVELY -> sendEffect(OnboardingEffect.Hide)
 			Step.HELP_YOU_STAY -> processHelpYouStayStep()
 			Step.WELCOME,
 			Step.MORE_OPPORTUNITIES,
 			Step.KNOWLEDGE_FROM_MASTERS,
-			Step.SPEND_YOUR_TIME_PRODUCTIVELY,
 			Step.CONGRATULATIONS -> {
 				if (!state.value.onboardingInfo.isLoading) {
 					setState(OnboardingReducer.reduce(state.value, NextStepClicked))

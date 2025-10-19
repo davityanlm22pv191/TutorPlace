@@ -8,7 +8,7 @@ sealed interface OnboardingEvent : BaseEvent {
 
 	data object NextStepClicked : OnboardingEvent
 	data object PreviousStepClicked : OnboardingEvent
-	data object OnSkipButtonClicked: OnboardingEvent
+	data object SkipButtonClicked : OnboardingEvent
 
 	data class NameValueChanged(val name: String) : OnboardingEvent
 	data object NameValidError : OnboardingEvent
@@ -20,6 +20,8 @@ sealed interface OnboardingEvent : BaseEvent {
 	data object SexError : OnboardingEvent
 	data class InterestSelected(val interestId: Int) : OnboardingEvent
 	data class PhoneNumberValueChanged(val phoneNumber: String) : OnboardingEvent
+	data class NotificationStartTimeSelected(val time: String) : OnboardingEvent
+	data class NotificationEndTimeSelected(val time: String) : OnboardingEvent
 
 	data object OnboardingInfoLoading : OnboardingEvent
 	data class OnboardingInfoLoaded(val onboardingInfo: OnboardingInfo) : OnboardingEvent

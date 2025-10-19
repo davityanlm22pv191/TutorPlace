@@ -11,7 +11,8 @@ import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValidError
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValueChanged
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NextStepClicked
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnSkipButtonClicked
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NotificationEndTimeSelected
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NotificationStartTimeSelected
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoadFail
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoaded
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.OnboardingInfoLoading
@@ -23,6 +24,7 @@ import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.RepeatPasswordValueChanged
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.SexChosen
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.SexError
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.SkipButtonClicked
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step
 
 object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
@@ -40,7 +42,7 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 		event: OnboardingEvent
 	): OnboardingState {
 		return when (event) {
-			is NextStepClicked, is OnSkipButtonClicked -> reduceNextStep(oldState)
+			is NextStepClicked, is SkipButtonClicked -> reduceNextStep(oldState)
 			is PreviousStepClicked -> reducePreviousStep(oldState)
 			is OnboardingInfoLoading -> oldState.copy(onboardingInfo = oldState.onboardingInfo.loading())
 			is OnboardingInfoLoadFail -> reduceOnboardingInfoLoadFail(oldState, event.throwable)
@@ -55,7 +57,31 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 			is SexError -> reduceSexError(oldState)
 			is InterestSelected -> reduceInterestSelected(oldState, event)
 			is PhoneNumberValueChanged -> reducePhoneNumberValueChanged(oldState, event)
+			is NotificationEndTimeSelected -> reduceNotificationEndTimeSelected(oldState, event)
+			is NotificationStartTimeSelected -> reduceNotificationStartTimeSelected(oldState, event)
 		}
+	}
+
+	private fun reduceNotificationStartTimeSelected(
+		oldState: OnboardingState,
+		event: NotificationStartTimeSelected
+	): OnboardingState {
+		return oldState.copy(
+			notificationStartTime = event.time,
+			isMainButtonEnabled = FormatHelper.isValidPhone(oldState.phoneNumber.value) &&
+					oldState.notificationStartTime != null && oldState.notificationEndTime != null
+		)
+	}
+
+	private fun reduceNotificationEndTimeSelected(
+		oldState: OnboardingState,
+		event: NotificationEndTimeSelected
+	): OnboardingState {
+		return oldState.copy(
+			notificationEndTime = event.time,
+			isMainButtonEnabled = FormatHelper.isValidPhone(oldState.phoneNumber.value) &&
+					oldState.notificationStartTime != null && oldState.notificationEndTime != null
+		)
 	}
 
 	private fun reducePhoneNumberValueChanged(
@@ -64,7 +90,8 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 	): OnboardingState {
 		return oldState.copy(
 			phoneNumber = TextFieldState(event.phoneNumber, isError = false),
-			isMainButtonEnabled = FormatHelper.isValidPhone(event.phoneNumber)
+			isMainButtonEnabled = FormatHelper.isValidPhone(event.phoneNumber) &&
+					oldState.notificationStartTime != null && oldState.notificationEndTime != null
 		)
 	}
 
@@ -151,7 +178,7 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 			step = nextStep,
 			isMainButtonEnabled = when (nextStep) {
 				Step.TELL_US_ABOUT_INTERESTS -> oldState.selectedInterestsIds.isNotEmpty()
-				Step.HELP_YOU_STAY -> true // TODO
+				Step.HELP_YOU_STAY -> false
 				else -> true
 			},
 			isBackButtonVisible = isBackButtonVisible(nextStep),
@@ -172,7 +199,12 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 		}
 		return oldState.copy(
 			step = previousStep,
-			isMainButtonEnabled = true,
+			isMainButtonEnabled = if (previousStep == Step.HELP_YOU_STAY) {
+				FormatHelper.isValidPhone(oldState.phoneNumber.value) &&
+						oldState.notificationStartTime != null && oldState.notificationEndTime != null
+			} else {
+				true
+			},
 			isBackButtonVisible = isBackButtonVisible(previousStep),
 			isSkipButtonVisible = isSkipButtonVisible(previousStep)
 		)

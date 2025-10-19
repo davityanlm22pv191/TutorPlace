@@ -25,6 +25,7 @@ fun OnboardingSpendYourTimeProductively(
 ) = with(columnScope) {
 	AsyncImage(
 		modifier = Modifier
+			.padding(bottom = 100.dp)
 			.fillMaxWidth()
 			.height(200.dp)
 			.padding(horizontal = 16.dp)

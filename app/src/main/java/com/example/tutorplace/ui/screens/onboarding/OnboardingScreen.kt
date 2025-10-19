@@ -34,7 +34,18 @@ import com.example.tutorplace.ui.common.TransparentButton
 import com.example.tutorplace.ui.common.header.Header
 import com.example.tutorplace.ui.common.header.HeaderLogoType.Image
 import com.example.tutorplace.ui.common.header.HeaderLogoType.Text
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEffect.Hide
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.InterestSelected
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValueChanged
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NextStepClicked
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NotificationEndTimeSelected
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NotificationStartTimeSelected
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PasswordValueChanged
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PhoneNumberValueChanged
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PreviousStepClicked
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.RepeatPasswordValueChanged
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.SexChosen
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.SkipButtonClicked
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.CONGRATULATIONS
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.HELP_YOU_STAY
@@ -67,7 +78,13 @@ fun OnboardingScreen(navController: NavController) {
 		confirmValueChange = { sheetValue -> sheetValue != SheetValue.Hidden }
 	)
 	LaunchedEffect(Unit) { sheetState.show() }
-
+	LaunchedEffect(Unit) {
+		viewModel.effect.collect { effect ->
+			when (effect) {
+				is Hide -> navController.popBackStack()
+			}
+		}
+	}
 	ModalBottomSheet(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -82,7 +99,7 @@ fun OnboardingScreen(navController: NavController) {
 			title = stringResource(state.value.step.title()),
 			description = state.value.step.description()?.let { resId -> stringResource(resId) },
 			onBackButtonClicked = {
-				viewModel.onEvent(OnboardingEvent.PreviousStepClicked)
+				viewModel.onEvent(PreviousStepClicked)
 			}.takeIf { state.value.isBackButtonVisible }
 		)
 		Spacer(modifier = Modifier.height(state.value.step.contentSeparatorHeight()))
@@ -107,7 +124,7 @@ fun OnboardingScreen(navController: NavController) {
 					text = stringResource(state.value.mainButtonTitle),
 					isEnabled = state.value.isMainButtonEnabled,
 					isLoading = state.value.onboardingInfo.isLoading,
-					onClick = { viewModel.onEvent(OnboardingEvent.NextStepClicked) }
+					onClick = { viewModel.onEvent(NextStepClicked) }
 				)
 				AnimatedContent(
 					targetState = state.value.isSkipButtonVisible
@@ -118,7 +135,7 @@ fun OnboardingScreen(navController: NavController) {
 								.fillMaxWidth()
 								.height(45.dp),
 							text = stringResource(R.string.common_skip),
-							onClick = { viewModel.onEvent(OnboardingEvent.OnSkipButtonClicked) }
+							onClick = { viewModel.onEvent(SkipButtonClicked) }
 						)
 					}
 				}
@@ -184,15 +201,15 @@ private fun OnboardingState.Content(step: OnboardingState.Step, viewModel: Onboa
 				this@Content,
 				columnScope = this,
 				onUserNameChanged = { userName ->
-					viewModel.onEvent(OnboardingEvent.NameValueChanged(userName))
+					viewModel.onEvent(NameValueChanged(userName))
 				},
 				onPasswordChanged = { password ->
-					viewModel.onEvent(OnboardingEvent.PasswordValueChanged(password))
+					viewModel.onEvent(PasswordValueChanged(password))
 				},
 				onRepeatedPasswordChanged = { password ->
-					viewModel.onEvent(OnboardingEvent.RepeatPasswordValueChanged(password))
+					viewModel.onEvent(RepeatPasswordValueChanged(password))
 				},
-				onSexChosen = { sex -> viewModel.onEvent(OnboardingEvent.SexChosen(sex)) },
+				onSexChosen = { sex -> viewModel.onEvent(SexChosen(sex)) },
 			)
 			MORE_OPPORTUNITIES -> OnboardingMoreOpportunities(
 				this@Content,
@@ -205,14 +222,20 @@ private fun OnboardingState.Content(step: OnboardingState.Step, viewModel: Onboa
 			TELL_US_ABOUT_INTERESTS -> OnboardingTellUsAboutInterests(
 				this@Content,
 				columnScope = this,
-				onTagClicked = { viewModel.onEvent(OnboardingEvent.InterestSelected(it.id.toInt())) }
+				onTagClicked = { viewModel.onEvent(InterestSelected(it.id.toInt())) }
 			)
 			HELP_YOU_STAY -> OnboardingHelpYouStay(
 				this@Content,
 				columnScope = this,
-				onPhoneNumberChanged = {  phoneNumber ->
-					viewModel.onEvent(OnboardingEvent.PhoneNumberValueChanged(phoneNumber))
-				}
+				phoneNumberChanged = { phoneNumber ->
+					viewModel.onEvent(PhoneNumberValueChanged(phoneNumber))
+				},
+				notificationStartTimeSelected = { time ->
+					viewModel.onEvent(NotificationStartTimeSelected(time))
+				},
+				notificationEndTimeSelected = { time ->
+					viewModel.onEvent(NotificationEndTimeSelected(time))
+				},
 			)
 			SPEND_YOUR_TIME_PRODUCTIVELY -> OnboardingSpendYourTimeProductively(
 				this@Content,
