@@ -31,13 +31,10 @@ class OnboardingViewModel @Inject constructor(
 	// https://iili.io/KkriSPS.png
 
 	// TODO
-	//  1) Сделать один when для When'a на проверку шага, создать UiState,
-	//  где будет mainButtonTitle, title, description, separator и тд,
-	//  2) далее реализовать mock API для HelpToStay экрана
-	//  3) Пофиксить карусель с картинками на MoreOpportunities и на KnowledgeFromMasters
-	//  4) На реальном телефоне проверить, чтобы цвет текста был везде черным
-	//  5) Подумать как распределить Event'ы так, чтобы можно было удобно их использовать UI/Domain
-	//  6) Радоваться
+	//  1) далее реализовать mock API для HelpToStay экрана
+	//  2) Пофиксить карусель с картинками на MoreOpportunities и на KnowledgeFromMasters
+	//  3) На реальном телефоне проверить, чтобы цвет текста был везде черным
+	//  4) Подумать как распределить Event'ы так, чтобы можно было удобно их использовать UI/Domain
 
 	init {
 		loadGiftProductName()

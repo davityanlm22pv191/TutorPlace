@@ -1,7 +1,5 @@
 package com.example.tutorplace.ui.screens.onboarding.presentation
 
-import androidx.annotation.StringRes
-import com.example.tutorplace.R
 import com.example.tutorplace.data.onboarding.model.OnboardingInfo
 import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.domain.model.Sex
@@ -9,7 +7,10 @@ import com.example.tutorplace.ui.base.BaseState
 import com.example.tutorplace.ui.common.TextFieldState
 
 data class OnboardingState(
-	val onboardingInfo: DataInfo<OnboardingInfo> = DataInfo(OnboardingInfo.empty(), isLoading = true),
+	val onboardingInfo: DataInfo<OnboardingInfo> = DataInfo(
+		OnboardingInfo.empty(),
+		isLoading = true
+	),
 	val step: Step,
 	val userName: TextFieldState = TextFieldState(),
 	val password: TextFieldState = TextFieldState(),
@@ -20,10 +21,7 @@ data class OnboardingState(
 	val notificationStartTime: String? = null,
 	val notificationEndTime: String? = null,
 	val isSexError: Boolean = false,
-	val isBackButtonVisible: Boolean = false,
 	val isMainButtonEnabled: Boolean = true,
-	@param:StringRes val mainButtonTitle: Int = R.string.onboarding_next_step,
-	val isSkipButtonVisible: Boolean = false,
 ) : BaseState {
 
 	enum class Step {

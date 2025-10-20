@@ -29,37 +29,27 @@ import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
 
 object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 
-	private val isBackButtonVisible: (Step) -> Boolean
-		get() = { step ->
-			step !in listOf(Step.CONGRATULATIONS, Step.WELCOME, Step.PROVIDE_DETAILS)
-		}
-
-	private val isSkipButtonVisible: (Step) -> Boolean
-		get() = { step -> step == Step.HELP_YOU_STAY }
-
 	override fun reduce(
 		oldState: OnboardingState,
 		event: OnboardingEvent
-	): OnboardingState {
-		return when (event) {
-			is NextStepClicked, is SkipButtonClicked -> reduceNextStep(oldState)
-			is PreviousStepClicked -> reducePreviousStep(oldState)
-			is OnboardingInfoLoading -> oldState.copy(onboardingInfo = oldState.onboardingInfo.loading())
-			is OnboardingInfoLoadFail -> reduceOnboardingInfoLoadFail(oldState, event.throwable)
-			is OnboardingInfoLoaded -> reduceOnboardingInfoLoaded(oldState, event.onboardingInfo)
-			is NameValidError -> reduceNameValidError(oldState)
-			is NameValueChanged -> reduceNameValueChanged(oldState, event)
-			is PasswordValidError -> reducePasswordValidError(oldState)
-			is PasswordValueChanged -> reducePasswordValueChanged(oldState, event)
-			is RepeatPasswordValidError -> reduceRepeatPasswordError(oldState)
-			is RepeatPasswordValueChanged -> reduceRepeatPasswordValueChanged(oldState, event)
-			is SexChosen -> reduceSexChosen(oldState, event)
-			is SexError -> reduceSexError(oldState)
-			is InterestSelected -> reduceInterestSelected(oldState, event)
-			is PhoneNumberValueChanged -> reducePhoneNumberValueChanged(oldState, event)
-			is NotificationEndTimeSelected -> reduceNotificationEndTimeSelected(oldState, event)
-			is NotificationStartTimeSelected -> reduceNotificationStartTimeSelected(oldState, event)
-		}
+	): OnboardingState = when (event) {
+		is NextStepClicked, is SkipButtonClicked -> reduceNextStep(oldState)
+		is PreviousStepClicked -> reducePreviousStep(oldState)
+		is OnboardingInfoLoading -> oldState.copy(onboardingInfo = oldState.onboardingInfo.loading())
+		is OnboardingInfoLoadFail -> reduceOnboardingInfoLoadFail(oldState, event.throwable)
+		is OnboardingInfoLoaded -> reduceOnboardingInfoLoaded(oldState, event.onboardingInfo)
+		is NameValidError -> reduceNameValidError(oldState)
+		is NameValueChanged -> reduceNameValueChanged(oldState, event)
+		is PasswordValidError -> reducePasswordValidError(oldState)
+		is PasswordValueChanged -> reducePasswordValueChanged(oldState, event)
+		is RepeatPasswordValidError -> reduceRepeatPasswordError(oldState)
+		is RepeatPasswordValueChanged -> reduceRepeatPasswordValueChanged(oldState, event)
+		is SexChosen -> reduceSexChosen(oldState, event)
+		is SexError -> reduceSexError(oldState)
+		is InterestSelected -> reduceInterestSelected(oldState, event)
+		is PhoneNumberValueChanged -> reducePhoneNumberValueChanged(oldState, event)
+		is NotificationEndTimeSelected -> reduceNotificationEndTimeSelected(oldState, event)
+		is NotificationStartTimeSelected -> reduceNotificationStartTimeSelected(oldState, event)
 	}
 
 	private fun reduceNotificationStartTimeSelected(
@@ -172,7 +162,7 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 			Step.KNOWLEDGE_FROM_MASTERS -> Step.TELL_US_ABOUT_INTERESTS
 			Step.TELL_US_ABOUT_INTERESTS -> Step.HELP_YOU_STAY
 			Step.HELP_YOU_STAY -> Step.SPEND_YOUR_TIME_PRODUCTIVELY
-			Step.SPEND_YOUR_TIME_PRODUCTIVELY -> oldState.step
+			Step.SPEND_YOUR_TIME_PRODUCTIVELY -> oldState.step // This is last step
 		}
 		return oldState.copy(
 			step = nextStep,
@@ -181,14 +171,12 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 				Step.HELP_YOU_STAY -> false
 				else -> true
 			},
-			isBackButtonVisible = isBackButtonVisible(nextStep),
-			isSkipButtonVisible = isSkipButtonVisible(nextStep)
 		)
 	}
 
 	private fun reducePreviousStep(oldState: OnboardingState): OnboardingState {
 		val previousStep = when (oldState.step) {
-			Step.CONGRATULATIONS -> TODO()
+			Step.CONGRATULATIONS -> oldState.step // This is first step
 			Step.WELCOME -> Step.CONGRATULATIONS
 			Step.PROVIDE_DETAILS -> Step.WELCOME
 			Step.MORE_OPPORTUNITIES -> Step.PROVIDE_DETAILS
@@ -205,8 +193,6 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 			} else {
 				true
 			},
-			isBackButtonVisible = isBackButtonVisible(previousStep),
-			isSkipButtonVisible = isSkipButtonVisible(previousStep)
 		)
 	}
 

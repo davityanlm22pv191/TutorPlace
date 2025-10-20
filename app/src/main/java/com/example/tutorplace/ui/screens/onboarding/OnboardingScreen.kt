@@ -1,6 +1,6 @@
 package com.example.tutorplace.ui.screens.onboarding
 
-import androidx.annotation.StringRes
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,38 +32,13 @@ import com.example.tutorplace.R
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.TransparentButton
 import com.example.tutorplace.ui.common.header.Header
-import com.example.tutorplace.ui.common.header.HeaderLogoType.Image
-import com.example.tutorplace.ui.common.header.HeaderLogoType.Text
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEffect.Hide
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.InterestSelected
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValueChanged
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NextStepClicked
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NotificationEndTimeSelected
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NotificationStartTimeSelected
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PasswordValueChanged
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PhoneNumberValueChanged
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.PreviousStepClicked
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.RepeatPasswordValueChanged
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.SexChosen
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.SkipButtonClicked
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.CONGRATULATIONS
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.HELP_YOU_STAY
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.KNOWLEDGE_FROM_MASTERS
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.MORE_OPPORTUNITIES
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.PROVIDE_DETAILS
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.SPEND_YOUR_TIME_PRODUCTIVELY
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.TELL_US_ABOUT_INTERESTS
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.WELCOME
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingViewModel
-import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingCongratulations
-import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingHelpYouStay
-import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingKnowledgeFromMasters
-import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingMain
-import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingMoreOpportunities
-import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingProvideDetails
-import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingSpendYourTimeProductively
-import com.example.tutorplace.ui.screens.onboarding.ui.OnboardingTellUsAboutInterests
+import com.example.tutorplace.ui.screens.onboarding.ui.uistate.OnboardingUiState
 import com.example.tutorplace.ui.theme.ContainerColor
 import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.Transparent
@@ -77,6 +52,7 @@ fun OnboardingScreen(navController: NavController) {
 		skipPartiallyExpanded = true,
 		confirmValueChange = { sheetValue -> sheetValue != SheetValue.Hidden }
 	)
+	val uiState = OnboardingUiState(state.value, viewModel)
 	LaunchedEffect(Unit) { sheetState.show() }
 	LaunchedEffect(Unit) {
 		viewModel.effect.collect { effect ->
@@ -95,15 +71,19 @@ fun OnboardingScreen(navController: NavController) {
 		onDismissRequest = { navController.popBackStack() }
 	) {
 		Header(
-			logo = state.value.step.headerLogoType(),
-			title = stringResource(state.value.step.title()),
-			description = state.value.step.description()?.let { resId -> stringResource(resId) },
+			logo = uiState.header,
+			title = stringResource(uiState.title),
+			description = uiState.description?.let { resId -> stringResource(resId) },
 			onBackButtonClicked = {
 				viewModel.onEvent(PreviousStepClicked)
-			}.takeIf { state.value.isBackButtonVisible }
+			}.takeIf { uiState.isBackButtonVisible }
 		)
-		Spacer(modifier = Modifier.height(state.value.step.contentSeparatorHeight()))
-		AnimatedContent(targetState = state.value.step) { state.value.Content(it, viewModel) }
+		Spacer(modifier = Modifier.height(uiState.contentSeparatorHeightDp))
+
+			@SuppressLint("UnusedContentLambdaTargetStateParameter")
+			AnimatedContent(targetState = state.value.step) {
+				Column { uiState.content.invoke(this@ModalBottomSheet) }
+			}
 		Box(
 			modifier = Modifier
 				.fillMaxWidth()
@@ -121,13 +101,13 @@ fun OnboardingScreen(navController: NavController) {
 					modifier = Modifier
 						.fillMaxWidth()
 						.height(45.dp),
-					text = stringResource(state.value.mainButtonTitle),
+					text = stringResource(uiState.mainButtonTitle),
 					isEnabled = state.value.isMainButtonEnabled,
 					isLoading = state.value.onboardingInfo.isLoading,
 					onClick = { viewModel.onEvent(NextStepClicked) }
 				)
 				AnimatedContent(
-					targetState = state.value.isSkipButtonVisible
+					targetState = uiState.isSkipButtonVisible
 				) { isSkipButtonVisible ->
 					if (isSkipButtonVisible) {
 						TransparentButton(
@@ -140,107 +120,6 @@ fun OnboardingScreen(navController: NavController) {
 					}
 				}
 			}
-		}
-	}
-}
-
-private fun OnboardingState.Step.contentSeparatorHeight() = when (this) {
-	CONGRATULATIONS, TELL_US_ABOUT_INTERESTS -> 12.dp
-	WELCOME, SPEND_YOUR_TIME_PRODUCTIVELY -> 40.dp
-	PROVIDE_DETAILS -> 16.dp
-	MORE_OPPORTUNITIES, KNOWLEDGE_FROM_MASTERS -> 40.dp
-	HELP_YOU_STAY -> 24.dp
-}
-
-private fun OnboardingState.Step.headerLogoType() = when (this) {
-	CONGRATULATIONS, WELCOME -> Image(R.drawable.ic_tutor_place_logo, paddingTop = 0)
-	PROVIDE_DETAILS -> Text(R.string.onboarding_provide_details_logo)
-	MORE_OPPORTUNITIES -> Text(R.string.onboarding_more_opportunities_logo)
-	KNOWLEDGE_FROM_MASTERS -> Text(R.string.onboarding_knowledge_from_masters_logo)
-	TELL_US_ABOUT_INTERESTS -> Text(R.string.onboarding_tell_us_about_interests_logo)
-	HELP_YOU_STAY -> Text(R.string.onboarding_help_you_stay_logo)
-	SPEND_YOUR_TIME_PRODUCTIVELY -> Text(R.string.onboarding_spend_your_time_productively_logo)
-}
-
-@StringRes
-private fun OnboardingState.Step.title() = when (this) {
-	CONGRATULATIONS, WELCOME -> R.string.onboarding_congratulations_welcome_to_tutor_place
-	PROVIDE_DETAILS -> R.string.onboarding_provide_details_title
-	MORE_OPPORTUNITIES -> R.string.onboarding_more_opportunities_title
-	KNOWLEDGE_FROM_MASTERS -> R.string.onboarding_knowledge_from_masters_title
-	TELL_US_ABOUT_INTERESTS -> R.string.onboarding_tell_us_about_interests_title
-	HELP_YOU_STAY -> R.string.onboarding_help_you_stay_title
-	SPEND_YOUR_TIME_PRODUCTIVELY -> R.string.onboarding_spend_your_time_productively_title
-}
-
-@StringRes
-private fun OnboardingState.Step.description() = when (this) {
-	CONGRATULATIONS -> R.string.onboarding_congratulations_description
-	WELCOME -> R.string.onboarding_welcome_description
-	PROVIDE_DETAILS -> null
-	MORE_OPPORTUNITIES -> R.string.onboarding_more_opportunities_description
-	KNOWLEDGE_FROM_MASTERS -> R.string.onboarding_knowledge_from_masters_description
-	TELL_US_ABOUT_INTERESTS -> R.string.onboarding_tell_us_about_interests_description
-	HELP_YOU_STAY -> R.string.onboarding_help_you_stay_description
-	SPEND_YOUR_TIME_PRODUCTIVELY -> R.string.onboarding_spend_your_time_productively_description
-}
-
-@Composable
-private fun OnboardingState.Content(step: OnboardingState.Step, viewModel: OnboardingViewModel) {
-	Column {
-		when (step) {
-			CONGRATULATIONS -> OnboardingCongratulations(
-				this@Content,
-				columnScope = this
-			)
-			WELCOME -> OnboardingMain(
-				this@Content,
-				columnScope = this
-			)
-			PROVIDE_DETAILS -> OnboardingProvideDetails(
-				this@Content,
-				columnScope = this,
-				onUserNameChanged = { userName ->
-					viewModel.onEvent(NameValueChanged(userName))
-				},
-				onPasswordChanged = { password ->
-					viewModel.onEvent(PasswordValueChanged(password))
-				},
-				onRepeatedPasswordChanged = { password ->
-					viewModel.onEvent(RepeatPasswordValueChanged(password))
-				},
-				onSexChosen = { sex -> viewModel.onEvent(SexChosen(sex)) },
-			)
-			MORE_OPPORTUNITIES -> OnboardingMoreOpportunities(
-				this@Content,
-				columnScope = this
-			)
-			KNOWLEDGE_FROM_MASTERS -> OnboardingKnowledgeFromMasters(
-				this@Content,
-				columnScope = this
-			)
-			TELL_US_ABOUT_INTERESTS -> OnboardingTellUsAboutInterests(
-				this@Content,
-				columnScope = this,
-				onTagClicked = { viewModel.onEvent(InterestSelected(it.id.toInt())) }
-			)
-			HELP_YOU_STAY -> OnboardingHelpYouStay(
-				this@Content,
-				columnScope = this,
-				phoneNumberChanged = { phoneNumber ->
-					viewModel.onEvent(PhoneNumberValueChanged(phoneNumber))
-				},
-				notificationStartTimeSelected = { time ->
-					viewModel.onEvent(NotificationStartTimeSelected(time))
-				},
-				notificationEndTimeSelected = { time ->
-					viewModel.onEvent(NotificationEndTimeSelected(time))
-				},
-			)
-			SPEND_YOUR_TIME_PRODUCTIVELY -> OnboardingSpendYourTimeProductively(
-				this@Content,
-				columnScope = this
-			)
 		}
 	}
 }

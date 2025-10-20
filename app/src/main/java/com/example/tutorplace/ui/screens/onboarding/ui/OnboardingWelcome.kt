@@ -19,7 +19,7 @@ import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
 import com.example.tutorplace.ui.theme.GreyD5
 
 @Composable
-fun OnboardingMain(
+fun OnboardingWelcome(
 	state: OnboardingState,
 	columnScope: ColumnScope
 ) = with(columnScope) {
@@ -41,10 +41,8 @@ fun OnboardingMain(
 @Composable
 private fun OnboardingMainPreview() {
 	Column {
-		OnboardingMain(
-			state = OnboardingState(
-				step = OnboardingState.Step.WELCOME
-			),
+		OnboardingWelcome(
+			state = OnboardingState(step = OnboardingState.Step.WELCOME),
 			columnScope = this
 		)
 	}
