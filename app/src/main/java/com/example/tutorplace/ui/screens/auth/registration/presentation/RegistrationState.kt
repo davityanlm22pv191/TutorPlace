@@ -6,8 +6,8 @@ import com.example.tutorplace.ui.screens.auth.registration.presentation.Registra
 import kotlin.reflect.KClass
 
 data class RegistrationState(
-	override val isLoading: Boolean = false,
-	override val throwable: Throwable? = null,
+	val isLoading: Boolean = false,
+	val throwable: Throwable? = null,
 	val firstStep: FirstStep = FirstStep(),
 	val secondStep: SecondStep = SecondStep(),
 	val currentStep: KClass<out RegistrationStep> = FirstStep::class

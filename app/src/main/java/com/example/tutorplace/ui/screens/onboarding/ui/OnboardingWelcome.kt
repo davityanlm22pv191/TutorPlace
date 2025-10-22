@@ -19,13 +19,12 @@ import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
 import com.example.tutorplace.ui.theme.GreyD5
 
 @Composable
-fun OnboardingSpendYourTimeProductively(
+fun OnboardingWelcome(
 	state: OnboardingState,
 	columnScope: ColumnScope
 ) = with(columnScope) {
 	AsyncImage(
 		modifier = Modifier
-			.padding(bottom = 100.dp)
 			.fillMaxWidth()
 			.height(200.dp)
 			.padding(horizontal = 16.dp)
@@ -40,13 +39,11 @@ fun OnboardingSpendYourTimeProductively(
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
-private fun OnboardingSpendYourTimeProductivelyPreview() {
+private fun OnboardingMainPreview() {
 	Column {
-		OnboardingSpendYourTimeProductively(
-			columnScope = this,
-			state = OnboardingState(
-				step = OnboardingState.Step.SPEND_YOUR_TIME_PRODUCTIVELY
-			)
+		OnboardingWelcome(
+			state = OnboardingState(step = OnboardingState.Step.WELCOME),
+			columnScope = this
 		)
 	}
 }

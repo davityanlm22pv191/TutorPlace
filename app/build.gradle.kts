@@ -102,4 +102,7 @@ dependencies {
 	// Chucker
 	debugImplementation(libs.chucker)
 	releaseImplementation(libs.chucker.no.op)
+
+	// Coil
+	implementation(libs.coil)
 }
