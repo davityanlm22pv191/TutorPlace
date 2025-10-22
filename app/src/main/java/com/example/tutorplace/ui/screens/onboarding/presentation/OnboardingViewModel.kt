@@ -31,9 +31,6 @@ class OnboardingViewModel @Inject constructor(
 	// https://iili.io/Kkri8V2.png
 	// https://iili.io/KkriSPS.png
 
-	// TODO
-	//  1) Подумать как распределить Event'ы так, чтобы можно было удобно их использовать UI/Domain
-
 	init {
 		loadGiftProductName()
 	}

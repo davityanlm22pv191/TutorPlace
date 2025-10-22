@@ -9,9 +9,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetValue
@@ -70,53 +74,68 @@ fun OnboardingScreen(navController: NavController) {
 		scrimColor = Transparent,
 		onDismissRequest = { navController.popBackStack() }
 	) {
-		Header(
-			logo = uiState.header,
-			title = stringResource(uiState.title),
-			description = uiState.description?.let { resId -> stringResource(resId) },
-			onBackButtonClicked = {
-				viewModel.onEvent(PreviousStepClicked)
-			}.takeIf { uiState.isBackButtonVisible }
-		)
-		Spacer(modifier = Modifier.height(uiState.contentSeparatorHeightDp))
-
-		@SuppressLint("UnusedContentLambdaTargetStateParameter")
-		AnimatedContent(targetState = state.value.step) {
-			Column { uiState.content.invoke(this@ModalBottomSheet) }
-		}
-		Box(
+		// Прокручиваемый контент
+		Column(
 			modifier = Modifier
 				.fillMaxWidth()
-				.padding(top = if (state.value.step != TELL_US_ABOUT_INTERESTS) 20.dp else 0.dp)
-				.shadow(8.dp, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-				.background(ContainerColor, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-				.padding(16.dp),
+				.verticalScroll(rememberScrollState())
+				.imePadding()
+				.navigationBarsPadding()
 		) {
-			Column(
-				modifier = Modifier.fillMaxWidth(),
-				verticalArrangement = Arrangement.spacedBy(8.dp),
-				horizontalAlignment = Alignment.CenterHorizontally
+			Header(
+				logo = uiState.header,
+				title = stringResource(uiState.title),
+				description = uiState.description?.let { resId -> stringResource(resId) },
+				onBackButtonClicked = {
+					viewModel.onEvent(PreviousStepClicked)
+				}.takeIf { uiState.isBackButtonVisible }
+			)
+
+			Spacer(modifier = Modifier.height(uiState.contentSeparatorHeightDp))
+
+			@SuppressLint("UnusedContentLambdaTargetStateParameter")
+			AnimatedContent(targetState = state.value.step) {
+				Column { uiState.content.invoke(this@ModalBottomSheet) }
+			}
+
+			// Нижняя панель с кнопками
+			Box(
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(top = if (state.value.step != TELL_US_ABOUT_INTERESTS) 20.dp else 0.dp)
+					.shadow(8.dp, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+					.background(
+						ContainerColor,
+						RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+					)
+					.padding(16.dp)
 			) {
-				PurpleButton(
-					modifier = Modifier
-						.fillMaxWidth()
-						.height(45.dp),
-					text = stringResource(uiState.mainButtonTitle),
-					isEnabled = state.value.isMainButtonEnabled,
-					isLoading = state.value.onboardingInfo.isLoading,
-					onClick = { viewModel.onEvent(NextStepClicked) }
-				)
-				AnimatedContent(
-					targetState = uiState.isSkipButtonVisible
-				) { isSkipButtonVisible ->
-					if (isSkipButtonVisible) {
-						TransparentButton(
-							modifier = Modifier
-								.fillMaxWidth()
-								.height(45.dp),
-							text = stringResource(R.string.common_skip),
-							onClick = { viewModel.onEvent(SkipButtonClicked) }
-						)
+				Column(
+					modifier = Modifier.fillMaxWidth(),
+					verticalArrangement = Arrangement.spacedBy(8.dp),
+					horizontalAlignment = Alignment.CenterHorizontally
+				) {
+					PurpleButton(
+						modifier = Modifier
+							.fillMaxWidth()
+							.height(45.dp),
+						text = stringResource(uiState.mainButtonTitle),
+						isEnabled = state.value.isMainButtonEnabled,
+						isLoading = state.value.onboardingInfo.isLoading,
+						onClick = { viewModel.onEvent(NextStepClicked) }
+					)
+					AnimatedContent(
+						targetState = uiState.isSkipButtonVisible
+					) { isSkipButtonVisible ->
+						if (isSkipButtonVisible) {
+							TransparentButton(
+								modifier = Modifier
+									.fillMaxWidth()
+									.height(45.dp),
+								text = stringResource(R.string.common_skip),
+								onClick = { viewModel.onEvent(SkipButtonClicked) }
+							)
+						}
 					}
 				}
 			}
