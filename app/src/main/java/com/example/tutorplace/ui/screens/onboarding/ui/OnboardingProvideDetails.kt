@@ -139,7 +139,12 @@ private fun SexChoosingMenu(
 			) {
 				sexList.forEach { sex ->
 					DropdownMenuItem(
-						text = { Text(text = stringResource(sex.stringResId)) },
+						text = {
+							Text(
+								text = stringResource(sex.stringResId),
+								style = Typography.labelMedium.copy(Black16)
+							)
+						},
 						onClick = {
 							isOpen = false
 							if (selectedSex != sex) {
