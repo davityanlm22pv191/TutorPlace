@@ -80,10 +80,10 @@ fun OnboardingScreen(navController: NavController) {
 		)
 		Spacer(modifier = Modifier.height(uiState.contentSeparatorHeightDp))
 
-			@SuppressLint("UnusedContentLambdaTargetStateParameter")
-			AnimatedContent(targetState = state.value.step) {
-				Column { uiState.content.invoke(this@ModalBottomSheet) }
-			}
+		@SuppressLint("UnusedContentLambdaTargetStateParameter")
+		AnimatedContent(targetState = state.value.step) {
+			Column { uiState.content.invoke(this@ModalBottomSheet) }
+		}
 		Box(
 			modifier = Modifier
 				.fillMaxWidth()
