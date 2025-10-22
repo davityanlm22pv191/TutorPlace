@@ -2,6 +2,7 @@ package com.example.tutorplace.ui.screens.onboarding.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.example.tutorplace.data.onboarding.model.PlatformAccessDataBody
+import com.example.tutorplace.data.onboarding.model.PostNotificationIntervalBody
 import com.example.tutorplace.domain.usecases.onboarding.GetOnboardingInfoUseCase
 import com.example.tutorplace.domain.usecases.onboarding.PostOnboardingInfoUseCase
 import com.example.tutorplace.helpers.FormatHelper
@@ -31,10 +32,7 @@ class OnboardingViewModel @Inject constructor(
 	// https://iili.io/KkriSPS.png
 
 	// TODO
-	//  1) далее реализовать mock API для HelpToStay экрана
-	//  2) Пофиксить карусель с картинками на MoreOpportunities и на KnowledgeFromMasters
-	//  3) На реальном телефоне проверить, чтобы цвет текста был везде черным
-	//  4) Подумать как распределить Event'ы так, чтобы можно было удобно их использовать UI/Domain
+	//  1) Подумать как распределить Event'ы так, чтобы можно было удобно их использовать UI/Domain
 
 	init {
 		loadGiftProductName()
@@ -49,88 +47,76 @@ class OnboardingViewModel @Inject constructor(
 
 	private fun checkCurrentStateAndNavigateToNextStep() {
 		when (state.value.step) {
-			Step.PROVIDE_DETAILS -> setState(
-				OnboardingReducer.reduce(
-					state.value,
-					NextStepClicked
-				)
-			) // TODO processProvideDetailsStep()
-			Step.TELL_US_ABOUT_INTERESTS -> setState(
-				OnboardingReducer.reduce(
-					state.value,
-					NextStepClicked
-				)
-			)// TODO processTellUsAboutInterestsStep()
+			Step.PROVIDE_DETAILS -> processProvideDetailsStep()
+			Step.TELL_US_ABOUT_INTERESTS -> processTellUsAboutInterestsStep()
 			Step.SPEND_YOUR_TIME_PRODUCTIVELY -> sendEffect(OnboardingEffect.Hide)
 			Step.HELP_YOU_STAY -> processHelpYouStayStep()
-			Step.WELCOME,
-			Step.MORE_OPPORTUNITIES,
-			Step.KNOWLEDGE_FROM_MASTERS,
-			Step.CONGRATULATIONS -> {
-				if (!state.value.onboardingInfo.isLoading) {
-					setState(OnboardingReducer.reduce(state.value, NextStepClicked))
-				}
+			else -> if (!state.value.onboardingInfo.isLoading) {
+				setState(OnboardingReducer.reduce(state.value, NextStepClicked))
 			}
 		}
 	}
 
-	private fun processHelpYouStayStep() {
-
-	}
-
-	private fun processTellUsAboutInterestsStep() {
-		viewModelScope.launch {
-			val isAllDataValid = state.value.selectedInterestsIds.isNotEmpty()
-			if (isAllDataValid) {
-				setState(OnboardingReducer.reduce(state.value, OnboardingInfoLoading))
-				postOnboardingInfoUseCase
-					.postInterests(state.value.selectedInterestsIds)
-					.onSuccess {
-						setState(
-							OnboardingReducer.reduce(
-								state.value,
-								OnboardingInfoLoaded(state.value.onboardingInfo.data)
-							)
-						)
-						setState(OnboardingReducer.reduce(state.value, NextStepClicked))
-					}
-					.onFailure { throwable ->
-						setState(
-							OnboardingReducer.reduce(state.value, OnboardingInfoLoadFail(throwable))
-						)
-					}
-			}
+	private fun processHelpYouStayStep() = processStep(
+		isValid = FormatHelper.isValidPhone(state.value.phoneNumber.value) &&
+				!state.value.notificationStartTime.isNullOrEmpty() &&
+				!state.value.notificationEndTime.isNullOrEmpty(),
+		postAction = {
+			postOnboardingInfoUseCase.postNotificationInterval(
+				PostNotificationIntervalBody(
+					phoneNumber = state.value.phoneNumber.value,
+					start = state.value.notificationStartTime!!,
+					end = state.value.notificationEndTime!!,
+				)
+			)
 		}
-	}
+	)
 
-	private fun processProvideDetailsStep() {
+	private fun processTellUsAboutInterestsStep() = processStep(
+		isValid = state.value.selectedInterestsIds.isNotEmpty(),
+		postAction = { postOnboardingInfoUseCase.postInterests(state.value.selectedInterestsIds) }
+	)
+
+	private fun processProvideDetailsStep() = processStep(
+		isValid = checkProvideDetailsStep(),
+		postAction = {
+			val sex = state.value.sex ?: return@processStep Result.failure(Throwable())
+			postOnboardingInfoUseCase.postPlatformAccessData(
+				PlatformAccessDataBody(
+					userName = state.value.userName.value,
+					password = state.value.password.value,
+					sex
+				)
+			)
+		}
+	)
+
+	private fun processStep(
+		isValid: Boolean,
+		postAction: suspend () -> Result<Unit>
+	) {
+		if (!isValid) return
+
 		viewModelScope.launch {
-			val isAllDataValid = checkProvideDetailsStep()
-			if (isAllDataValid) {
-				setState(OnboardingReducer.reduce(state.value, OnboardingInfoLoading))
-				postOnboardingInfoUseCase
-					.postPlatformAccessData(
-						PlatformAccessDataBody(
-							userName = state.value.userName.value,
-							password = state.value.password.value,
-							sex = state.value.sex ?: return@launch
+			setState(OnboardingReducer.reduce(state.value, OnboardingInfoLoading))
+			postAction()
+				.onSuccess {
+					setState(
+						OnboardingReducer.reduce(
+							state.value,
+							OnboardingInfoLoaded(state.value.onboardingInfo.data)
 						)
 					)
-					.onSuccess {
-						setState(
-							OnboardingReducer.reduce(
-								state.value,
-								OnboardingInfoLoaded(state.value.onboardingInfo.data)
-							)
+					setState(OnboardingReducer.reduce(state.value, NextStepClicked))
+				}
+				.onFailure { throwable ->
+					setState(
+						OnboardingReducer.reduce(
+							state.value,
+							OnboardingInfoLoadFail(throwable)
 						)
-						setState(OnboardingReducer.reduce(state.value, NextStepClicked))
-					}
-					.onFailure { throwable ->
-						setState(
-							OnboardingReducer.reduce(state.value, OnboardingInfoLoadFail(throwable))
-						)
-					}
-			}
+					)
+				}
 		}
 	}
 

@@ -3,6 +3,7 @@ package com.example.tutorplace.data.onboarding
 import com.example.tutorplace.data.onboarding.model.OnboardingInfo
 import com.example.tutorplace.data.onboarding.model.PlatformAccessDataBody
 import com.example.tutorplace.data.onboarding.model.PostInterestListBody
+import com.example.tutorplace.data.onboarding.model.PostNotificationIntervalBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -22,4 +23,7 @@ interface OnboardingService {
 
 	@POST(ENDPOINT)
 	suspend fun postInterests(@Body body: PostInterestListBody): Response<Unit>
+
+	@POST(ENDPOINT)
+	suspend fun postNotificationInterval(@Body body: PostNotificationIntervalBody): Response<Unit>
 }

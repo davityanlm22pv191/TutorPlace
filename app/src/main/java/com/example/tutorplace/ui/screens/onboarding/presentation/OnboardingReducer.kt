@@ -56,22 +56,24 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 		oldState: OnboardingState,
 		event: NotificationStartTimeSelected
 	): OnboardingState {
-		return oldState.copy(
-			notificationStartTime = event.time,
-			isMainButtonEnabled = FormatHelper.isValidPhone(oldState.phoneNumber.value) &&
-					oldState.notificationStartTime != null && oldState.notificationEndTime != null
-		)
+		return oldState.copy(notificationStartTime = event.time).let { state ->
+			state.copy(
+				isMainButtonEnabled = FormatHelper.isValidPhone(oldState.phoneNumber.value) &&
+						state.notificationStartTime != null && state.notificationEndTime != null
+			)
+		}
 	}
 
 	private fun reduceNotificationEndTimeSelected(
 		oldState: OnboardingState,
 		event: NotificationEndTimeSelected
 	): OnboardingState {
-		return oldState.copy(
-			notificationEndTime = event.time,
-			isMainButtonEnabled = FormatHelper.isValidPhone(oldState.phoneNumber.value) &&
-					oldState.notificationStartTime != null && oldState.notificationEndTime != null
-		)
+		return oldState.copy(notificationEndTime = event.time).let { state ->
+			state.copy(
+				isMainButtonEnabled = FormatHelper.isValidPhone(oldState.phoneNumber.value) &&
+						state.notificationStartTime != null && state.notificationEndTime != null
+			)
+		}
 	}
 
 	private fun reducePhoneNumberValueChanged(
@@ -168,7 +170,8 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 			step = nextStep,
 			isMainButtonEnabled = when (nextStep) {
 				Step.TELL_US_ABOUT_INTERESTS -> oldState.selectedInterestsIds.isNotEmpty()
-				Step.HELP_YOU_STAY -> false
+				Step.HELP_YOU_STAY -> FormatHelper.isValidPhone(oldState.phoneNumber.value) &&
+						oldState.notificationStartTime != null && oldState.notificationEndTime != null
 				else -> true
 			},
 		)
