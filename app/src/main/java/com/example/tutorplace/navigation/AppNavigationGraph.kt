@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.navigation
+package com.example.tutorplace.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder

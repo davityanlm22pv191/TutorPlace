@@ -15,9 +15,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.ui.common.bottomnavbar.BottomNavigationBar
 import com.example.tutorplace.ui.common.bottomnavbar.BottomTabBarItem
-import com.example.tutorplace.ui.navigation.Destinations
-import com.example.tutorplace.ui.navigation.Destinations.MainScreen.MainScreenParams
-import com.example.tutorplace.ui.navigation.tabs.TabsNavHost
+import com.example.tutorplace.navigation.Destinations
+import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
+import com.example.tutorplace.navigation.tabs.TabsNavHost
 
 @Composable
 fun MainScreen(navController: NavHostController, params: MainScreenParams) {

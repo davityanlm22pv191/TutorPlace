@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.navigation.tabs
+package com.example.tutorplace.navigation.tabs
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

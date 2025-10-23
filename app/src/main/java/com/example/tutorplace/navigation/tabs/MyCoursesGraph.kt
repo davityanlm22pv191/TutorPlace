@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.navigation.tabs
+package com.example.tutorplace.navigation.tabs
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController

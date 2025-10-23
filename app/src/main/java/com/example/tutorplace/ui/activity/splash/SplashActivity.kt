@@ -15,8 +15,8 @@ import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEffe
 import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEffect.NavigateToMain
 import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEvent.SplashAnimationEnded
 import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityViewModel
-import com.example.tutorplace.ui.navigation.Destinations
-import com.example.tutorplace.ui.navigation.Destinations.MainScreen.MainScreenParams
+import com.example.tutorplace.navigation.Destinations
+import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

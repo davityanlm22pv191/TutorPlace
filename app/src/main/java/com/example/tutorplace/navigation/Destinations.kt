@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.navigation
+package com.example.tutorplace.navigation
 
 sealed class Destinations(open val route: String) {
 

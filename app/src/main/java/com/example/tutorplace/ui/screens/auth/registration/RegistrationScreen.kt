@@ -40,8 +40,8 @@ import com.example.tutorplace.ui.common.header.Header
 import com.example.tutorplace.ui.common.header.HeaderLogoType
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
-import com.example.tutorplace.ui.navigation.Destinations
-import com.example.tutorplace.ui.navigation.Destinations.MainScreen.MainScreenParams
+import com.example.tutorplace.navigation.Destinations
+import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
 import com.example.tutorplace.ui.screens.auth.common.AuthSectionDivider
 import com.example.tutorplace.ui.screens.auth.common.YandexButton
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEffect

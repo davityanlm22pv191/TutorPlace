@@ -43,7 +43,7 @@ fun BottomNavigationBar(
 		val navBackStackEntry by navController.currentBackStackEntryAsState()
 		val currentDestination = navBackStackEntry?.destination?.route
 		bottomTabBarItems.forEach { tabBarItem ->
-			val isSelected = currentDestination == tabBarItem.route
+			val isSelected = currentDestination?.startsWith(tabBarItem.route) == true
 			NavigationBarItem(
 				selected = isSelected,
 				label = {
