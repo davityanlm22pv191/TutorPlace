@@ -12,17 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.tutorplace.ui.common.BottomNavigationBar
-import com.example.tutorplace.ui.navigation.BottomTabBarItem
+import com.example.tutorplace.ui.common.bottomnavbar.BottomNavigationBar
+import com.example.tutorplace.ui.common.bottomnavbar.BottomTabBarItem
 import com.example.tutorplace.ui.navigation.Destinations
 import com.example.tutorplace.ui.navigation.Destinations.MainScreen.MainScreenParams
-import com.example.tutorplace.ui.screens.catalog.CatalogScreen
-import com.example.tutorplace.ui.screens.home.HomeScreen
-import com.example.tutorplace.ui.screens.mycourses.MyCoursesScreen
-import com.example.tutorplace.ui.screens.tasks.TasksScreen
+import com.example.tutorplace.ui.navigation.tabs.TabsNavHost
 
 @Composable
 fun MainScreen(navController: NavHostController, params: MainScreenParams) {
@@ -37,16 +32,11 @@ fun MainScreen(navController: NavHostController, params: MainScreenParams) {
 	Scaffold(
 		bottomBar = { BottomNavigationBar(bottomNavController, bottomNavigationBarItems) }
 	) { paddingValues ->
-		NavHost(
+		TabsNavHost(
 			modifier = Modifier.padding(paddingValues),
 			navController = bottomNavController,
-			startDestination = BottomTabBarItem.Home.route,
-		) {
-			composable(BottomTabBarItem.Catalog.route) { CatalogScreen() }
-			composable(BottomTabBarItem.MyCourses.route) { MyCoursesScreen() }
-			composable(BottomTabBarItem.Home.route) { HomeScreen() }
-			composable(BottomTabBarItem.Tasks.route) { TasksScreen() }
-		}
+			startDestination = Destinations.Home.route
+		)
 	}
 }
 

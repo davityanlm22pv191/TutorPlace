@@ -9,7 +9,7 @@ import com.example.tutorplace.ui.screens.auth.authorization.AuthorizationScreen
 import com.example.tutorplace.ui.screens.auth.registration.RegistrationScreen
 import com.example.tutorplace.ui.screens.auth.restorepassword.RestorePasswordScreen
 
-fun NavGraphBuilder.AuthorizationFlow(navController: NavController) {
+fun NavGraphBuilder.authorizationFlow(navController: NavController) {
 	navigation(
 		startDestination = AuthorizationFlow.Auth.route,
 		route = AuthorizationFlow.FLOW_ROUTE

@@ -1,8 +1,9 @@
-package com.example.tutorplace.ui.navigation
+package com.example.tutorplace.ui.common.bottomnavbar
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.example.tutorplace.R
+import com.example.tutorplace.ui.navigation.Destinations
 
 sealed class BottomTabBarItem(
 	val route: String,

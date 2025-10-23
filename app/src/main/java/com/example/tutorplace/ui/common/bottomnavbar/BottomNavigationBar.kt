@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.common
+package com.example.tutorplace.ui.common.bottomnavbar
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -13,11 +13,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.tutorplace.ui.navigation.BottomTabBarItem
+import androidx.navigation.compose.rememberNavController
+import com.example.tutorplace.ui.common.bottomnavbar.BottomTabBarItem.Catalog
+import com.example.tutorplace.ui.common.bottomnavbar.BottomTabBarItem.Home
+import com.example.tutorplace.ui.common.bottomnavbar.BottomTabBarItem.MyCourses
+import com.example.tutorplace.ui.common.bottomnavbar.BottomTabBarItem.Tasks
 import com.example.tutorplace.ui.theme.ContainerColor
 import com.example.tutorplace.ui.theme.Grey82
 import com.example.tutorplace.ui.theme.PurpleCC
@@ -71,4 +76,13 @@ fun BottomNavigationBar(
 			)
 		}
 	}
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+@Composable
+private fun BottomNavigationBarPreview() {
+	BottomNavigationBar(
+		rememberNavController(),
+		listOf(Catalog, MyCourses, Home, Tasks)
+	)
 }

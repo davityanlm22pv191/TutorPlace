@@ -16,13 +16,13 @@ import com.example.tutorplace.ui.screens.onboarding.OnboardingScreen
 fun AppNavigationGraph(startDestination: String) {
 	val navController = rememberNavController()
 	NavHost(navController, startDestination = startDestination) {
-		AuthorizationFlow(navController)
-		MainScreen(navController)
+		authorizationFlow(navController)
+		mainScreen(navController)
 		dialog(Destinations.Onboarding.route) { OnboardingScreen(navController) }
 	}
 }
 
-private fun NavGraphBuilder.MainScreen(navController: NavHostController) {
+private fun NavGraphBuilder.mainScreen(navController: NavHostController) {
 	composable(
 		route = Destinations.MainScreen.DEFAULT_ROUTE,
 		arguments = listOf(
