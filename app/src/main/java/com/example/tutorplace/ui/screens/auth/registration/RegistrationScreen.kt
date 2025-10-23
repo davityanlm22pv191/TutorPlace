@@ -36,12 +36,13 @@ import com.example.tutorplace.ui.common.PasswordTextField
 import com.example.tutorplace.ui.common.PhoneTextField
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.TelegramTextField
+import com.example.tutorplace.ui.common.header.Header
+import com.example.tutorplace.ui.common.header.HeaderLogoType
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
 import com.example.tutorplace.ui.navigation.Destinations
+import com.example.tutorplace.ui.navigation.Destinations.MainScreen.MainScreenParams
 import com.example.tutorplace.ui.screens.auth.common.AuthSectionDivider
-import com.example.tutorplace.ui.common.header.Header
-import com.example.tutorplace.ui.common.header.HeaderLogoType
 import com.example.tutorplace.ui.screens.auth.common.YandexButton
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEffect
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.ConfirmPasswordChanged
@@ -234,9 +235,7 @@ private fun ObserveViewModelEvents(
 		viewModel.effect.collect { effect ->
 			when (effect) {
 				RegistrationEffect.NavigateToHome -> navController.navigate(
-					Destinations.Home(
-						Destinations.Home.HomeParams(isShouldShowOnboarding = true)
-					).route
+					Destinations.MainScreen(MainScreenParams(isShouldShowOnboarding = true)).route
 				) {
 					popUpTo(Destinations.AuthorizationFlow.FLOW_ROUTE) { inclusive = true }
 				}

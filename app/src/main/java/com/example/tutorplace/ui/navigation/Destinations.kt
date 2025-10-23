@@ -14,19 +14,24 @@ sealed class Destinations(open val route: String) {
 		object Registration : AuthorizationFlow("registration")
 	}
 
-	data class Home(val params: HomeParams) : Destinations(route = params.toRoute()) {
+	object Catalog : Destinations("catalog")
+	object MyCourses : Destinations("my_courses")
+	object Home : Destinations("home")
+	object Tasks : Destinations("tasks")
+
+	data class MainScreen(val params: MainScreenParams) : Destinations(route = params.toRoute()) {
 		companion object {
-			private const val ROUTE = "home"
+			private const val ROUTE = "main"
 			const val DEFAULT_ROUTE = "$ROUTE?isShouldShowOnboarding={isShouldShowOnboarding}"
 
-			private fun HomeParams.toRoute() =
+			private fun MainScreenParams.toRoute() =
 				"$ROUTE?isShouldShowOnboarding=${isShouldShowOnboarding}"
 		}
 
-		data class HomeParams(
+		data class MainScreenParams(
 			val isShouldShowOnboarding: Boolean = false
 		)
 	}
 
-	object Onboarding: Destinations("onboarding")
+	object Onboarding : Destinations("onboarding")
 }

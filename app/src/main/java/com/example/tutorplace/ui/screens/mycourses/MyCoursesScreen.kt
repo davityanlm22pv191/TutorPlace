@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.screens.home
+package com.example.tutorplace.ui.screens.mycourses
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,15 +10,14 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun MyCourses(navController: NavController) {
 	Box(
 		Modifier.fillMaxSize()
 	) {
-		Text(text = "This is Home Screen")
+		Text(text = "This is My Courses Screen")
 	}
-
 }
 
 @Preview
 @Composable
-private fun HomePreview() = HomeScreen(rememberNavController())
+private fun MyCoursesPreview() = MyCourses(rememberNavController())

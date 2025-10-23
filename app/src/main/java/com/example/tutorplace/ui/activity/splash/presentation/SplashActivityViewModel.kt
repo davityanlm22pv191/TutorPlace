@@ -25,7 +25,7 @@ class SplashActivityViewModel @Inject constructor(
 		viewModelScope.launch {
 			val isAuthorized = async { credentialsStorage.isAuthorized().firstOrNull() }.await()
 			if (isAuthorized == true) {
-				sendEffect(SplashActivityEffect.NavigateToHome)
+				sendEffect(SplashActivityEffect.NavigateToMain)
 			} else {
 				sendEffect(SplashActivityEffect.NavigateToAuthFlow)
 			}
