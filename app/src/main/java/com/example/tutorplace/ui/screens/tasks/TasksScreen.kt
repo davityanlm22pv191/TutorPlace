@@ -6,11 +6,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun TasksScreen(navController: NavController) {
+fun TasksScreen() {
 	Box(
 		Modifier.fillMaxSize()
 	) {
@@ -20,4 +18,4 @@ fun TasksScreen(navController: NavController) {
 
 @Preview
 @Composable
-private fun TasksPreview() = TasksScreen(rememberNavController())
+private fun TasksPreview() = TasksScreen()

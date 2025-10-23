@@ -1,6 +1,11 @@
 <resources>
 	<string name="app_name">TutorPlace</string>
 
+	<string name="tab_catalog_title">Каталог</string>
+	<string name="tab_my_courses_title">Мои курсы</string>
+	<string name="tab_home_title">Главная</string>
+	<string name="tab_tasks_title">Задания</string>
+
 	<!-- 	Common -->
 	<string name="common_or">или</string>
 	<string name="common_next">Далее</string>
