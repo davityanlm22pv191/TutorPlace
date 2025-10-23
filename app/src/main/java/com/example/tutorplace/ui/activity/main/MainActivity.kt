@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.SideEffect
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.tutorplace.helpers.isLight
-import com.example.tutorplace.ui.navigation.AppNavigationGraph
+import com.example.tutorplace.navigation.AppNavigationGraph
 import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.TutorPlaceTheme
 import dagger.hilt.android.AndroidEntryPoint

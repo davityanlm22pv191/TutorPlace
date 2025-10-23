@@ -17,6 +17,10 @@ val Typography = Typography(
 		lineHeight = 29.sp,
 		fontSize = 24.sp,
 	),
+	bodySmall = TextStyle(
+		fontWeight = FontWeight.Normal,
+		fontSize = 12.sp
+	),
 	bodyMedium = TextStyle(
 		fontWeight = FontWeight.Normal,
 		lineHeight = 28.sp,
@@ -34,7 +38,7 @@ val Typography = Typography(
 	displayLarge = TextStyle(
 		fontWeight = FontWeight.SemiBold,
 		fontSize = 64.sp,
-	)
+	),
 
 
 	/* Other default text styles to override

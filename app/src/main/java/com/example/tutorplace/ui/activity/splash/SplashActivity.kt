@@ -12,10 +12,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.tutorplace.ui.activity.main.MainActivity
 import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEffect
 import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEffect.NavigateToAuthFlow
-import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEffect.NavigateToHome
+import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEffect.NavigateToMain
 import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityEvent.SplashAnimationEnded
 import com.example.tutorplace.ui.activity.splash.presentation.SplashActivityViewModel
-import com.example.tutorplace.ui.navigation.Destinations
+import com.example.tutorplace.navigation.Destinations
+import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -54,8 +55,12 @@ class SplashActivity : ComponentActivity() {
 
 	private fun handlingViewModelEffect(effect: SplashActivityEffect) {
 		val startDestination = when (effect) {
-			NavigateToAuthFlow -> Destinations.AuthorizationFlow.FLOW_ROUTE
-			NavigateToHome -> Destinations.Home(Destinations.Home.HomeParams(isShouldShowOnboarding = true)).route
+			NavigateToAuthFlow -> {
+				Destinations.AuthorizationFlow.FLOW_ROUTE
+			}
+			NavigateToMain -> {
+				Destinations.MainScreen(MainScreenParams(isShouldShowOnboarding = false)).route
+			}
 		}
 		val intent = Intent(this, MainActivity::class.java).apply {
 			putExtra("start_destination", startDestination)

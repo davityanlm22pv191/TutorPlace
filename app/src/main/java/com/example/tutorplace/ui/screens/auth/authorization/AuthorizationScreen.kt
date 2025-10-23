@@ -36,9 +36,12 @@ import com.example.tutorplace.R
 import com.example.tutorplace.ui.common.EmailTextField
 import com.example.tutorplace.ui.common.PasswordTextField
 import com.example.tutorplace.ui.common.PurpleButton
+import com.example.tutorplace.ui.common.header.Header
+import com.example.tutorplace.ui.common.header.HeaderLogoType
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
-import com.example.tutorplace.ui.navigation.Destinations
+import com.example.tutorplace.navigation.Destinations
+import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToHome
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToRegistration
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToRestorePassword
@@ -46,8 +49,6 @@ import com.example.tutorplace.ui.screens.auth.authorization.presentation.Authori
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationViewModel
 import com.example.tutorplace.ui.screens.auth.common.AuthSectionDivider
-import com.example.tutorplace.ui.common.header.Header
-import com.example.tutorplace.ui.common.header.HeaderLogoType
 import com.example.tutorplace.ui.screens.auth.common.YandexButton
 import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.ScreenColor
@@ -188,7 +189,7 @@ private fun ObserveViewModelEvents(
 		viewModel.effect.collect { effect ->
 			when (effect) {
 				is NavigateToHome -> navController.navigate(
-					Destinations.Home(Destinations.Home.HomeParams(isShouldShowOnboarding = false)).route
+					Destinations.MainScreen(MainScreenParams(isShouldShowOnboarding = false)).route
 				) {
 					popUpTo(Destinations.AuthorizationFlow.FLOW_ROUTE) {
 						inclusive = true
