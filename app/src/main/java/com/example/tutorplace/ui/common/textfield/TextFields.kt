@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.common
+package com.example.tutorplace.ui.common.textfield
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

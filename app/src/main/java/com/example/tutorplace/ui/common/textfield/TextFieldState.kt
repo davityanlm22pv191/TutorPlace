@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.common
+package com.example.tutorplace.ui.common.textfield
 
 data class TextFieldState(
 	val value: String = "",

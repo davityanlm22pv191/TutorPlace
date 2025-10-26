@@ -4,7 +4,7 @@ import com.example.tutorplace.data.onboarding.model.OnboardingInfo
 import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.domain.model.Sex
 import com.example.tutorplace.ui.base.BaseState
-import com.example.tutorplace.ui.common.TextFieldState
+import com.example.tutorplace.ui.common.textfield.TextFieldState
 
 data class OnboardingState(
 	val onboardingInfo: DataInfo<OnboardingInfo> = DataInfo(

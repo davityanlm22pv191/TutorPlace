@@ -33,7 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tutorplace.R
 import com.example.tutorplace.helpers.FormatHelper
-import com.example.tutorplace.ui.common.PhoneTextField
+import com.example.tutorplace.ui.common.textfield.PhoneTextField
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
 import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.ContainerColor

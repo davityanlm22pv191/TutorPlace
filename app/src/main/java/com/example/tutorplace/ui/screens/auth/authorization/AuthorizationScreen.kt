@@ -33,8 +33,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.R
-import com.example.tutorplace.ui.common.EmailTextField
-import com.example.tutorplace.ui.common.PasswordTextField
+import com.example.tutorplace.ui.common.textfield.EmailTextField
+import com.example.tutorplace.ui.common.textfield.PasswordTextField
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.header.Header
 import com.example.tutorplace.ui.common.header.HeaderLogoType
