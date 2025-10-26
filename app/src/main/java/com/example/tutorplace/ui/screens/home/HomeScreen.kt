@@ -25,7 +25,7 @@ fun HomeScreen(navController: NavHostController) {
 				profileImageUrl = "",
 				level = 1,
 				progress = 0f,
-				isArrowVisible = true,
+				isArrowVisible = false,
 				onBackClicked = {},
 				onNotificationClicked = {},
 				onSearchClicked = {},

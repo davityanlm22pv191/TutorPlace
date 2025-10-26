@@ -76,7 +76,7 @@ fun ToolbarHeader(
 					modifier = Modifier
 						.size(24.dp)
 						.clip(CircleShape)
-						.clickable { onBackClicked() },
+						.clickable(interactionSource = null, indication = null) { onBackClicked() },
 					painter = painterResource(R.drawable.ic_arrow_left_black_16),
 					contentDescription = null
 				)
