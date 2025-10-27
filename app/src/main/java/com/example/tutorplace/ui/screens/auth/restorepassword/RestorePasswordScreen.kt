@@ -31,7 +31,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.R
 import com.example.tutorplace.helpers.FormatHelper
-import com.example.tutorplace.ui.common.EmailTextField
+import com.example.tutorplace.ui.common.textfield.EmailTextField
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData

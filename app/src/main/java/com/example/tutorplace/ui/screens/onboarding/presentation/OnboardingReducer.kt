@@ -6,7 +6,7 @@ import com.example.tutorplace.domain.model.loaded
 import com.example.tutorplace.domain.model.loading
 import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.ui.base.BaseReducer
-import com.example.tutorplace.ui.common.TextFieldState
+import com.example.tutorplace.ui.common.textfield.TextFieldState
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.InterestSelected
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValidError
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NameValueChanged

@@ -15,6 +15,8 @@ val ContainerColor: Color
 val White = Color(0xFFFFFFFF)
 
 val Black16 = Color(0xFF161616)
+val Black49 = Color(0xFF3D4449)
+val Black36 = Color(0xFF293036)
 val BlackAlpha04 = Color(0x0A000000)
 
 val Grey82 = Color(0xFF828282)
@@ -23,5 +25,9 @@ val GreyAC = Color(0xFFACACAC)
 val GreyD5 = Color(0xFFD5D5D5)
 
 val PurpleCC = Color(0xFF7200CC)
+val PurpleDE = Color(0xFFA55CDE)
 
 val Red1D = Color(0xFFFC3F1D)
+val Red33 = Color(0xFFD63333)
+
+val Yellow12 = Color(0xFFF6DD12)

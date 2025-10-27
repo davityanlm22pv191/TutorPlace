@@ -30,9 +30,9 @@ import com.example.tutorplace.R
 import com.example.tutorplace.data.onboarding.model.OnboardingInfo
 import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.domain.model.Sex
-import com.example.tutorplace.ui.common.NameTextField
-import com.example.tutorplace.ui.common.PasswordTextField
-import com.example.tutorplace.ui.common.TextFieldState
+import com.example.tutorplace.ui.common.textfield.NameTextField
+import com.example.tutorplace.ui.common.textfield.PasswordTextField
+import com.example.tutorplace.ui.common.textfield.TextFieldState
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
 import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.ContainerColor

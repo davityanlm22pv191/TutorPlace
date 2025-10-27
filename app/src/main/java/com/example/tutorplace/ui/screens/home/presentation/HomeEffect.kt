@@ -2,4 +2,8 @@ package com.example.tutorplace.ui.screens.home.presentation
 
 import com.example.tutorplace.ui.base.BaseEffect
 
-sealed interface HomeEffect : BaseEffect
+sealed interface HomeEffect : BaseEffect {
+	object NavigateToMail : HomeEffect
+	object NavigateToSearchScreen : HomeEffect
+	object NavigateToProfile : HomeEffect
+}
