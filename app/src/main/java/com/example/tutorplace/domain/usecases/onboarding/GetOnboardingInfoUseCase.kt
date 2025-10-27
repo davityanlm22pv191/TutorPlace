@@ -10,7 +10,7 @@ class GetOnboardingInfoUseCase @Inject constructor(
 	suspend fun execute(): Result<OnboardingInfo> {
 		val response = onboardingService.getOnboardingInfo()
 		return if (response.isSuccessful && response.body() != null) {
-			Result.success(response.body()!!.first())
+			Result.success(response.body()!!)
 		} else {
 			Result.failure(Throwable(response.message()))
 		}

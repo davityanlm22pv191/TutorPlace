@@ -44,7 +44,7 @@ android {
 		buildConfigField(
 			"String",
 			"SERVER_URL",
-			"\"https://68eaea8e76b3362414cc7139.mockapi.io/app/\""
+			"\"https://tutorplace.wiremockapi.cloud/\""
 		)
 	}
 }

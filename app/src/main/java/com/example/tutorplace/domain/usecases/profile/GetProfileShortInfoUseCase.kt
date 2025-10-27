@@ -12,7 +12,7 @@ class GetProfileShortInfoUseCase @Inject constructor(
 	suspend fun execute(): Result<Unit> {
 		val response = profileService.getProfileShortInfo()
 		return if (response.isSuccessful) {
-			response.body()?.first()?.let { profileShortInfo ->
+			response.body()?.let { profileShortInfo ->
 				profileStorage.setProfileShortInfo(profileShortInfo)
 			}
 			Result.success(Unit)

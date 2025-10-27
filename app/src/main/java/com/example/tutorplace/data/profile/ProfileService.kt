@@ -7,9 +7,9 @@ import retrofit2.http.GET
 interface ProfileService {
 
 	private companion object {
-		const val PROFILE_SHORT_INFO_ENDPOINT = "profileShortInfo"
+		const val PROFILE_SHORT_INFO_ENDPOINT = "profile/short"
 	}
 
 	@GET(PROFILE_SHORT_INFO_ENDPOINT)
-	suspend fun getProfileShortInfo(): Response<List<ProfileShortInfo>>
+	suspend fun getProfileShortInfo(): Response<ProfileShortInfo>
 }
