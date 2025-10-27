@@ -145,7 +145,8 @@ fun ToolbarHeader(
 			modifier = Modifier
 				.size(44.dp)
 				.clip(CircleShape)
-				.clickable { onSearchClicked() }, contentAlignment = Alignment.Center
+				.clickable { onSearchClicked() },
+			contentAlignment = Alignment.Center
 		) {
 			Icon(
 				painter = painterResource(R.drawable.ic_search),

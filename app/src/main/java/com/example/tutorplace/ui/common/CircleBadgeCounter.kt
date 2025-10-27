@@ -41,7 +41,7 @@ fun CircleBadgeCounter(
 		contentAlignment = Alignment.Center
 	) {
 		Text(
-			modifier = Modifier.offset(x = (-0.5).dp).takeIf { value < 9 } ?: Modifier,
+			modifier = Modifier.offset(x = (-0.5).dp).takeIf { value <= 9 } ?: Modifier,
 			text = text,
 			color = textColor,
 			style = Typography.displaySmall.copy(
@@ -59,7 +59,7 @@ private fun Preview() {
 		modifier = Modifier.padding(8.dp),
 		verticalArrangement = Arrangement.spacedBy(2.dp)
 	) {
-		CircleBadgeCounter(value = 2, badgeColor = Red33, textColor = White)
+		CircleBadgeCounter(value = 9, badgeColor = Red33, textColor = White)
 		CircleBadgeCounter(value = 99, badgeColor = Red33, textColor = White)
 		CircleBadgeCounter(value = 999, badgeColor = Red33, textColor = White)
 		CircleBadgeCounter(value = 9, badgeColor = Yellow12, textColor = Black16)
