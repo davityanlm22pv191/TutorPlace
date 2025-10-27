@@ -1,5 +1,6 @@
 package com.example.tutorplace.ui.base.main
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -17,9 +18,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.navigation.Destinations
 import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
 import com.example.tutorplace.navigation.tabs.TabsNavHost
+import com.example.tutorplace.ui.base.main.presentation.MainScreenViewModel
 import com.example.tutorplace.ui.common.bottomnavbar.BottomNavigationBar
 import com.example.tutorplace.ui.common.bottomnavbar.BottomTabBarItem
-import com.example.tutorplace.ui.base.main.presentation.MainScreenViewModel
 
 @Composable
 fun MainScreen(navController: NavHostController, params: MainScreenParams) {
@@ -33,6 +34,7 @@ fun MainScreen(navController: NavHostController, params: MainScreenParams) {
 		BottomTabBarItem.Tasks
 	)
 	Scaffold(
+		contentWindowInsets = WindowInsets(0, 0, 0, 0),
 		bottomBar = { BottomNavigationBar(bottomNavController, bottomNavigationBarItems) }
 	) { paddingValues ->
 		TabsNavHost(
