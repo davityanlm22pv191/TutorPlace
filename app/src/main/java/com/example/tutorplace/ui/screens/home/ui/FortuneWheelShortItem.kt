@@ -2,6 +2,8 @@ package com.example.tutorplace.ui.screens.home.ui
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,10 +23,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.StrokeCap
@@ -58,17 +63,23 @@ fun FortuneWheelShortItem(
 	onInformationClick: () -> Unit,
 	onItemClick: () -> Unit,
 ) {
-	val now = remember { mutableStateOf(LocalDateTime.now()) }
-	val remainingDuration = Duration.between(lastRotationTime, now.value)
-	val remainingTime = remember { mutableStateOf(remainingDuration) }
-	if (remainingDuration.toMillis() > 0) {
-		LaunchedEffect(Unit) {
-			while (remainingTime.value.toMillis() > 0) {
-				remainingTime.value = Duration.between(lastRotationTime, now.value)
-				delay(1000)
+	var durationTime by remember {
+		mutableStateOf(
+			run {
+				val sinceLastRotation = Duration.between(lastRotationTime, LocalDateTime.now())
+				val remaining = Duration.ofDays(1).minus(sinceLastRotation)
+				if (remaining.isNegative) Duration.ZERO else remaining
 			}
+		)
+	}
+
+	LaunchedEffect(Unit) {
+		while (durationTime > Duration.ZERO) {
+			delay(1000L)
+			durationTime = durationTime.minusSeconds(1)
 		}
 	}
+
 	Box(
 		modifier = modifier
 			.fillMaxWidth()
@@ -101,7 +112,21 @@ fun FortuneWheelShortItem(
 					fontWeight = FontWeight.Normal
 				)
 			)
-			FreeSpinThrough(modifier = Modifier.padding(top = 4.dp), remainingTime.value)
+			AnimatedContent(
+				targetState = durationTime.isZero or durationTime.isNegative
+			) {
+				val alpha = animateFloatAsState(
+					targetValue = if (it) 0f else 1f,
+					label = "free_spin_through_alpha"
+				)
+				FreeSpinThrough(
+					modifier = Modifier
+						.padding(top = 4.dp)
+						.alpha(alpha.value),
+					remainingTime = durationTime
+				)
+			}
+
 		}
 		Image(
 			modifier = Modifier
