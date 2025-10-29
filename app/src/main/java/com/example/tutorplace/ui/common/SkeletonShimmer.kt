@@ -1,6 +1,6 @@
 package com.example.tutorplace.ui.common
 
-import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -34,8 +34,8 @@ fun SkeletonShimmer(
 		targetValue = 1000f,     // конечное значение (справа)
 		animationSpec = infiniteRepeatable( // бесконечное повторение
 			animation = tween(
-				durationMillis = 800,     // скорость движения shimmer-а
-				easing = LinearEasing      // равномерное движение без ускорений
+				durationMillis = 1000,     // скорость движения shimmer-а
+				easing = FastOutLinearInEasing      // равномерное движение без ускорений
 			),
 			repeatMode = RepeatMode.Reverse // когда доходит до конца — начинается заново
 		),
@@ -45,6 +45,7 @@ fun SkeletonShimmer(
 	// 🎨 3. Задаём цвета для shimmer-а (можно подбирать под стиль)
 	// Это три цвета: тёмный → светлый → тёмный.
 	// В центре — яркий цвет, создающий "блик".
+
 	val shimmerColors = listOf(
 		Color.LightGray.copy(alpha = 0.6f),  // тёмный участок
 		Color.Gray.copy(alpha = 0.3f),       // светлая полоса

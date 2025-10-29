@@ -2,6 +2,11 @@ package com.example.tutorplace.ui.screens.home
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,6 +29,7 @@ import com.example.tutorplace.ui.screens.home.presentation.HomeEffect
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent
 import com.example.tutorplace.ui.screens.home.presentation.HomeViewModel
 import com.example.tutorplace.ui.screens.home.ui.FortuneWheelShortItem
+import com.example.tutorplace.ui.screens.home.ui.FortuneWheelShortItemSkeleton
 import com.example.tutorplace.ui.theme.ScreenColor
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -59,19 +65,27 @@ fun HomeScreen(navController: NavHostController) {
 				.padding(paddingValues)
 		) {
 			item {
-				if (!state.value.fortuneWheelLastRotation.isLoading && state.value.fortuneWheelLastRotation.throwable == null) {
-					FortuneWheelShortItem(
-						modifier = Modifier.padding(top = 8.dp),
-						lastRotationTime = state.value.fortuneWheelLastRotation.data,
-						onInformationClick = { viewModel.onEvent(HomeEvent.UI.FortuneWheelInformationClicked) },
-						onItemClick = { viewModel.onEvent(HomeEvent.UI.FortuneWheelClicked) }
-					)
-				} else {
-					// TODO SKELETON
+				val isFortuneWheelSectionReady =
+					!state.value.fortuneWheelLastRotation.isLoading && state.value.fortuneWheelLastRotation.throwable == null
+				AnimatedContent(
+					targetState = isFortuneWheelSectionReady,
+					transitionSpec = {
+						fadeIn(animationSpec = tween(durationMillis = 500)) togetherWith
+								fadeOut(animationSpec = tween(durationMillis = 500))
+					}) {
+					if (it) {
+						FortuneWheelShortItem(
+							modifier = Modifier.padding(top = 8.dp),
+							lastRotationTime = state.value.fortuneWheelLastRotation.data,
+							onInformationClick = { viewModel.onEvent(HomeEvent.UI.FortuneWheelInformationClicked) },
+							onItemClick = { viewModel.onEvent(HomeEvent.UI.FortuneWheelClicked) }
+						)
+					} else {
+						FortuneWheelShortItemSkeleton(modifier = Modifier.padding(top = 8.dp))
+					}
 				}
 			}
 		}
-
 	}
 }
 

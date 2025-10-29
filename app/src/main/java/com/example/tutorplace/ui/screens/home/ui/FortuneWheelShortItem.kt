@@ -147,7 +147,7 @@ private fun FreeSpinThrough(modifier: Modifier = Modifier, remainingTime: Durati
 		TimerCounter(value = (remainingTime.toSeconds() % 60).toInt(), amount = 60)
 		Spacer(modifier = Modifier.weight(1f))
 		Surface(
-			modifier = modifier.height(50.dp),
+			modifier = Modifier.height(50.dp),
 			shape = RoundedCornerShape(12.dp),
 			color = Green22,
 			content = {
@@ -171,10 +171,7 @@ private fun FreeSpinThrough(modifier: Modifier = Modifier, remainingTime: Durati
 fun GradientCircularProgress(progress: Float, size: Dp, strokeWidth: Dp) {
 	val gradient = Brush.sweepGradient(colors = listOf(PurpleC3, BlueCE))
 
-	Canvas(
-		modifier = Modifier
-			.size(size)
-	) {
+	Canvas(modifier = Modifier.size(size)) {
 		drawArc(
 			brush = gradient,
 			startAngle = -90f,

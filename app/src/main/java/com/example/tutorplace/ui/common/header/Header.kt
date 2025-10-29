@@ -70,7 +70,7 @@ fun Header(
 			Text(
 				modifier = Modifier
 					.fillMaxWidth()
-					.padding(top = 24.dp),
+					.padding(top = if (logo !is HeaderLogoType.None) 24.dp else 0.dp),
 				text = title,
 				style = Typography.headlineLarge,
 				color = Black16,
