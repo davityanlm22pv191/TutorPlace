@@ -1,5 +1,6 @@
 package com.example.tutorplace.ui.base.main
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -12,8 +13,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.navigation.Destinations
 import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
@@ -33,9 +34,23 @@ fun MainScreen(navController: NavHostController, params: MainScreenParams) {
 		BottomTabBarItem.Home,
 		BottomTabBarItem.Tasks
 	)
+	val bottomBarRoutes = bottomNavigationBarItems.map { item -> item.route }
+	val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
+	val currentRoute = navBackStackEntry?.destination?.route
+	val shouldShowBottomBar = currentRoute in bottomBarRoutes
+
 	Scaffold(
 		contentWindowInsets = WindowInsets(0, 0, 0, 0),
-		bottomBar = { BottomNavigationBar(bottomNavController, bottomNavigationBarItems) }
+		bottomBar = {
+			AnimatedContent(
+				shouldShowBottomBar,
+				label = "shouldShowBottomBar",
+			) {
+				if (it) {
+					BottomNavigationBar(bottomNavController, bottomNavigationBarItems)
+				}
+			}
+		}
 	) { paddingValues ->
 		TabsNavHost(
 			modifier = Modifier.padding(paddingValues),
@@ -47,13 +62,13 @@ fun MainScreen(navController: NavHostController, params: MainScreenParams) {
 
 @Composable
 private fun OpenOnboardingIfNeeded(
-	navController: NavController,
+	navController: NavHostController,
 	isShouldShowOnboarding: Boolean
 ) {
-	var alreadyNavigated by rememberSaveable { mutableStateOf(false) }
+	var onboardingNavigated by rememberSaveable { mutableStateOf(false) }
 	LaunchedEffect(isShouldShowOnboarding) {
-		if (isShouldShowOnboarding && !alreadyNavigated) {
-			alreadyNavigated = true
+		if (isShouldShowOnboarding && !onboardingNavigated) {
+			onboardingNavigated = true
 			navController.navigate(Destinations.Onboarding.route)
 		}
 	}

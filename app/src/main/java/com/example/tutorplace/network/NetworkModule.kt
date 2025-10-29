@@ -4,6 +4,8 @@ import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.example.tutorplace.BuildConfig
+import com.example.tutorplace.network.deserializers.LocalDateTimeDeserializer
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,6 +14,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.time.LocalDateTime
 import javax.inject.Singleton
 
 @Module
@@ -38,8 +41,12 @@ object NetworkModule {
 	@Provides
 	@Singleton
 	fun provideRetrofit(client: OkHttpClient): Retrofit {
+		val gson = GsonBuilder()
+			.registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeDeserializer())
+			.create()
 		return Retrofit.Builder()
 			.baseUrl(BuildConfig.SERVER_URL)
+			.addConverterFactory(GsonConverterFactory.create(gson))
 			.client(client)
 			.addConverterFactory(GsonConverterFactory.create())
 			.build()

@@ -74,7 +74,6 @@ fun OnboardingScreen(navController: NavController) {
 		scrimColor = Transparent,
 		onDismissRequest = { navController.popBackStack() }
 	) {
-		// Прокручиваемый контент
 		Column(
 			modifier = Modifier
 				.fillMaxWidth()

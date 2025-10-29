@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.example.tutorplace.navigation.fortuneWheelFlow
 
 @Composable
 fun TabsNavHost(modifier: Modifier, navController: NavHostController, startDestination: String) {
@@ -16,5 +17,7 @@ fun TabsNavHost(modifier: Modifier, navController: NavHostController, startDesti
 		myCoursesGraph(navController)
 		homeGraph(navController)
 		tasksGraph(navController)
+
+		fortuneWheelFlow(navController)
 	}
 }

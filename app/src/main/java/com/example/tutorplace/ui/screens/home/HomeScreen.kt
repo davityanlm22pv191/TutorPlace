@@ -1,7 +1,15 @@
 package com.example.tutorplace.ui.screens.home
 
-import androidx.compose.foundation.layout.Column
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -9,28 +17,29 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.R
+import com.example.tutorplace.navigation.Destinations.FortuneWheelFlow
 import com.example.tutorplace.ui.common.toolbar.ToolbarHeader
+import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.model.FortuneWheelParams
 import com.example.tutorplace.ui.screens.home.presentation.HomeEffect
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent
 import com.example.tutorplace.ui.screens.home.presentation.HomeViewModel
+import com.example.tutorplace.ui.screens.home.ui.FortuneWheelShortItem
+import com.example.tutorplace.ui.screens.home.ui.FortuneWheelShortItemSkeleton
 import com.example.tutorplace.ui.theme.ScreenColor
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun HomeScreen(navController: NavHostController) {
 	val viewModel = hiltViewModel<HomeViewModel>()
 	val state = viewModel.state.collectAsState()
 	ObserveViewModelEvents(viewModel, navController)
 	Scaffold(
-		containerColor = ScreenColor,
-	) { paddingValues ->
-		Column(
-			modifier = Modifier.fillMaxSize()
-		) {
+		topBar = {
 			ToolbarHeader(
 				modifier = Modifier,
 				screenName = stringResource(R.string.home_screen_name),
@@ -47,6 +56,35 @@ fun HomeScreen(navController: NavHostController) {
 				onSearchClicked = { viewModel.onEvent(HomeEvent.UI.SearchClicked) },
 				onProfileClicked = { viewModel.onEvent(HomeEvent.UI.ProfileClicked) }
 			)
+		},
+		containerColor = ScreenColor,
+	) { paddingValues ->
+		LazyColumn(
+			modifier = Modifier
+				.fillMaxSize()
+				.padding(paddingValues)
+		) {
+			item {
+				val isFortuneWheelSectionReady =
+					!state.value.fortuneWheelLastRotation.isLoading && state.value.fortuneWheelLastRotation.throwable == null
+				AnimatedContent(
+					targetState = isFortuneWheelSectionReady,
+					transitionSpec = {
+						fadeIn(animationSpec = tween(durationMillis = 500)) togetherWith
+								fadeOut(animationSpec = tween(durationMillis = 500))
+					}) {
+					if (it) {
+						FortuneWheelShortItem(
+							modifier = Modifier.padding(top = 8.dp),
+							lastRotationTime = state.value.fortuneWheelLastRotation.data,
+							onInformationClick = { viewModel.onEvent(HomeEvent.UI.FortuneWheelInformationClicked) },
+							onItemClick = { viewModel.onEvent(HomeEvent.UI.FortuneWheelClicked) }
+						)
+					} else {
+						FortuneWheelShortItemSkeleton(modifier = Modifier.padding(top = 8.dp))
+					}
+				}
+			}
 		}
 	}
 }
@@ -54,7 +92,7 @@ fun HomeScreen(navController: NavHostController) {
 @Composable
 private fun ObserveViewModelEvents(
 	viewModel: HomeViewModel,
-	navController: NavController
+	navController: NavHostController
 ) {
 	LaunchedEffect(Unit) {
 		viewModel.effect.collect { effect ->
@@ -62,11 +100,22 @@ private fun ObserveViewModelEvents(
 				HomeEffect.NavigateToMail -> navController
 				HomeEffect.NavigateToProfile -> navController
 				HomeEffect.NavigateToSearchScreen -> navController
+				HomeEffect.NavigateToFortuneWheelInformationBottomSheet -> navController.navigate(
+					FortuneWheelFlow.FortuneWheel(
+						FortuneWheelParams(isShouldShowInformation = true)
+					).route
+				)
+				HomeEffect.NavigateToFortuneWheelScreen -> navController.navigate(
+					FortuneWheelFlow.FortuneWheel(
+						FortuneWheelParams(isShouldShowInformation = false)
+					).route
+				)
 			}
 		}
 	}
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Preview
 @Composable
 private fun HomePreview() {
