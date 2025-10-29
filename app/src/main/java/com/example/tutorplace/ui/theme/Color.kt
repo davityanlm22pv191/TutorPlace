@@ -26,8 +26,14 @@ val GreyD5 = Color(0xFFD5D5D5)
 
 val PurpleCC = Color(0xFF7200CC)
 val PurpleDE = Color(0xFFA55CDE)
+val PurpleC3 = Color(0xFFB71AC3)
 
 val Red1D = Color(0xFFFC3F1D)
 val Red33 = Color(0xFFD63333)
 
 val Yellow12 = Color(0xFFF6DD12)
+
+val Green22 = Color(0xFFCBF922)
+
+val Blue36Alpha90 = Color(0x1E2736E5)
+val BlueCE= Color(0xFF649ECE)

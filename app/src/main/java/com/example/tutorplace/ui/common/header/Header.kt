@@ -63,6 +63,7 @@ fun Header(
 						color = Black16,
 						textAlign = TextAlign.Center
 					)
+					else -> {}
 				}
 			}
 

@@ -105,4 +105,18 @@
 	<!-- 	Home -->
 	<string name="home_screen_name">Дом</string>
 
+	<!-- 	Fortune Wheel -->
+	<string name="fortune_wheel">Колесо фортуны</string>
+	<string name="fortune_wheel_try_your_luck">Испытай свою удачу!</string>
+	<string name="fortune_wheel_free_spin_through">Бесплатное\nвращение\nчерез</string>
+	<string name="fortune_wheel_play">Играть</string>
+
+	<string name="fortune_wheel_information_description">Колесо фортуны — ваше вознаграждение за время проведённое с пользой!\n\nЗдесь вы сможете испытать свою удачу, и забрать ценные призы</string>
+	<string name="fortune_wheel_information_description_span">забрать ценные призы</string>
+	<string name="fortune_wheel_information_every_day_you_are_given_one_free_spin">Каждый день вам даётся 1 бесплатное вращение</string>
+	<string name="fortune_wheel_information_every_day_you_are_given_one_free_spin_span">1 бесплатное вращение</string>
+	<string name="fortune_wheel_information_additional_description">Также вы имеете возможность крутить колесо за монетки — которые легко заработать занимаясь саморазвитием: проходя уроки, выполняя задания и прокачивая свой уровень</string>
+	<string name="fortune_wheel_information_additional_description_span">проходя уроки, выполняя задания и прокачивая свой уровень</string>
+	<string name="fortune_wheel_information_more_about_promotion">Подробнее об условиях акции</string>
+
 </resources>

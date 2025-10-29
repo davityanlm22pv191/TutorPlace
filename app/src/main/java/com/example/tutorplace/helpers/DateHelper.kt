@@ -1,9 +1,8 @@
 package com.example.tutorplace.helpers
 
-import java.time.ZonedDateTime
-import java.util.Date
+import java.time.LocalDateTime
 
 object DateHelper {
 
-	fun ZonedDateTime.toDate(): Date = Date.from(this.toInstant())
+
 }

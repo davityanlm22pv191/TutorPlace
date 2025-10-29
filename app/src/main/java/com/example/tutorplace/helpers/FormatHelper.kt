@@ -5,6 +5,8 @@ import java.util.Locale
 
 object FormatHelper {
 
+	const val DATE_WITH_TIME = "dd.MM.yyyy HH:mm:ss"
+
 	private const val REQUIRED_NAME_LENGTH = 6
 	private const val REQUIRED_PASSWORD_LENGTH = 6
 	private const val RUSSIAN_PHONE_NUMBER_LENGTH = 11
