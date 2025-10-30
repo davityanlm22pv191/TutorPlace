@@ -55,7 +55,6 @@ import kotlinx.coroutines.delay
 import java.time.Duration
 import java.time.LocalDateTime
 
-@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun FortuneWheelShortItem(
 	modifier: Modifier = Modifier,
@@ -91,9 +90,7 @@ fun FortuneWheelShortItem(
 			contentDescription = null,
 			contentScale = ContentScale.Crop
 		)
-		Column(
-			modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 5.dp, bottom = 16.dp)
-		) {
+		Column(modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 5.dp, bottom = 16.dp)) {
 			Text(
 				modifier = Modifier.fillMaxWidth(),
 				text = stringResource(R.string.fortune_wheel_try_your_luck),
@@ -140,7 +137,6 @@ fun FortuneWheelShortItem(
 	}
 }
 
-@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 private fun FreeSpinThrough(modifier: Modifier = Modifier, remainingTime: Duration) {
 	Row(
@@ -169,7 +165,7 @@ private fun FreeSpinThrough(modifier: Modifier = Modifier, remainingTime: Durati
 			text = ":",
 			style = Typography.bodyMedium.copy(color = White, fontWeight = FontWeight.SemiBold)
 		)
-		TimerCounter(value = (remainingTime.toSeconds() % 60).toInt(), amount = 60)
+		TimerCounter(value = (remainingTime.seconds % 60).toInt(), amount = 60)
 		Spacer(modifier = Modifier.weight(1f))
 		Surface(
 			modifier = Modifier.height(50.dp),

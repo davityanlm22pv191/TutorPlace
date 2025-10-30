@@ -32,7 +32,6 @@ import com.example.tutorplace.ui.screens.home.ui.FortuneWheelShortItem
 import com.example.tutorplace.ui.screens.home.ui.FortuneWheelShortItemSkeleton
 import com.example.tutorplace.ui.theme.ScreenColor
 
-@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun HomeScreen(navController: NavHostController) {
 	val viewModel = hiltViewModel<HomeViewModel>()
