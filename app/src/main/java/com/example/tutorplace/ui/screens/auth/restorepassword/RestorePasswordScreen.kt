@@ -31,12 +31,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.R
 import com.example.tutorplace.helpers.FormatHelper
-import com.example.tutorplace.ui.common.textfield.EmailTextField
 import com.example.tutorplace.ui.common.PurpleButton
-import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
-import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
 import com.example.tutorplace.ui.common.header.Header
 import com.example.tutorplace.ui.common.header.HeaderLogoType
+import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
+import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
+import com.example.tutorplace.ui.common.textfield.EmailTextField
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEffect.NavigateToAuthorization
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailChanged
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordViewModel
@@ -123,24 +123,29 @@ fun RestorePasswordScreen(navController: NavController) {
 					thickness = 1.dp,
 					color = BlackAlpha04
 				)
-				SpanClickableText(
-					modifier = Modifier
-						.padding(top = 16.dp)
-						.fillMaxWidth(),
-					text = stringResource(R.string.common_auth_already_have_account),
-					links = listOf(
-						SpanLinkData(
-							link = stringResource(R.string.restore_password_already_have_account_spannable),
-							tag = "ENTRY",
-							style = SpanStyle(color = PurpleCC),
-							onClick = { viewModel.authorizeClicked() }
-						)
-					),
-					textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
-				)
+				DoYouHaveAnAccountSection { viewModel.authorizeClicked() }
 			}
 		}
 	}
+}
+
+@Composable
+private fun DoYouHaveAnAccountSection(onAuthorizedClicked: () -> Unit) {
+	SpanClickableText(
+		modifier = Modifier
+			.padding(top = 16.dp)
+			.fillMaxWidth(),
+		text = stringResource(R.string.common_auth_already_have_account),
+		links = listOf(
+			SpanLinkData(
+				link = stringResource(R.string.restore_password_already_have_account_spannable),
+				tag = "ENTRY",
+				style = SpanStyle(color = PurpleCC),
+				onClick = { onAuthorizedClicked() }
+			)
+		),
+		textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
+	)
 }
 
 @Composable
