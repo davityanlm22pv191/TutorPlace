@@ -28,20 +28,21 @@ import androidx.compose.ui.unit.LayoutDirection.Ltr
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.R
-import com.example.tutorplace.ui.common.textfield.EmailTextField
-import com.example.tutorplace.ui.common.textfield.NameTextField
-import com.example.tutorplace.ui.common.textfield.PasswordTextField
-import com.example.tutorplace.ui.common.textfield.PhoneTextField
+import com.example.tutorplace.navigation.Destinations
+import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
 import com.example.tutorplace.ui.common.PurpleButton
-import com.example.tutorplace.ui.common.textfield.TelegramTextField
 import com.example.tutorplace.ui.common.header.Header
 import com.example.tutorplace.ui.common.header.HeaderLogoType
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
-import com.example.tutorplace.navigation.Destinations
-import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
+import com.example.tutorplace.ui.common.textfield.EmailTextField
+import com.example.tutorplace.ui.common.textfield.NameTextField
+import com.example.tutorplace.ui.common.textfield.PasswordTextField
+import com.example.tutorplace.ui.common.textfield.PhoneTextField
+import com.example.tutorplace.ui.common.textfield.TelegramTextField
 import com.example.tutorplace.ui.screens.auth.common.AuthSectionDivider
 import com.example.tutorplace.ui.screens.auth.common.YandexButton
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEffect
@@ -60,7 +61,7 @@ import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.Typography
 
 @Composable
-fun RegistrationScreen(navController: NavController) {
+fun RegistrationScreen(navController: NavHostController) {
 	val viewModel = hiltViewModel<RegistrationViewModel>()
 	val state by viewModel.state.collectAsState()
 	val scrollState = rememberScrollState()
@@ -171,59 +172,72 @@ fun RegistrationScreen(navController: NavController) {
 					else -> return@PurpleButton
 				}
 			}
-			AuthSectionDivider(
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(top = 8.dp)
-			)
-			YandexButton(modifier = Modifier.padding(top = 8.dp)) {
-				viewModel.onYandexClicked()
-			}
-			SpanClickableText(
-				modifier = Modifier
-					.padding(top = 12.dp)
-					.fillMaxWidth(),
-				text = stringResource(R.string.registration_offer_and_terms),
-				links = listOf(
-					SpanLinkData(
-						link = stringResource(R.string.registration_offer_span),
-						tag = "OFFER",
-						style = SpanStyle(color = PurpleCC),
-						onClick = { viewModel.onOfferClicked() },
-					),
-					SpanLinkData(
-						link = stringResource(R.string.registration_terms_span),
-						tag = "TERMS",
-						style = SpanStyle(color = PurpleCC),
-						onClick = { viewModel.onTermsClicked() },
-					)
-				),
-				textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center),
-			)
-			HorizontalDivider(
-				modifier = Modifier
-					.padding(top = 16.dp)
-					.fillMaxWidth(),
-				thickness = 1.dp,
-				color = BlackAlpha04
-			)
-			SpanClickableText(
-				modifier = Modifier
-					.padding(top = 16.dp)
-					.fillMaxWidth(),
-				text = stringResource(R.string.common_auth_already_have_account),
-				links = listOf(
-					SpanLinkData(
-						link = stringResource(R.string.restore_password_already_have_account_spannable),
-						tag = "ENTRY",
-						style = SpanStyle(color = PurpleCC),
-						onClick = { navController.popBackStack() }
-					)
-				),
-				textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
+			YandexButtonWithTerms(
+				viewModel::onYandexClicked,
+				viewModel::onOfferClicked,
+				viewModel::onTermsClicked,
+				onEnterClicked = { navController.popBackStack() }
 			)
 		}
 	}
+}
+
+@Composable
+private fun YandexButtonWithTerms(
+	onYandexClicked: () -> Unit,
+	onOfferClicked: () -> Unit,
+	onTermsClicked: () -> Unit,
+	onEnterClicked: () -> Unit
+) {
+	AuthSectionDivider(
+		modifier = Modifier
+			.fillMaxWidth()
+			.padding(top = 8.dp)
+	)
+	YandexButton(modifier = Modifier.padding(top = 8.dp)) { onYandexClicked() }
+	SpanClickableText(
+		modifier = Modifier
+			.padding(top = 12.dp)
+			.fillMaxWidth(),
+		text = stringResource(R.string.registration_offer_and_terms),
+		links = listOf(
+			SpanLinkData(
+				link = stringResource(R.string.registration_offer_span),
+				tag = "OFFER",
+				style = SpanStyle(color = PurpleCC),
+				onClick = { onOfferClicked() },
+			),
+			SpanLinkData(
+				link = stringResource(R.string.registration_terms_span),
+				tag = "TERMS",
+				style = SpanStyle(color = PurpleCC),
+				onClick = { onTermsClicked() },
+			)
+		),
+		textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center),
+	)
+	HorizontalDivider(
+		modifier = Modifier
+			.padding(top = 16.dp)
+			.fillMaxWidth(),
+		thickness = 1.dp,
+		color = BlackAlpha04
+	)
+	SpanClickableText(
+		modifier = Modifier
+			.padding(top = 16.dp)
+			.fillMaxWidth(),
+		text = stringResource(R.string.common_auth_already_have_account),
+		links = listOf(
+			SpanLinkData(
+				link = stringResource(R.string.restore_password_already_have_account_spannable),
+				tag = "ENTRY",
+				style = SpanStyle(color = PurpleCC),
+				onClick = { onEnterClicked() }
+			)
+		),
+		textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
+	)
 }
 
 @Composable
