@@ -70,15 +70,14 @@ fun EmailTextField(
 	onNextClicked: () -> Unit,
 	onValueChanged: (String) -> Unit,
 ) {
+	val textStyle = remember { Typography.labelMedium.copy(color = Black16) }
 	OutlinedTextField(
-		modifier = modifier
-			.fillMaxWidth()
-			.focusable(),
+		modifier = modifier.fillMaxWidth(),
 		shape = RoundedCornerShape(12.dp),
 		value = value,
 		onValueChange = { onValueChanged(it) },
 		singleLine = true,
-		textStyle = Typography.labelMedium.copy(color = Black16),
+		textStyle = textStyle,
 		colors = outlinedTextFieldColors,
 		isError = isError,
 		label = {
@@ -103,16 +102,14 @@ fun PasswordTextField(
 	onValueChanged: (String) -> Unit,
 ) {
 	var passwordVisible by remember { mutableStateOf(false) }
-
+	val textStyle = remember { Typography.labelMedium.copy(color = Black16) }
 	OutlinedTextField(
-		modifier = modifier
-			.fillMaxWidth()
-			.focusable(),
+		modifier = modifier.fillMaxWidth(),
 		shape = RoundedCornerShape(12.dp),
 		value = value,
 		onValueChange = { onValueChanged(it) },
 		singleLine = true,
-		textStyle = Typography.labelMedium.copy(color = Black16),
+		textStyle = textStyle,
 		colors = outlinedTextFieldColors,
 		isError = isError,
 		label = {

@@ -2,12 +2,14 @@ package com.example.tutorplace.ui.screens.auth.authorization
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
@@ -33,15 +35,15 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.R
-import com.example.tutorplace.ui.common.textfield.EmailTextField
-import com.example.tutorplace.ui.common.textfield.PasswordTextField
+import com.example.tutorplace.navigation.Destinations
+import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.header.Header
 import com.example.tutorplace.ui.common.header.HeaderLogoType
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
-import com.example.tutorplace.navigation.Destinations
-import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
+import com.example.tutorplace.ui.common.textfield.EmailTextField
+import com.example.tutorplace.ui.common.textfield.PasswordTextField
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToHome
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToRegistration
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToRestorePassword
@@ -56,127 +58,137 @@ import com.example.tutorplace.ui.theme.TutorPlaceTheme
 import com.example.tutorplace.ui.theme.Typography
 
 @Composable
-fun AuthorizationScreen(navController: NavController) = TutorPlaceTheme {
+fun AuthorizationScreen(navController: NavController) {
 	val viewModel = hiltViewModel<AuthorizationViewModel>()
 	val state by viewModel.state.collectAsState()
 	val scrollState = rememberScrollState()
 	val emailFocusRequester = remember { FocusRequester() }
 	val passwordFocusRequester = remember { FocusRequester() }
 	ObserveViewModelEvents(viewModel, navController)
-	Scaffold(
-		modifier = Modifier.fillMaxSize(),
-		containerColor = ScreenColor
-	) { paddingValues ->
-		Column(
-			modifier = Modifier
-				.fillMaxSize()
-				.padding(
-					top = paddingValues.calculateTopPadding(),
-					start = paddingValues.calculateStartPadding(Ltr),
-					end = paddingValues.calculateEndPadding(Ltr),
-					bottom = paddingValues.calculateBottomPadding() + 16.dp
-				)
-				.verticalScroll(scrollState)
-				.imePadding(),
-			horizontalAlignment = Alignment.CenterHorizontally
-		) {
-			Header(
-				logo = HeaderLogoType.Image(R.drawable.ic_tutor_place_lettering_logo),
-				title = stringResource(R.string.authorization_enter_to_profile),
-				description = null,
-				onBackButtonClicked = null,
-			)
-			EmailTextField(
+	TutorPlaceTheme {
+		Scaffold(
+			modifier = Modifier.fillMaxSize(),
+			containerColor = ScreenColor
+		) { paddingValues ->
+			Column(
 				modifier = Modifier
-					.padding(top = 18.dp)
-					.padding(horizontal = 20.dp)
-					.focusRequester(emailFocusRequester),
-				value = state.email,
-				label = stringResource(R.string.common_auth_your_email),
-				isError = state.isEmailError,
-				onNextClicked = { passwordFocusRequester.requestFocus() }
-			) { viewModel.onEvent(AuthorizationEvent.EmailChanged(it)) }
-
-			PasswordTextField(
-				modifier = Modifier
-					.padding(top = 6.dp)
-					.padding(horizontal = 20.dp)
-					.focusRequester(passwordFocusRequester),
-				value = state.password,
-				label = stringResource(R.string.authorization_your_password),
-				isError = state.isPasswordError,
-				onDoneClicked = { viewModel.onEnterClicked() }
-			) { viewModel.onEvent(AuthorizationEvent.PasswordChanged(it)) }
-
-			TextButton(
-				modifier = Modifier
-					.align(Alignment.Start)
-					.padding(start = 10.dp),
-				colors = ButtonDefaults.textButtonColors(contentColor = PurpleCC),
-				onClick = { viewModel.onRestoreClicked() },
+					.fillMaxSize()
+					.padding(
+						top = paddingValues.calculateTopPadding(),
+						start = paddingValues.calculateStartPadding(Ltr),
+						end = paddingValues.calculateEndPadding(Ltr),
+						bottom = paddingValues.calculateBottomPadding() + 16.dp
+					)
+					.verticalScroll(scrollState)
+					.windowInsetsPadding(WindowInsets.ime),
+				horizontalAlignment = Alignment.CenterHorizontally
 			) {
-				Text(
-					modifier = Modifier.padding(top = 6.dp),
-					text = stringResource(R.string.authorization_restore_password),
-					style = Typography.bodyMedium,
+				Header(
+					logo = HeaderLogoType.Image(R.drawable.ic_tutor_place_lettering_logo),
+					title = stringResource(R.string.authorization_enter_to_profile),
+					description = null,
+					onBackButtonClicked = null,
 				)
-			}
-			Spacer(Modifier.weight(1f))
-			PurpleButton(
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(horizontal = 20.dp),
-				text = stringResource(R.string.authorization_entry),
-				isLoading = state.isLoading,
-				isEnabled = true
-			) {
-				if (!state.isLoading) {
-					viewModel.onEnterClicked()
+				EmailTextField(
+					modifier = Modifier
+						.padding(top = 18.dp)
+						.padding(horizontal = 20.dp)
+						.focusRequester(emailFocusRequester),
+					value = state.email,
+					label = stringResource(R.string.common_auth_your_email),
+					isError = state.isEmailError,
+					onNextClicked = { passwordFocusRequester.requestFocus() }
+				) { viewModel.onEvent(AuthorizationEvent.EmailChanged(it)) }
+				PasswordTextField(
+					modifier = Modifier
+						.padding(top = 6.dp)
+						.padding(horizontal = 20.dp)
+						.focusRequester(passwordFocusRequester),
+					value = state.password,
+					label = stringResource(R.string.authorization_your_password),
+					isError = state.isPasswordError,
+					onDoneClicked = { viewModel.onEnterClicked() }
+				) { viewModel.onEvent(AuthorizationEvent.PasswordChanged(it)) }
+				TextButton(
+					modifier = Modifier
+						.align(Alignment.Start)
+						.padding(start = 10.dp),
+					colors = ButtonDefaults.textButtonColors(contentColor = PurpleCC),
+					onClick = { viewModel.onRestoreClicked() },
+				) {
+					Text(
+						modifier = Modifier.padding(top = 6.dp),
+						text = stringResource(R.string.authorization_restore_password),
+						style = Typography.bodyMedium,
+					)
 				}
+				Spacer(Modifier.weight(1f))
+				PurpleButton(
+					modifier = Modifier
+						.fillMaxWidth()
+						.padding(horizontal = 20.dp),
+					text = stringResource(R.string.authorization_entry),
+					isLoading = state.isLoading,
+					isEnabled = true
+				) {
+					if (!state.isLoading) {
+						viewModel.onEnterClicked()
+					}
+				}
+				AuthSectionDivider(
+					modifier = Modifier
+						.padding(top = 8.dp)
+						.padding(horizontal = 20.dp)
+				)
+				YandexButton(
+					modifier = Modifier
+						.padding(top = 8.dp)
+						.padding(horizontal = 20.dp)
+				) { viewModel.onYandexClicked() }
+				SupportSection(
+					onSupportClick = { viewModel.onSupportClicked() },
+					onRegisterClick = { viewModel.onRegistrationClicked() }
+				)
 			}
-			AuthSectionDivider(
-				modifier = Modifier
-					.padding(top = 8.dp)
-					.padding(horizontal = 20.dp)
-			)
-			YandexButton(
-				modifier = Modifier
-					.padding(top = 8.dp)
-					.padding(horizontal = 20.dp)
-			) { viewModel.onYandexClicked() }
-			SpanClickableText(
-				modifier = Modifier
-					.padding(top = 12.dp)
-					.padding(horizontal = 20.dp),
-				text = stringResource(R.string.authorization_email_error_support_hint),
-				links = listOf(
-					SpanLinkData(
-						link = stringResource(R.string.authorization_email_error_support_hint_spannable),
-						tag = "SUPPORT",
-						SpanStyle(color = PurpleCC),
-						onClick = { viewModel.onSupportClicked() }
-					)
-				),
-				textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
-			)
-
-			SpanClickableText(
-				modifier = Modifier
-					.padding(top = 32.dp)
-					.padding(horizontal = 20.dp)
-					.fillMaxWidth(),
-				text = stringResource(R.string.authorization_not_yet_account),
-				links = listOf(
-					SpanLinkData(
-						link = stringResource(R.string.auth_register),
-						tag = "REGISTRATION",
-						SpanStyle(color = PurpleCC),
-						onClick = { viewModel.onRegistrationClicked() }
-					)
-				),
-				textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center),
-			)
 		}
+	}
+}
+
+@Composable
+private fun SupportSection(onSupportClick: () -> Unit, onRegisterClick: () -> Unit) {
+	Column(
+		modifier = Modifier
+			.padding(horizontal = 20.dp)
+			.fillMaxWidth(),
+		horizontalAlignment = Alignment.CenterHorizontally
+	) {
+		SpanClickableText(
+			modifier = Modifier.padding(top = 12.dp),
+			text = stringResource(R.string.authorization_email_error_support_hint),
+			links = listOf(
+				SpanLinkData(
+					link = stringResource(R.string.authorization_email_error_support_hint_spannable),
+					tag = "SUPPORT",
+					SpanStyle(color = PurpleCC),
+					onClick = onSupportClick
+				)
+			),
+			textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
+		)
+
+		SpanClickableText(
+			modifier = Modifier.padding(top = 32.dp),
+			text = stringResource(R.string.authorization_not_yet_account),
+			links = listOf(
+				SpanLinkData(
+					link = stringResource(R.string.auth_register),
+					tag = "REGISTRATION",
+					SpanStyle(color = PurpleCC),
+					onClick = onRegisterClick
+				)
+			),
+			textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
+		)
 	}
 }
 
