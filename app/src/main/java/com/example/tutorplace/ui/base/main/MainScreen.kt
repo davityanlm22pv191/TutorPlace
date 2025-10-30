@@ -1,5 +1,7 @@
 package com.example.tutorplace.ui.base.main
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
@@ -20,6 +22,7 @@ import com.example.tutorplace.navigation.Destinations
 import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
 import com.example.tutorplace.navigation.tabs.TabsNavHost
 import com.example.tutorplace.ui.base.main.presentation.MainScreenViewModel
+import com.example.tutorplace.ui.common.RequestPermission
 import com.example.tutorplace.ui.common.bottomnavbar.BottomNavigationBar
 import com.example.tutorplace.ui.common.bottomnavbar.BottomTabBarItem
 
@@ -52,6 +55,9 @@ fun MainScreen(navController: NavHostController, params: MainScreenParams) {
 			}
 		}
 	) { paddingValues ->
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+			RequestPermission(Manifest.permission.POST_NOTIFICATIONS) {}
+		}
 		TabsNavHost(
 			modifier = Modifier.padding(paddingValues),
 			navController = bottomNavController,
