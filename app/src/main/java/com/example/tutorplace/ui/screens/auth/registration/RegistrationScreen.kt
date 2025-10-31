@@ -29,11 +29,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.R
 import com.example.tutorplace.navigation.Destinations
 import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
+import com.example.tutorplace.ui.common.AuthSectionDivider
 import com.example.tutorplace.ui.common.PurpleButton
+import com.example.tutorplace.ui.common.YandexButton
 import com.example.tutorplace.ui.common.header.Header
 import com.example.tutorplace.ui.common.header.HeaderLogoType
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
@@ -43,8 +44,6 @@ import com.example.tutorplace.ui.common.textfield.NameTextField
 import com.example.tutorplace.ui.common.textfield.PasswordTextField
 import com.example.tutorplace.ui.common.textfield.PhoneTextField
 import com.example.tutorplace.ui.common.textfield.TelegramTextField
-import com.example.tutorplace.ui.screens.auth.common.AuthSectionDivider
-import com.example.tutorplace.ui.screens.auth.common.YandexButton
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEffect
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.ConfirmPasswordChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.EmailChanged
@@ -52,6 +51,7 @@ import com.example.tutorplace.ui.screens.auth.registration.presentation.Registra
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.PasswordChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.PhoneChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.TelegramChanged
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState.RegistrationStep.FirstStep
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState.RegistrationStep.SecondStep
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationViewModel
@@ -64,8 +64,43 @@ import com.example.tutorplace.ui.theme.Typography
 fun RegistrationScreen(navController: NavHostController) {
 	val viewModel = hiltViewModel<RegistrationViewModel>()
 	val state by viewModel.state.collectAsState()
-	val scrollState = rememberScrollState()
 	ObserveViewModelEvents(viewModel, navController)
+	RegistrationScreen(
+		state,
+		onFirstStepClicked = { viewModel.onFirstStepClicked() },
+		onSecondStepClicked = { viewModel.onSecondStepClicked() },
+		onNameChanged = { viewModel.onEvent(NameChanged(it)) },
+		onPhoneNumberChanged = { viewModel.onEvent(PhoneChanged(it)) },
+		onTelegramChanged = { viewModel.onEvent(TelegramChanged(it)) },
+		onEmailChanged = { viewModel.onEvent(EmailChanged(it)) },
+		onPasswordChanged = { viewModel.onEvent(PasswordChanged(it)) },
+		onConfirmPasswordChanged = { viewModel.onEvent(ConfirmPasswordChanged(it)) },
+		onRegisterClicked = { viewModel.onRegisterClicked() },
+		onYandexClicked = { viewModel.onYandexClicked() },
+		onOfferClicked = { viewModel.onOfferClicked() },
+		onTermsClicked = { viewModel.onTermsClicked() },
+		onSignUpClicked = { navController.popBackStack() }
+	)
+}
+
+@Composable
+private fun RegistrationScreen(
+	state: RegistrationState,
+	onFirstStepClicked: () -> Unit,
+	onSecondStepClicked: () -> Unit,
+	onNameChanged: (name: String) -> Unit,
+	onPhoneNumberChanged: (phoneNumber: String) -> Unit,
+	onTelegramChanged: (telegram: String) -> Unit,
+	onEmailChanged: (email: String) -> Unit,
+	onPasswordChanged: (password: String) -> Unit,
+	onConfirmPasswordChanged: (confirmPassword: String) -> Unit,
+	onRegisterClicked: () -> Unit,
+	onYandexClicked: () -> Unit,
+	onOfferClicked: () -> Unit,
+	onTermsClicked: () -> Unit,
+	onSignUpClicked: () -> Unit
+) {
+	val scrollState = rememberScrollState()
 	Scaffold(
 		modifier = Modifier.fillMaxSize(),
 		containerColor = ScreenColor
@@ -87,12 +122,12 @@ fun RegistrationScreen(navController: NavHostController) {
 				logo = HeaderLogoType.Image(R.drawable.ic_tutor_place_lettering_logo),
 				title = stringResource(R.string.registration_title),
 				description = null,
-				onBackButtonClicked = when (state.currentStep) {
-					FirstStep::class -> null
-					SecondStep::class -> {
-						{ viewModel.onFirstStepClicked() }
+				onBackButtonClicked = {
+					when (state.currentStep) {
+						FirstStep::class -> null
+						SecondStep::class -> onFirstStepClicked()
+						else -> null
 					}
-					else -> null
 				}
 			)
 			AnimatedContent(
@@ -107,21 +142,21 @@ fun RegistrationScreen(navController: NavHostController) {
 								label = stringResource(R.string.registration_your_name),
 								isError = state.firstStep.isNameError,
 								onNextClicked = {},
-								onValueChanged = { viewModel.onEvent(NameChanged(it)) }
+								onValueChanged = { value -> onNameChanged(value) }
 							)
 							PhoneTextField(
 								value = state.firstStep.phoneNumber,
 								label = stringResource(R.string.registration_your_phone_number),
 								isError = state.firstStep.isPhoneNumberError,
 								onNextClicked = {},
-								onValueChanged = { viewModel.onEvent(PhoneChanged(it)) }
+								onValueChanged = { value -> onPhoneNumberChanged(value) }
 							)
 							TelegramTextField(
 								value = state.firstStep.telegram,
 								label = stringResource(R.string.registration_your_telegram),
 								isError = state.firstStep.isTelegramError,
-								onDoneClicked = { viewModel.onSecondStepClicked() },
-								onValueChanged = { viewModel.onEvent(TelegramChanged(it)) }
+								onDoneClicked = { onSecondStepClicked() },
+								onValueChanged = { value -> onTelegramChanged(value) }
 							)
 						}
 						SecondStep::class -> {
@@ -130,21 +165,21 @@ fun RegistrationScreen(navController: NavHostController) {
 								label = stringResource(R.string.common_auth_your_email),
 								isError = state.secondStep.isEmailError,
 								onNextClicked = {},
-								onValueChanged = { viewModel.onEvent(EmailChanged(it)) }
+								onValueChanged = { value -> onEmailChanged(value) }
 							)
 							PasswordTextField(
 								value = state.secondStep.password,
 								label = stringResource(R.string.registration_your_password),
 								isError = state.secondStep.isPasswordError,
 								onDoneClicked = {},
-								onValueChanged = { viewModel.onEvent(PasswordChanged(it)) }
+								onValueChanged = { value -> onPasswordChanged(value) }
 							)
 							PasswordTextField(
 								value = state.secondStep.confirmPassword,
 								label = stringResource(R.string.registration_repeat_password),
 								isError = state.secondStep.isConfirmPasswordError,
 								onDoneClicked = {},
-								onValueChanged = { viewModel.onEvent(ConfirmPasswordChanged(it)) }
+								onValueChanged = { value -> onConfirmPasswordChanged(value) }
 							)
 						}
 						else -> {}
@@ -167,16 +202,16 @@ fun RegistrationScreen(navController: NavHostController) {
 			) {
 				if (state.isLoading) return@PurpleButton
 				when (state.currentStep) {
-					FirstStep::class -> viewModel.onSecondStepClicked()
-					SecondStep::class -> viewModel.onRegisterClicked()
+					FirstStep::class -> onSecondStepClicked()
+					SecondStep::class -> onRegisterClicked()
 					else -> return@PurpleButton
 				}
 			}
 			YandexButtonWithTerms(
-				viewModel::onYandexClicked,
-				viewModel::onOfferClicked,
-				viewModel::onTermsClicked,
-				onEnterClicked = { navController.popBackStack() }
+				onYandexClicked,
+				onOfferClicked,
+				onTermsClicked,
+				onSignUpClicked = { onSignUpClicked() }
 			)
 		}
 	}
@@ -187,7 +222,7 @@ private fun YandexButtonWithTerms(
 	onYandexClicked: () -> Unit,
 	onOfferClicked: () -> Unit,
 	onTermsClicked: () -> Unit,
-	onEnterClicked: () -> Unit
+	onSignUpClicked: () -> Unit
 ) {
 	AuthSectionDivider(
 		modifier = Modifier
@@ -233,7 +268,7 @@ private fun YandexButtonWithTerms(
 				link = stringResource(R.string.restore_password_already_have_account_spannable),
 				tag = "ENTRY",
 				style = SpanStyle(color = PurpleCC),
-				onClick = { onEnterClicked() }
+				onClick = { onSignUpClicked() }
 			)
 		),
 		textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
@@ -260,6 +295,42 @@ private fun ObserveViewModelEvents(
 
 @Preview
 @Composable
-private fun RegistrationScreenPreview() {
-	RegistrationScreen(rememberNavController())
+private fun FirstStepPreview() {
+	RegistrationScreen(
+		state = RegistrationState(),
+		onFirstStepClicked = {},
+		onSecondStepClicked = {},
+		onNameChanged = {},
+		onPhoneNumberChanged = {},
+		onTelegramChanged = {},
+		onEmailChanged = {},
+		onPasswordChanged = {},
+		onConfirmPasswordChanged = {},
+		onRegisterClicked = {},
+		onYandexClicked = {},
+		onOfferClicked = {},
+		onTermsClicked = {},
+		onSignUpClicked = {}
+	)
+}
+
+@Preview
+@Composable
+private fun SecondStepPreview() {
+	RegistrationScreen(
+		state = RegistrationState(currentStep = SecondStep::class),
+		onFirstStepClicked = {},
+		onSecondStepClicked = {},
+		onNameChanged = {},
+		onPhoneNumberChanged = {},
+		onTelegramChanged = {},
+		onEmailChanged = {},
+		onPasswordChanged = {},
+		onConfirmPasswordChanged = {},
+		onRegisterClicked = {},
+		onYandexClicked = {},
+		onOfferClicked = {},
+		onTermsClicked = {},
+		onSignUpClicked = {}
+	)
 }

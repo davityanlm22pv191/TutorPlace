@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.LayoutDirection.Ltr
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
 import com.example.tutorplace.R
 import com.example.tutorplace.navigation.Destinations
 import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
@@ -48,108 +48,133 @@ import com.example.tutorplace.ui.screens.auth.authorization.presentation.Authori
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToRegistration
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToRestorePassword
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToSupport
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.EmailChanged
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.PasswordChanged
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationState
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationViewModel
-import com.example.tutorplace.ui.screens.auth.common.AuthSectionDivider
-import com.example.tutorplace.ui.screens.auth.common.YandexButton
+import com.example.tutorplace.ui.common.AuthSectionDivider
+import com.example.tutorplace.ui.common.YandexButton
 import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.ScreenColor
-import com.example.tutorplace.ui.theme.TutorPlaceTheme
 import com.example.tutorplace.ui.theme.Typography
 
 @Composable
-fun AuthorizationScreen(navController: NavController) {
+fun AuthorizationScreen(navController: NavHostController) {
 	val viewModel = hiltViewModel<AuthorizationViewModel>()
 	val state by viewModel.state.collectAsState()
-	val scrollState = rememberScrollState()
+	ObserveViewModelEvents(viewModel, navController)
+	AuthorizationScreen(
+		state,
+		onEmailChanged = { email -> viewModel.onEvent(EmailChanged(email)) },
+		onPasswordChanged = { password -> viewModel.onEvent(PasswordChanged(password)) },
+		onRestoreClicked = { viewModel.onRestoreClicked() },
+		onEnterClicked = { viewModel.onEnterClicked() },
+		onYandexClicked = { viewModel.onYandexClicked() },
+		onSupportClicked = { viewModel.onSupportClicked() },
+		onRegistrationClicked = { viewModel.onRegistrationClicked() }
+	)
+}
+
+@Composable
+private fun AuthorizationScreen(
+	state: AuthorizationState,
+	onEmailChanged: (email: String) -> Unit,
+	onPasswordChanged: (password: String) -> Unit,
+	onRestoreClicked: () -> Unit,
+	onEnterClicked: () -> Unit,
+	onYandexClicked: () -> Unit,
+	onSupportClicked: () -> Unit,
+	onRegistrationClicked: () -> Unit,
+) {
 	val emailFocusRequester = remember { FocusRequester() }
 	val passwordFocusRequester = remember { FocusRequester() }
-	ObserveViewModelEvents(viewModel, navController)
-	TutorPlaceTheme {
-		Scaffold(
-			modifier = Modifier.fillMaxSize(),
-			containerColor = ScreenColor
-		) { paddingValues ->
-			Column(
+	val scrollState = rememberScrollState()
+	Scaffold(
+		modifier = Modifier.fillMaxSize(),
+		containerColor = ScreenColor
+	) { paddingValues ->
+		Column(
+			modifier = Modifier
+				.fillMaxSize()
+				.padding(
+					top = paddingValues.calculateTopPadding(),
+					start = paddingValues.calculateStartPadding(Ltr),
+					end = paddingValues.calculateEndPadding(Ltr),
+					bottom = paddingValues.calculateBottomPadding() + 16.dp
+				)
+				.verticalScroll(scrollState)
+				.windowInsetsPadding(WindowInsets.ime),
+			horizontalAlignment = Alignment.CenterHorizontally
+		) {
+			Header(
+				logo = HeaderLogoType.Image(R.drawable.ic_tutor_place_lettering_logo),
+				title = stringResource(R.string.authorization_enter_to_profile),
+				description = null,
+				onBackButtonClicked = null,
+			)
+			EmailTextField(
 				modifier = Modifier
-					.fillMaxSize()
-					.padding(
-						top = paddingValues.calculateTopPadding(),
-						start = paddingValues.calculateStartPadding(Ltr),
-						end = paddingValues.calculateEndPadding(Ltr),
-						bottom = paddingValues.calculateBottomPadding() + 16.dp
-					)
-					.verticalScroll(scrollState)
-					.windowInsetsPadding(WindowInsets.ime),
-				horizontalAlignment = Alignment.CenterHorizontally
+					.padding(top = 18.dp)
+					.padding(horizontal = 20.dp)
+					.focusRequester(emailFocusRequester),
+				value = state.email,
+				label = stringResource(R.string.common_auth_your_email),
+				isError = state.isEmailError,
+				onNextClicked = { passwordFocusRequester.requestFocus() },
+				onValueChanged = { value -> onEmailChanged(value) }
+			)
+			PasswordTextField(
+				modifier = Modifier
+					.padding(top = 6.dp)
+					.padding(horizontal = 20.dp)
+					.focusRequester(passwordFocusRequester),
+				value = state.password,
+				label = stringResource(R.string.authorization_your_password),
+				isError = state.isPasswordError,
+				onDoneClicked = { onEnterClicked() },
+				onValueChanged = { value -> onPasswordChanged(value) }
+			)
+			TextButton(
+				modifier = Modifier
+					.align(Alignment.Start)
+					.padding(start = 10.dp),
+				colors = ButtonDefaults.textButtonColors(contentColor = PurpleCC),
+				onClick = { onRestoreClicked() },
 			) {
-				Header(
-					logo = HeaderLogoType.Image(R.drawable.ic_tutor_place_lettering_logo),
-					title = stringResource(R.string.authorization_enter_to_profile),
-					description = null,
-					onBackButtonClicked = null,
-				)
-				EmailTextField(
-					modifier = Modifier
-						.padding(top = 18.dp)
-						.padding(horizontal = 20.dp)
-						.focusRequester(emailFocusRequester),
-					value = state.email,
-					label = stringResource(R.string.common_auth_your_email),
-					isError = state.isEmailError,
-					onNextClicked = { passwordFocusRequester.requestFocus() }
-				) { viewModel.onEvent(AuthorizationEvent.EmailChanged(it)) }
-				PasswordTextField(
-					modifier = Modifier
-						.padding(top = 6.dp)
-						.padding(horizontal = 20.dp)
-						.focusRequester(passwordFocusRequester),
-					value = state.password,
-					label = stringResource(R.string.authorization_your_password),
-					isError = state.isPasswordError,
-					onDoneClicked = { viewModel.onEnterClicked() }
-				) { viewModel.onEvent(AuthorizationEvent.PasswordChanged(it)) }
-				TextButton(
-					modifier = Modifier
-						.align(Alignment.Start)
-						.padding(start = 10.dp),
-					colors = ButtonDefaults.textButtonColors(contentColor = PurpleCC),
-					onClick = { viewModel.onRestoreClicked() },
-				) {
-					Text(
-						modifier = Modifier.padding(top = 6.dp),
-						text = stringResource(R.string.authorization_restore_password),
-						style = Typography.bodyMedium,
-					)
-				}
-				Spacer(Modifier.weight(1f))
-				PurpleButton(
-					modifier = Modifier
-						.fillMaxWidth()
-						.padding(horizontal = 20.dp),
-					text = stringResource(R.string.authorization_entry),
-					isLoading = state.isLoading,
-					isEnabled = true
-				) {
-					if (!state.isLoading) {
-						viewModel.onEnterClicked()
-					}
-				}
-				AuthSectionDivider(
-					modifier = Modifier
-						.padding(top = 8.dp)
-						.padding(horizontal = 20.dp)
-				)
-				YandexButton(
-					modifier = Modifier
-						.padding(top = 8.dp)
-						.padding(horizontal = 20.dp)
-				) { viewModel.onYandexClicked() }
-				SupportSection(
-					onSupportClick = { viewModel.onSupportClicked() },
-					onRegisterClick = { viewModel.onRegistrationClicked() }
+				Text(
+					modifier = Modifier.padding(top = 6.dp),
+					text = stringResource(R.string.authorization_restore_password),
+					style = Typography.bodyMedium,
 				)
 			}
+			Spacer(Modifier.weight(1f))
+			PurpleButton(
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(horizontal = 20.dp),
+				text = stringResource(R.string.authorization_entry),
+				isLoading = state.isLoading,
+				isEnabled = true
+			) {
+				if (!state.isLoading) {
+					onEnterClicked()
+				}
+			}
+			AuthSectionDivider(
+				modifier = Modifier
+					.padding(top = 8.dp)
+					.padding(horizontal = 20.dp)
+			)
+			YandexButton(
+				modifier = Modifier
+					.padding(top = 8.dp)
+					.padding(horizontal = 20.dp),
+				onClick = { onYandexClicked() }
+			)
+			SupportSection(
+				onSupportClick = { onSupportClicked() },
+				onRegisterClick = { onRegistrationClicked() }
+			)
 		}
 	}
 }
@@ -201,7 +226,7 @@ private fun ObserveViewModelEvents(
 		viewModel.effect.collect { effect ->
 			when (effect) {
 				is NavigateToHome -> navController.navigate(
-					Destinations.MainScreen(MainScreenParams(isShouldShowOnboarding = false)).route
+					Destinations.MainScreen(MainScreenParams(isShouldShowOnboarding = true)).route
 				) {
 					popUpTo(Destinations.AuthorizationFlow.FLOW_ROUTE) {
 						inclusive = true
@@ -217,4 +242,15 @@ private fun ObserveViewModelEvents(
 
 @Preview
 @Composable
-private fun AuthorizationScreenPreview() = AuthorizationScreen(rememberNavController())
+private fun AuthorizationScreenPreview() {
+	AuthorizationScreen(
+		state = AuthorizationState(),
+		onEmailChanged = {},
+		onPasswordChanged = {},
+		onRestoreClicked = {},
+		onEnterClicked = {},
+		onYandexClicked = {},
+		onSupportClicked = {},
+		onRegistrationClicked = {}
+	)
+}

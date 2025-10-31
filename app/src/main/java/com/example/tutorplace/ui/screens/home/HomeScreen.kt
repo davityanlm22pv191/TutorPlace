@@ -1,7 +1,5 @@
 package com.example.tutorplace.ui.screens.home
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -14,19 +12,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.R
 import com.example.tutorplace.navigation.Destinations.FortuneWheelFlow
 import com.example.tutorplace.ui.common.toolbar.ToolbarHeader
 import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.model.FortuneWheelParams
 import com.example.tutorplace.ui.screens.home.presentation.HomeEffect
-import com.example.tutorplace.ui.screens.home.presentation.HomeEvent
+import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI
+import com.example.tutorplace.ui.screens.home.presentation.HomeState
 import com.example.tutorplace.ui.screens.home.presentation.HomeViewModel
 import com.example.tutorplace.ui.screens.home.ui.FortuneWheelShortItem
 import com.example.tutorplace.ui.screens.home.ui.FortuneWheelShortItemSkeleton
@@ -35,25 +34,44 @@ import com.example.tutorplace.ui.theme.ScreenColor
 @Composable
 fun HomeScreen(navController: NavHostController) {
 	val viewModel = hiltViewModel<HomeViewModel>()
-	val state = viewModel.state.collectAsState()
+	val state by viewModel.state.collectAsState()
 	ObserveViewModelEvents(viewModel, navController)
+	HomeScreen(
+		state = state,
+		onNotificationClicked = { viewModel.onEvent(UI.NotificationClicked) },
+		onSearchClicked = { viewModel.onEvent(UI.SearchClicked) },
+		onProfileClicked = { viewModel.onEvent(UI.ProfileClicked) },
+		onFortuneWheelClicked = { viewModel.onEvent(UI.FortuneWheelClicked) },
+		onFortuneWheelInformationClicked = { viewModel.onEvent(UI.FortuneWheelInformationClicked) },
+	)
+}
+
+@Composable
+private fun HomeScreen(
+	state: HomeState,
+	onNotificationClicked: () -> Unit,
+	onSearchClicked: () -> Unit,
+	onProfileClicked: () -> Unit,
+	onFortuneWheelClicked: () -> Unit,
+	onFortuneWheelInformationClicked: () -> Unit,
+) {
 	Scaffold(
 		topBar = {
 			ToolbarHeader(
 				modifier = Modifier,
 				screenName = stringResource(R.string.home_screen_name),
-				unreadEmailCount = state.value.profileShortInfo?.unreadMessageCount ?: 0,
-				profileImageUrl = state.value.profileShortInfo?.profileThumbUrl.orEmpty(),
-				level = state.value.profileShortInfo?.level?.level ?: 0,
-				progress = state.value.profileShortInfo?.level?.let { (_, currentAmount, target) ->
+				unreadEmailCount = state.profileShortInfo?.unreadMessageCount ?: 0,
+				profileImageUrl = state.profileShortInfo?.profileThumbUrl.orEmpty(),
+				level = state.profileShortInfo?.level?.level ?: 0,
+				progress = state.profileShortInfo?.level?.let { (_, currentAmount, target) ->
 					currentAmount / target.toFloat()
 				} ?: 0f,
 				isArrowVisible = false,
-				isLoading = state.value.profileShortInfo == null,
+				isLoading = state.profileShortInfo == null,
 				onBackClicked = {},
-				onNotificationClicked = { viewModel.onEvent(HomeEvent.UI.NotificationClicked) },
-				onSearchClicked = { viewModel.onEvent(HomeEvent.UI.SearchClicked) },
-				onProfileClicked = { viewModel.onEvent(HomeEvent.UI.ProfileClicked) }
+				onNotificationClicked = { onNotificationClicked },
+				onSearchClicked = { onSearchClicked },
+				onProfileClicked = { onProfileClicked }
 			)
 		},
 		containerColor = ScreenColor,
@@ -65,7 +83,7 @@ fun HomeScreen(navController: NavHostController) {
 		) {
 			item {
 				val isFortuneWheelSectionReady =
-					!state.value.fortuneWheelLastRotation.isLoading && state.value.fortuneWheelLastRotation.throwable == null
+					!state.fortuneWheelLastRotation.isLoading && state.fortuneWheelLastRotation.throwable == null
 				AnimatedContent(
 					targetState = isFortuneWheelSectionReady,
 					transitionSpec = {
@@ -75,9 +93,9 @@ fun HomeScreen(navController: NavHostController) {
 					if (it) {
 						FortuneWheelShortItem(
 							modifier = Modifier.padding(top = 8.dp),
-							lastRotationTime = state.value.fortuneWheelLastRotation.data,
-							onInformationClick = { viewModel.onEvent(HomeEvent.UI.FortuneWheelInformationClicked) },
-							onItemClick = { viewModel.onEvent(HomeEvent.UI.FortuneWheelClicked) }
+							lastRotationTime = state.fortuneWheelLastRotation.data,
+							onInformationClick = { onFortuneWheelInformationClicked() },
+							onItemClick = { onFortuneWheelClicked() }
 						)
 					} else {
 						FortuneWheelShortItemSkeleton(modifier = Modifier.padding(top = 8.dp))
@@ -114,9 +132,15 @@ private fun ObserveViewModelEvents(
 	}
 }
 
-@RequiresApi(Build.VERSION_CODES.S)
 @Preview
 @Composable
 private fun HomePreview() {
-	HomeScreen(rememberNavController())
+	HomeScreen(
+		state = HomeState(),
+		onNotificationClicked = {},
+		onSearchClicked = {},
+		onProfileClicked = {},
+		onFortuneWheelClicked = {},
+		onFortuneWheelInformationClicked = {},
+	)
 }

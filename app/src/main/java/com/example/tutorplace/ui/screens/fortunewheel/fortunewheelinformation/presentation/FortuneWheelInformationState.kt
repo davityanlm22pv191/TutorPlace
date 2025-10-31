@@ -2,6 +2,4 @@ package com.example.tutorplace.ui.screens.fortunewheel.fortunewheelinformation.p
 
 import com.example.tutorplace.ui.base.BaseState
 
-data class FortuneWheelInformationState(
-    val isLoading: Boolean = false
-): BaseState
+data object FortuneWheelInformationState: BaseState

@@ -15,6 +15,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -25,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.R
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.TransparentButton
@@ -33,6 +33,7 @@ import com.example.tutorplace.ui.common.header.Header
 import com.example.tutorplace.ui.common.header.HeaderLogoType
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
+import com.example.tutorplace.ui.screens.fortunewheel.fortunewheelinformation.presentation.FortuneWheelInformationState
 import com.example.tutorplace.ui.screens.fortunewheel.fortunewheelinformation.presentation.FortuneWheelInformationViewModel
 import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.ContainerColor
@@ -45,9 +46,24 @@ import com.example.tutorplace.ui.theme.Typography
 @Composable
 fun FortuneWheelInformationScreen(navController: NavController) {
 	val viewModel = hiltViewModel<FortuneWheelInformationViewModel>()
-	val state = viewModel.state.collectAsState()
-	val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+	val state by viewModel.state.collectAsState()
+	FortuneWheelInformationScreen(
+		state,
+		onDismissRequest = { navController.popBackStack() },
+		onNextClicked = { navController.popBackStack() },
+		onMoreAboutPromotionClicked = { navController.popBackStack() }
+	)
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FortuneWheelInformationScreen(
+	state: FortuneWheelInformationState,
+	onDismissRequest: () -> Unit,
+	onNextClicked: () -> Unit,
+	onMoreAboutPromotionClicked: () -> Unit
+) {
+	val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 	ModalBottomSheet(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -55,7 +71,7 @@ fun FortuneWheelInformationScreen(navController: NavController) {
 		containerColor = ScreenColor,
 		sheetState = sheetState,
 		scrimColor = Transparent,
-		onDismissRequest = { navController.popBackStack() }
+		onDismissRequest = { onDismissRequest() }
 	) {
 		Column(
 			modifier = Modifier
@@ -135,14 +151,14 @@ fun FortuneWheelInformationScreen(navController: NavController) {
 				text = stringResource(R.string.common_next),
 				isLoading = false,
 				isEnabled = true,
-				onClick = { navController.popBackStack() }
+				onClick = { onNextClicked() }
 			)
 			TransparentButton(
 				modifier = Modifier
 					.fillMaxWidth()
 					.padding(top = 8.dp, bottom = 16.dp),
 				text = stringResource(R.string.fortune_wheel_information_more_about_promotion),
-				onClick = { navController.popBackStack() }
+				onClick = { onMoreAboutPromotionClicked() }
 			)
 		}
 	}
@@ -151,5 +167,10 @@ fun FortuneWheelInformationScreen(navController: NavController) {
 @Preview
 @Composable
 fun FortuneWheelInformationScreenPreview() {
-	FortuneWheelInformationScreen(rememberNavController())
+	FortuneWheelInformationScreen(
+		state = FortuneWheelInformationState,
+		onDismissRequest = {},
+		onNextClicked = {},
+		onMoreAboutPromotionClicked = {}
+	)
 }

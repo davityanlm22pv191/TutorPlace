@@ -8,7 +8,7 @@ import javax.inject.Inject
 class FortuneWheelInformationViewModel @Inject constructor() :
 	BaseViewModel<FortuneWheelInformationEvent, FortuneWheelInformationState, FortuneWheelInformationEffect>() {
 
-	override fun initialState(): FortuneWheelInformationState = FortuneWheelInformationState()
+	override fun initialState(): FortuneWheelInformationState = FortuneWheelInformationState
 
 	override fun onEvent(event: FortuneWheelInformationEvent) {}
 }
