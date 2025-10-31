@@ -10,7 +10,6 @@ fun TabsNavHost(
     modifier: Modifier,
     navController: NavHostController,
     startDestination: String,
-    rootNavController: NavHostController,
 ) {
 	NavHost(
 		modifier = modifier,
@@ -19,7 +18,7 @@ fun TabsNavHost(
 	) {
         catalogGraph(navController)
         myCoursesGraph(navController)
-        homeGraph(navController, rootNavController)
+        homeGraph(navController)
         tasksGraph(navController)
 	}
 }

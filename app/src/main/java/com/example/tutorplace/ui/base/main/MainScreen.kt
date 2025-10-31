@@ -53,8 +53,7 @@ private fun MainScreen(rootNavController: NavHostController) {
 		TabsNavHost(
 			modifier = Modifier.padding(paddingValues),
 			navController = bottomNavController,
-			startDestination = Destinations.Home.route,
-			rootNavController = rootNavController
+			startDestination = Destinations.Tabs.Home.route,
 		)
 	}
 }

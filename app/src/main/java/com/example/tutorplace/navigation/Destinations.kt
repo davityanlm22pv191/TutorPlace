@@ -3,26 +3,46 @@ package com.example.tutorplace.navigation
 import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.model.FortuneWheelParams
 import kotlinx.serialization.Serializable
 
-sealed class Destinations(open val route: String) {
+sealed interface Destinations {
+	val route: String
 
-	sealed class AuthorizationFlow(override val route: String) : Destinations(route) {
+	@Serializable
+	sealed class AuthorizationFlow(override val route: String) : Destinations {
 		companion object {
 			const val FLOW_ROUTE = "authorization_flow"
 		}
 
-		object Auth : AuthorizationFlow("auth")
+		@Serializable
+		data object Auth : AuthorizationFlow(route = "auth")
 
-		object RestorePassword : AuthorizationFlow("restore_password")
+		@Serializable
+		data object RestorePassword : AuthorizationFlow("restore_password")
 
-		object Registration : AuthorizationFlow("registration")
+		@Serializable
+		data object Registration : AuthorizationFlow("registration")
 	}
 
-	object Catalog : Destinations("catalog")
-	object MyCourses : Destinations("my_courses")
-	object Home : Destinations("home")
-	object Tasks : Destinations("tasks")
+	@Serializable
+	sealed class Tabs(override val route: String) : Destinations {
+		@Serializable
+		data object Catalog : Tabs("catalog")
 
-    data class MainScreen(val params: MainScreenParams) : Destinations(route = params.toRoute()) {
+		@Serializable
+		data object MyCourses : Tabs("my_courses")
+
+		@Serializable
+		data object Home : Tabs("home")
+
+		@Serializable
+		data object Tasks : Tabs("tasks")
+	}
+
+	@Serializable
+	data class MainScreen(
+		val params: MainScreenParams,
+		override val route: String = params.toRoute()
+	) : Destinations {
+
 		companion object {
 			private const val ROUTE = "main"
 			const val DEFAULT_ROUTE = "$ROUTE?isShouldShowOnboarding={isShouldShowOnboarding}"
@@ -31,22 +51,26 @@ sealed class Destinations(open val route: String) {
 				"$ROUTE?isShouldShowOnboarding=${isShouldShowOnboarding}"
 		}
 
-        @Serializable
-        data class MainScreenParams(
+		@Serializable
+		data class MainScreenParams(
 			val isShouldShowOnboarding: Boolean = false
 		)
 	}
 
-	object Onboarding : Destinations("onboarding")
+	@Serializable
+	data object Onboarding : Destinations {
+		override val route: String = "onboarding"
+	}
 
-	sealed class FortuneWheelFlow(override val route: String) : Destinations(route) {
+	@Serializable
+	sealed class FortuneWheelFlow(override val route: String) : Destinations {
 		companion object {
 			const val FLOW_ROUTE = "fortune_wheel_flow"
 		}
 
-		data class FortuneWheel(
-			val params: FortuneWheelParams
-		) : FortuneWheelFlow(route = params.toRoute()) {
+		@Serializable
+		data class FortuneWheel(val params: FortuneWheelParams) :
+			FortuneWheelFlow(route = params.toRoute()) {
 			companion object {
 				private const val ROUTE = "fortune_wheel"
 				const val DEFAULT_ROUTE = "$ROUTE?isShouldShowInformation={isShouldShowInformation}"
@@ -56,6 +80,7 @@ sealed class Destinations(open val route: String) {
 			}
 		}
 
-		object FortuneWheelInformation : FortuneWheelFlow("fortune_wheel_information")
+		@Serializable
+		data object FortuneWheelInformation : FortuneWheelFlow("fortune_wheel_information")
 	}
 }

@@ -8,29 +8,28 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class BottomTabBarItem(
-	val route: String,
 	@param:StringRes val label: Int,
 	@param:DrawableRes val icon: Int,
+	val route: String,
 ) {
 	Catalog(
-		route = Destinations.Catalog.route,
+		route = Destinations.Tabs.Catalog.route,
 		label = R.string.tab_catalog_title,
-		icon = R.drawable.ic_catalog
+		icon = R.drawable.ic_catalog,
 	),
 	MyCourses(
-		route = Destinations.MyCourses.route,
+		route = Destinations.Tabs.MyCourses.route,
 		label = R.string.tab_my_courses_title,
 		icon = R.drawable.ic_play
 	),
 	Home(
-		route = Destinations.Home.route,
+		route = Destinations.Tabs.Home.route,
 		label = R.string.tab_home_title,
 		icon = R.drawable.ic_home
 	),
 	Tasks(
-		route = Destinations.Tasks.route,
+		route = Destinations.Tabs.Tasks.route,
 		label = R.string.tab_tasks_title,
 		icon = R.drawable.ic_star
 	)
-
 }

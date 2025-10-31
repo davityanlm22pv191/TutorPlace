@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.tutorplace.navigation.tabs.homeGraph
 import com.example.tutorplace.ui.base.main.MainScreen
 import com.example.tutorplace.ui.screens.onboarding.OnboardingScreen
 
@@ -19,23 +20,24 @@ fun AppNavigationGraph(startDestination: String) {
 		authorizationFlow(navController)
 		mainScreen(navController)
 		dialog(Destinations.Onboarding.route) { OnboardingScreen(navController) }
+		homeGraph(navController)
 	}
 }
 
 private fun NavGraphBuilder.mainScreen(navController: NavHostController) {
-    composable(
-        route = Destinations.MainScreen.DEFAULT_ROUTE,
-        arguments = listOf(
-            navArgument(name = "isShouldShowOnboarding") {
-                type = NavType.BoolType
-                defaultValue = false
-                nullable = false
-            }
-        )
-    ) {
-        val params = Destinations.MainScreen.MainScreenParams(
-            isShouldShowOnboarding = requireNotNull(it.arguments?.getBoolean("isShouldShowOnboarding"))
-        )
-        MainScreen(navController, params)
-    }
+	composable(
+		route = Destinations.MainScreen.DEFAULT_ROUTE,
+		arguments = listOf(
+			navArgument(name = "isShouldShowOnboarding") {
+				type = NavType.BoolType
+				defaultValue = false
+				nullable = false
+			}
+		)
+	) {
+		val params = Destinations.MainScreen.MainScreenParams(
+			isShouldShowOnboarding = requireNotNull(it.arguments?.getBoolean("isShouldShowOnboarding"))
+		)
+		MainScreen(navController, params)
+	}
 }

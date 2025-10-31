@@ -1,5 +1,6 @@
 package com.example.tutorplace.ui.common.bottomnavbar
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -15,6 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -25,19 +28,24 @@ import com.example.tutorplace.ui.theme.Grey82
 import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.Transparent
 import com.example.tutorplace.ui.theme.Typography
+import kotlin.reflect.KClass
+
+private fun NavDestination?.isRouteInHierarchy(route: KClass<*>) =
+	this?.hierarchy?.any { it.hasRoute(route) } ?: false
 
 @Composable
 fun BottomNavigationBar(bottomNavController: NavHostController) {
 	NavigationBar(
 		modifier = Modifier
 			.shadow(4.dp, RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+			.background(ContainerColor, RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
 			.clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
 		containerColor = ContainerColor,
 	) {
 		val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
 		val currentDestination = navBackStackEntry?.destination
 		BottomTabBarItem.entries.forEach { tabBarItem ->
-			val isSelected = currentDestination?.hierarchy?.any { it.route == tabBarItem.route } == true
+			val isSelected = false//currentDestination.isRouteInHierarchy(tabBarItem)
 			NavigationBarItem(
 				selected = isSelected,
 				label = {
