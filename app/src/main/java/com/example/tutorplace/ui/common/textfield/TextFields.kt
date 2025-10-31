@@ -11,16 +11,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.KeyboardActionHandler
+import androidx.compose.foundation.text.input.TextObfuscationMode
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -32,9 +38,7 @@ import androidx.compose.ui.text.input.KeyboardType.Companion.Email
 import androidx.compose.ui.text.input.KeyboardType.Companion.Password
 import androidx.compose.ui.text.input.KeyboardType.Companion.Phone
 import androidx.compose.ui.text.input.KeyboardType.Companion.Text
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tutorplace.R
@@ -103,15 +107,17 @@ fun PasswordTextField(
 ) {
 	var passwordVisible by remember { mutableStateOf(false) }
 	val textStyle = remember { Typography.labelMedium.copy(color = Black16) }
-	OutlinedTextField(
+	val state = rememberTextFieldState(initialText = value)
+	LaunchedEffect(state) {
+		snapshotFlow { state.text }.collect { onValueChanged(it.toString()) }
+	}
+	OutlinedSecureTextField(
 		modifier = modifier.fillMaxWidth(),
+		state = state,
 		shape = RoundedCornerShape(12.dp),
-		value = value,
-		onValueChange = { onValueChanged(it) },
-		singleLine = true,
+		isError = isError,
 		textStyle = textStyle,
 		colors = outlinedTextFieldColors,
-		isError = isError,
 		label = {
 			Text(
 				text = label,
@@ -136,12 +142,15 @@ fun PasswordTextField(
 			}
 		},
 		keyboardOptions = KeyboardOptions(keyboardType = Password, imeAction = Done),
-		keyboardActions = KeyboardActions(onDone = { onDoneClicked() }),
-		visualTransformation = if (passwordVisible) {
-			VisualTransformation.None
+		textObfuscationMode = if (passwordVisible) {
+			TextObfuscationMode.Visible
 		} else {
-			PasswordVisualTransformation(mask = '*')
-		}
+			TextObfuscationMode.Hidden
+		},
+		textObfuscationCharacter = '*',
+		onKeyboardAction = object : KeyboardActionHandler {
+			override fun onKeyboardAction(performDefaultAction: () -> Unit) = onDoneClicked()
+		},
 	)
 }
 

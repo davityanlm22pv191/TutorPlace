@@ -226,7 +226,7 @@ private fun ObserveViewModelEvents(
 		viewModel.effect.collect { effect ->
 			when (effect) {
 				is NavigateToHome -> navController.navigate(
-					Destinations.MainScreen(MainScreenParams(isShouldShowOnboarding = true)).route
+					Destinations.MainScreen(MainScreenParams(isShouldShowOnboarding = false)).route
 				) {
 					popUpTo(Destinations.AuthorizationFlow.FLOW_ROUTE) {
 						inclusive = true
