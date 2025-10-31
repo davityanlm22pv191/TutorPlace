@@ -14,27 +14,25 @@ import com.example.tutorplace.ui.screens.fortunewheel.fortunewheelinformation.Fo
 fun NavGraphBuilder.fortuneWheelFlow(navController: NavHostController) {
 	navigation(
 		startDestination = FortuneWheelFlow.FortuneWheel(
-			FortuneWheelParams(
-				isShouldShowInformation = false
-			)
+			FortuneWheelParams(isShouldShowInformation = false)
 		).route,
 		route = FortuneWheelFlow.FLOW_ROUTE
-	) {
-		composable(
-			route = FortuneWheelFlow.FortuneWheel.DEFAULT_ROUTE,
-			arguments = listOf(
-				navArgument(name = "isShouldShowInformation") {
-					type = NavType.BoolType
-					defaultValue = false
-					nullable = false
-				}
-			)
-		) {
-			val params = FortuneWheelParams(
-				isShouldShowInformation = requireNotNull(it.arguments?.getBoolean("isShouldShowInformation"))
-			)
-			FortuneWheelScreen(navController, params)
-		}
+    ) {
+        composable(
+            route = FortuneWheelFlow.FortuneWheel.DEFAULT_ROUTE,
+            arguments = listOf(
+                navArgument(name = "isShouldShowInformation") {
+                    type = NavType.BoolType
+                    defaultValue = false
+                    nullable = false
+                }
+            )
+        ) {
+            val params = FortuneWheelParams(
+                isShouldShowInformation = requireNotNull(it.arguments?.getBoolean("isShouldShowInformation"))
+            )
+            FortuneWheelScreen(navController, params)
+        }
 		composable(FortuneWheelFlow.FortuneWheelInformation.route) {
 			FortuneWheelInformationScreen(navController)
 		}

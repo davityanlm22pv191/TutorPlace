@@ -1,6 +1,7 @@
 package com.example.tutorplace.navigation
 
 import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.model.FortuneWheelParams
+import kotlinx.serialization.Serializable
 
 sealed class Destinations(open val route: String) {
 
@@ -21,7 +22,7 @@ sealed class Destinations(open val route: String) {
 	object Home : Destinations("home")
 	object Tasks : Destinations("tasks")
 
-	data class MainScreen(val params: MainScreenParams) : Destinations(route = params.toRoute()) {
+    data class MainScreen(val params: MainScreenParams) : Destinations(route = params.toRoute()) {
 		companion object {
 			private const val ROUTE = "main"
 			const val DEFAULT_ROUTE = "$ROUTE?isShouldShowOnboarding={isShouldShowOnboarding}"
@@ -30,7 +31,8 @@ sealed class Destinations(open val route: String) {
 				"$ROUTE?isShouldShowOnboarding=${isShouldShowOnboarding}"
 		}
 
-		data class MainScreenParams(
+        @Serializable
+        data class MainScreenParams(
 			val isShouldShowOnboarding: Boolean = false
 		)
 	}

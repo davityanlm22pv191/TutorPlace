@@ -23,19 +23,19 @@ fun AppNavigationGraph(startDestination: String) {
 }
 
 private fun NavGraphBuilder.mainScreen(navController: NavHostController) {
-	composable(
-		route = Destinations.MainScreen.DEFAULT_ROUTE,
-		arguments = listOf(
-			navArgument(name = "isShouldShowOnboarding") {
-				type = NavType.BoolType
-				defaultValue = false
-				nullable = false
-			}
-		)
-	) {
-		val params = Destinations.MainScreen.MainScreenParams(
-			isShouldShowOnboarding = requireNotNull(it.arguments?.getBoolean("isShouldShowOnboarding"))
-		)
-		MainScreen(navController, params)
-	}
+    composable(
+        route = Destinations.MainScreen.DEFAULT_ROUTE,
+        arguments = listOf(
+            navArgument(name = "isShouldShowOnboarding") {
+                type = NavType.BoolType
+                defaultValue = false
+                nullable = false
+            }
+        )
+    ) {
+        val params = Destinations.MainScreen.MainScreenParams(
+            isShouldShowOnboarding = requireNotNull(it.arguments?.getBoolean("isShouldShowOnboarding"))
+        )
+        MainScreen(navController, params)
+    }
 }

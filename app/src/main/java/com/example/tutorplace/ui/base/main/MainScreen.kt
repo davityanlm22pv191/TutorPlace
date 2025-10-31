@@ -2,7 +2,6 @@ package com.example.tutorplace.ui.base.main
 
 import android.Manifest
 import android.os.Build
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -16,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.navigation.Destinations
 import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
@@ -24,35 +22,29 @@ import com.example.tutorplace.navigation.tabs.TabsNavHost
 import com.example.tutorplace.ui.base.main.presentation.MainScreenViewModel
 import com.example.tutorplace.ui.common.RequestPermission
 import com.example.tutorplace.ui.common.bottomnavbar.BottomNavigationBar
-import com.example.tutorplace.ui.common.bottomnavbar.BottomTabBarItem
 
 @Composable
 fun MainScreen(navController: NavHostController, params: MainScreenParams) {
 	val viewModel = hiltViewModel<MainScreenViewModel>()
 	OpenOnboardingIfNeeded(navController, params.isShouldShowOnboarding)
-	val bottomNavController = rememberNavController()
-	val bottomNavigationBarItems = listOf(
-		BottomTabBarItem.Catalog,
-		BottomTabBarItem.MyCourses,
-		BottomTabBarItem.Home,
-		BottomTabBarItem.Tasks
-	)
-	val bottomBarRoutes = bottomNavigationBarItems.map { item -> item.route }
-	val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
-	val currentRoute = navBackStackEntry?.destination?.route
-	val shouldShowBottomBar = currentRoute in bottomBarRoutes
+	MainScreen(rootNavController = navController)
+}
 
+@Composable
+private fun MainScreen(rootNavController: NavHostController) {
+	val bottomNavController = rememberNavController()
 	Scaffold(
 		contentWindowInsets = WindowInsets(0, 0, 0, 0),
 		bottomBar = {
-			AnimatedContent(
-				shouldShowBottomBar,
-				label = "shouldShowBottomBar",
-			) {
-				if (it) {
-					BottomNavigationBar(bottomNavController, bottomNavigationBarItems)
-				}
-			}
+			BottomNavigationBar(bottomNavController)
+//			AnimatedContent(
+//				shouldShowBottomBar,
+//				label = "shouldShowBottomBar",
+//			) {
+//				if (it) {
+//					BottomNavigationBar(bottomNavController, bottomNavigationBarItems)
+//				}
+//			}
 		}
 	) { paddingValues ->
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -61,7 +53,8 @@ fun MainScreen(navController: NavHostController, params: MainScreenParams) {
 		TabsNavHost(
 			modifier = Modifier.padding(paddingValues),
 			navController = bottomNavController,
-			startDestination = Destinations.Home.route
+			startDestination = Destinations.Home.route,
+			rootNavController = rootNavController
 		)
 	}
 }
@@ -83,5 +76,5 @@ private fun OpenOnboardingIfNeeded(
 @Preview
 @Composable
 private fun MainScreenPreview() {
-	MainScreen(rememberNavController(), MainScreenParams(false))
+	MainScreen(rootNavController = rememberNavController())
 }
