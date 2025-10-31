@@ -248,7 +248,7 @@ fun OnboardingScreenProvideDetailsPreview() {
 
 @Preview
 @Composable
-fun OnboardingScreenMoreOppotunitiesPreview() {
+fun OnboardingScreenMoreOpportunitiesPreview() {
 	val state = OnboardingState(step = OnboardingState.Step.MORE_OPPORTUNITIES)
 	OnboardingScreen(
 		state,
@@ -271,7 +271,7 @@ fun OnboardingScreenMoreOppotunitiesPreview() {
 
 @Preview
 @Composable
-fun OnboardingScreenKnowledgesFromMastersPreview() {
+fun OnboardingScreenKnowledgeFromMastersPreview() {
 	val state = OnboardingState(step = OnboardingState.Step.KNOWLEDGE_FROM_MASTERS)
 	OnboardingScreen(
 		state,
