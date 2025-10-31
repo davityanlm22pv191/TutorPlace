@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.screens.auth.common
+package com.example.tutorplace.ui.common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

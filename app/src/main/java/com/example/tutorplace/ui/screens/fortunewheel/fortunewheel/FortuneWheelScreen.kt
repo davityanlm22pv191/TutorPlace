@@ -16,7 +16,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.navigation.Destinations
 import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.model.FortuneWheelParams
 import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.presentation.FortuneWheelViewModel
@@ -26,6 +25,11 @@ fun FortuneWheelScreen(navController: NavHostController, params: FortuneWheelPar
 	val viewModel = hiltViewModel<FortuneWheelViewModel>()
 	val state = viewModel.state.collectAsState()
 	OpenInformationBottomSheetIfNeeded(navController, params.isShouldShowInformation)
+	FortuneWheelScreen()
+}
+
+@Composable
+private fun FortuneWheelScreen() {
 	Scaffold(
 		modifier = Modifier.fillMaxSize()
 	) { paddingValues ->
@@ -56,5 +60,5 @@ private fun OpenInformationBottomSheetIfNeeded(
 @Preview
 @Composable
 fun FortuneWheelScreenPreview() {
-	FortuneWheelScreen(rememberNavController(), params = FortuneWheelParams(false))
+	FortuneWheelScreen()
 }
